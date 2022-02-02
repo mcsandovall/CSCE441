@@ -95,6 +95,27 @@ struct Triangle_t{
     
 };
 
+struct BoundedBox_t{
+    int xmin, xmax;
+    int ymin, ymax;
+    int zmin, zmax;
+    
+    // constructor
+    BoundedBox_t() : xmin(0), xmax(0), ymin(0), ymax(0), zmin(0), zmax(0) {}
+    BoundedBox_t(const Triangle_t T){
+        xmin = INT_MAX, ymin = INT_MAX, zmin = INT_MAX;
+        xmax = INT_MIN, ymin = INT_MIN, zmax = INT_MIN;
+        for(auto const v : T.vertex){
+            if(v.x < xmin) xmin = v.x;
+            if(v.y < ymin) ymin = v.y;
+            if(v.z < zmin) zmin = v.z;
+            
+            if(v.x > xmax) xmax = v.x;
+            if(v.y > ymax) ymax = v.y;
+            if(v.z > zmax) zmax =  v.z;
+        }
+    }
+};
 
 int main(int argc, char **argv)
 {
