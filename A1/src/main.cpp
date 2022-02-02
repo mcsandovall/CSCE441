@@ -20,6 +20,81 @@ double RANDOM_COLORS[7][3] = {
 	{0.3010,    0.7450,    0.9330},
 	{0.6350,    0.0780,    0.1840},
 };
+// bring back all the datastructures from the labs
+struct Point_t {
+    int x, y , z; // is in three dimensions
+    unsigned char r, g, b; // define the colors
+    
+    // constructor
+    Point_t() : x(0), y(0), z(0) {}
+    Point_t(int _x, int _y, int _z) : x(_x), y(_y), z(_z) {}
+    
+    void setColors(unsigned char _r, unsigned char _g, unsigned char _b){
+        r = _r, g = _g, b = _b;
+    }
+    
+    Point_t operator -(Point_t _v2){
+        return {x - _v2.x, y - _v2.y, z - _v2.z};
+    }
+    
+    Point_t crossProduct(Point_t _v2){
+        return {
+                       ((y * _v2.z) - (z * _v2.z)),
+                       -((x * _v2.z) - (z * _v2.x)),
+                       ((x * _v2.y) - (y * _v2.x)) };
+    }
+    
+    float lenght(){
+        return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+    }
+    
+    float dotProduct(Point_t _v2){
+        return (x * _v2.x) + (y * _v2.y) + (z * _v2.z);
+    }
+};
+
+// Triangle DS
+struct Triangle_t{
+    Point_t vertex[3];
+    float area;
+    float u, v, w; // the bycentric coordinates at that point
+    
+    // constructors
+    Triangle_t() : area(0) {}
+    Triangle_t(Point_t _v1, Point_t _v2, Point_t _v3){
+        vertex[0] = _v1, vertex[1] = _v2, vertex[2] = _v3;
+        area = 0.5 * (((_v2 - _v1)).crossProduct((_v3 - _v1))).lenght();
+    }
+    
+    // calculate the bycentric coordinates
+    bool inTrinagle(Point_t P){
+        // get the vertex PB x PC / area
+        Triangle_t PBC (P, vertex[1], vertex[2]);
+        Triangle_t PCA (P, vertex[2], vertex[0]);
+        Triangle_t PAB (P, vertex[0], vertex[1]);
+        
+        u = PBC.area / area;
+        v = PCA.area / area;
+        w = PAB.area / area;
+        
+        if(u < 0.0 || u > 1.0f){
+            return false;
+        }
+        
+        if(v < 0.0 || v > 1.0f){
+            return false;
+        }
+        
+        if(w < 0.0 || w > 1.0f)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
+};
+
 
 int main(int argc, char **argv)
 {
