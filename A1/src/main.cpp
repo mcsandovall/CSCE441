@@ -44,11 +44,11 @@ struct Point_t {
                        ((x * _v2.y) - (y * _v2.x)) };
     }
     
-    float lenght(){
+    double lenght(){
         return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
     }
     
-    float dotProduct(Point_t _v2){
+    double dotProduct(Point_t _v2){
         return (x * _v2.x) + (y * _v2.y) + (z * _v2.z);
     }
 };
@@ -56,8 +56,8 @@ struct Point_t {
 // Triangle DS
 struct Triangle_t{
     Point_t vertex[3];
-    float area;
-    float u, v, w; // the bycentric coordinates at that point
+    double area;
+    double u, v, w; // the bycentric coordinates at that point
     
     // constructors
     Triangle_t() : area(0) {}
@@ -101,7 +101,7 @@ struct BoundedBox_t{
     int zmin, zmax;
     
     // constructor
-    BoundedBox_t() : xmin(0), xmax(0), ymin(0), ymax(0), zmin(0), zmax(0) {}
+    BoundedBox_t() : xmin(INT_MAX), xmax(INT_MIN), ymin(INT_MAX), ymax(INT_MIN), zmin(INT_MAX), zmax(INT_MIN) {}
     BoundedBox_t(const Triangle_t T){
         xmin = INT_MAX, ymin = INT_MAX, zmin = INT_MAX;
         xmax = INT_MIN, ymin = INT_MIN, zmax = INT_MIN;
@@ -115,7 +115,24 @@ struct BoundedBox_t{
             if(v.z > zmax) zmax =  v.z;
         }
     }
+    
+    void draw_2D(std::shared_ptr<Image> image, unsigned char r, unsigned char g, unsigned char b){
+        for(int x = xmin; x <= xmax; ++x){
+            for(int y = ymin; y <= ymax; ++y){
+                image->setPixel(x, y, r, g, b);
+            }
+        }
+    }
 };
+
+// get color function for blending the colors of the bycentric coordinates
+double * getColor(Point_t P, Triangle_t T){
+    double * color = new double[3];
+    color[0] = floor(T.vertex[0].r * T.u + T.vertex[1].r * T.u + T.vertex[2].r * T.u);
+    color[1] = floor(T.vertex[0].g * T.v + T.vertex[1].g * T.v + T.vertex[2].g * T.v);
+    color[2] = floor(T.vertex[0].b * T.w + T.vertex[1].b * T.w + T.vertex[2].b * T.w);
+    return color;
+}
 
 int main(int argc, char **argv)
 {
@@ -124,6 +141,14 @@ int main(int argc, char **argv)
 		return 0;
 	}
 	string meshName(argv[1]);
+    // Output filename
+    string filename(argv[2]);
+    // Image width
+    int width = atoi(argv[3]);
+    // image height
+    int height = atoi(argv[4]);
+    // Create the image like in the labs
+    auto image = make_shared<Image>(width, height);
 
 	// Load geometry
 	vector<float> posBuf; // list of vertex positions
@@ -171,6 +196,42 @@ int main(int argc, char **argv)
 		}
 	}
 	cout << "Number of vertices: " << posBuf.size()/3 << endl;
-	
+    
+    
+    // construct the points in 3D
+    vector<Point_t *> points;
+    for(int p = 0; p < posBuf.size(); p+= 3){
+        points.push_back(new Point_t(posBuf[p], posBuf[p+1], posBuf[p+2]));
+    }
+    // build the triangles from the points
+    vector<Triangle_t *> triangles;
+    // make the bounding box for each respective triangle
+    vector<BoundedBox_t *> boundedBoxes;
+    for(int v = 0; v < points.size(); v += 3){
+        triangles.push_back(new Triangle_t(*points[v], *points[v+1], *points[v+2]));
+        boundedBoxes.push_back(new BoundedBox_t(*triangles[triangles.size()-1]));
+    }
+    
+    // get a bounded box for all the bounde boxes
+    BoundedBox_t bb;
+    for(int b = 0; b < boundedBoxes.size(); ++b){
+        if(boundedBoxes[b]->xmin < bb.xmin) bb.xmin = boundedBoxes[b]->xmin;
+        if(boundedBoxes[b]->xmax > bb.xmax) bb.xmax = boundedBoxes[b]->xmax;
+        
+        if(boundedBoxes[b]->ymin < bb.ymin) bb.ymin = boundedBoxes[b]->ymin;
+        if(boundedBoxes[b]->ymax > bb.xmax) bb.ymax = boundedBoxes[b]->ymax;
+        
+        if(boundedBoxes[b]->zmin < bb.zmin) bb.zmin = boundedBoxes[b]->zmin;
+        if(boundedBoxes[b]->zmax > bb.zmax) bb.zmax = boundedBoxes[b]->zmax;
+    }
+    
+    // task 1 drawing bounded boxes
+    // write code to conver 3D coordinates into 2D coordinates
+    for(int b = 0; b < boundedBoxes.size(); ++b){
+        boundedBoxes[b]->draw_2D(image, RANDOM_COLORS[b%7][0] * 255, RANDOM_COLORS[b%7][1] * 255, RANDOM_COLORS[b%7][2] * 255);
+    }
+    
+    image->writeToFile(filename);
+    
 	return 0;
 }
