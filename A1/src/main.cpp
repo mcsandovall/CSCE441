@@ -22,12 +22,12 @@ double RANDOM_COLORS[7][3] = {
 };
 // bring back all the datastructures from the labs
 struct Point_t {
-    int x, y , z; // is in three dimensions
+    double x, y , z; // is in three dimensions
     unsigned char r, g, b; // define the colors
     
     // constructor
     Point_t() : x(0), y(0), z(0) {}
-    Point_t(int _x, int _y, int _z) : x(_x), y(_y), z(_z) {}
+    Point_t(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
     
     void setColors(unsigned char _r, unsigned char _g, unsigned char _b){
         r = _r, g = _g, b = _b;
@@ -53,17 +53,50 @@ struct Point_t {
     }
 };
 
+struct BoundedBox_t{
+    double xmin, xmax;
+    double ymin, ymax;
+    double zmin, zmax;
+    
+    // constructor
+    BoundedBox_t() : xmin(INT_MAX), xmax(INT_MIN), ymin(INT_MAX), ymax(INT_MIN), zmin(INT_MAX), zmax(INT_MIN) {}
+    BoundedBox_t(const Point_t * vtx){
+        xmin = INT_MAX, ymin = INT_MAX, zmin = INT_MAX;
+        xmax = INT_MIN, ymin = INT_MIN, zmax = INT_MIN;
+        for(int i = 0; i < 3; ++i){
+            if(vtx[i].x < xmin) xmin = vtx[i].x;
+            if(vtx[i].x > xmax) xmax = vtx[i].x;
+            
+            if(vtx[i].y < ymin) ymin = vtx[i].y;
+            if(vtx[i].y > ymax) ymax = vtx[i].y;
+            
+            if(vtx[i].z < zmin) zmin = vtx[i].z;
+            if(vtx[i].z > zmax) zmax = vtx[i].z;
+        }
+    }
+    
+    void draw_2D(std::shared_ptr<Image> image, unsigned char r, unsigned char g, unsigned char b){
+        for(int x = xmin; x <= xmax; ++x){
+            for(int y = ymin; y <= ymax; ++y){
+                image->setPixel(x, y, r, g, b);
+            }
+        }
+    }
+};
+
 // Triangle DS
 struct Triangle_t{
     Point_t vertex[3];
     double area;
     double u, v, w; // the bycentric coordinates at that point
+    BoundedBox_t * bb;
     
     // constructors
     Triangle_t() : area(0) {}
     Triangle_t(Point_t _v1, Point_t _v2, Point_t _v3){
         vertex[0] = _v1, vertex[1] = _v2, vertex[2] = _v3;
         area = 0.5 * (((_v2 - _v1)).crossProduct((_v3 - _v1))).lenght();
+        bb = new BoundedBox_t(vertex);
     }
     
     // calculate the bycentric coordinates
@@ -95,36 +128,6 @@ struct Triangle_t{
     
 };
 
-struct BoundedBox_t{
-    int xmin, xmax;
-    int ymin, ymax;
-    int zmin, zmax;
-    
-    // constructor
-    BoundedBox_t() : xmin(INT_MAX), xmax(INT_MIN), ymin(INT_MAX), ymax(INT_MIN), zmin(INT_MAX), zmax(INT_MIN) {}
-    BoundedBox_t(const Triangle_t T){
-        xmin = INT_MAX, ymin = INT_MAX, zmin = INT_MAX;
-        xmax = INT_MIN, ymin = INT_MIN, zmax = INT_MIN;
-        for(auto const v : T.vertex){
-            if(v.x < xmin) xmin = v.x;
-            if(v.y < ymin) ymin = v.y;
-            if(v.z < zmin) zmin = v.z;
-            
-            if(v.x > xmax) xmax = v.x;
-            if(v.y > ymax) ymax = v.y;
-            if(v.z > zmax) zmax =  v.z;
-        }
-    }
-    
-    void draw_2D(std::shared_ptr<Image> image, unsigned char r, unsigned char g, unsigned char b){
-        for(int x = xmin; x <= xmax; ++x){
-            for(int y = ymin; y <= ymax; ++y){
-                image->setPixel(x, y, r, g, b);
-            }
-        }
-    }
-};
-
 // get color function for blending the colors of the bycentric coordinates
 double * getColor(Point_t P, Triangle_t T){
     double * color = new double[3];
@@ -132,6 +135,22 @@ double * getColor(Point_t P, Triangle_t T){
     color[1] = floor(T.vertex[0].g * T.v + T.vertex[1].g * T.v + T.vertex[2].g * T.v);
     color[2] = floor(T.vertex[0].b * T.w + T.vertex[1].b * T.w + T.vertex[2].b * T.w);
     return color;
+}
+
+// return the scalar factor for the image
+double scalar_factor(int width, int height,const BoundedBox_t * bb){
+    // assume the image always begins at (0,0) -> (w,h)
+    double s_x = width / (bb->xmax - bb->xmin);
+    double s_y = height / (bb->ymax - bb->ymin);
+    return min(s_x,s_y);
+}
+
+double * translation_factor(int width, int height, double scalar, const BoundedBox_t * bb){
+    // get the translation factor for box x and y
+    double * t_x_y = new double[2];
+    t_x_y[0] = (0.5 * width) - (scalar * ( 0.5 * (bb->xmax + bb->xmin)));
+    t_x_y[1] = (0.5 * height) - (scalar * ( 0.5 * (bb->ymax + bb->ymin)));
+    return t_x_y;
 }
 
 int main(int argc, char **argv)
@@ -206,30 +225,25 @@ int main(int argc, char **argv)
     // build the triangles from the points
     vector<Triangle_t *> triangles;
     // make the bounding box for each respective triangle
-    vector<BoundedBox_t *> boundedBoxes;
     for(int v = 0; v < points.size(); v += 3){
         triangles.push_back(new Triangle_t(*points[v], *points[v+1], *points[v+2]));
-        boundedBoxes.push_back(new BoundedBox_t(*triangles[triangles.size()-1]));
     }
     
     // get a bounded box for all the bounde boxes
     BoundedBox_t bb;
-    for(int b = 0; b < boundedBoxes.size(); ++b){
-        if(boundedBoxes[b]->xmin < bb.xmin) bb.xmin = boundedBoxes[b]->xmin;
-        if(boundedBoxes[b]->xmax > bb.xmax) bb.xmax = boundedBoxes[b]->xmax;
+    for(int b = 0; b < triangles.size(); ++b){
+        if(triangles[b]->bb->xmin < bb.xmin) bb.xmin = triangles[b]->bb->xmin;
+        if(triangles[b]->bb->xmax > bb.xmax) bb.xmax = triangles[b]->bb->xmax;
         
-        if(boundedBoxes[b]->ymin < bb.ymin) bb.ymin = boundedBoxes[b]->ymin;
-        if(boundedBoxes[b]->ymax > bb.xmax) bb.ymax = boundedBoxes[b]->ymax;
+        if(triangles[b]->bb->ymin < bb.ymin) bb.ymin = triangles[b]->bb->ymin;
+        if(triangles[b]->bb->ymax > bb.ymax) bb.ymax = triangles[b]->bb->ymax;
         
-        if(boundedBoxes[b]->zmin < bb.zmin) bb.zmin = boundedBoxes[b]->zmin;
-        if(boundedBoxes[b]->zmax > bb.zmax) bb.zmax = boundedBoxes[b]->zmax;
+        if(triangles[b]->bb->zmin < bb.zmin) bb.zmin = triangles[b]->bb->zmin;
+        if(triangles[b]->bb->zmax > bb.zmax) bb.zmax = triangles[b]->bb->zmax;
     }
     
     // task 1 drawing bounded boxes
     // write code to conver 3D coordinates into 2D coordinates
-    for(int b = 0; b < boundedBoxes.size(); ++b){
-        boundedBoxes[b]->draw_2D(image, RANDOM_COLORS[b%7][0] * 255, RANDOM_COLORS[b%7][1] * 255, RANDOM_COLORS[b%7][2] * 255);
-    }
     
     image->writeToFile(filename);
     
