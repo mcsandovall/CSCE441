@@ -51,6 +51,11 @@ struct Point_t {
     double dotProduct(Point_t _v2){
         return (x * _v2.x) + (y * _v2.y) + (z * _v2.z);
     }
+    
+    void set_toImage(double scalar, double * translate){
+        x = (scalar * x) + translate[0];
+        y = (scalar * y) + translate[1];
+    }
 };
 
 struct BoundedBox_t{
@@ -62,7 +67,7 @@ struct BoundedBox_t{
     BoundedBox_t() : xmin(INT_MAX), xmax(INT_MIN), ymin(INT_MAX), ymax(INT_MIN), zmin(INT_MAX), zmax(INT_MIN) {}
     BoundedBox_t(const Point_t * vtx){
         xmin = INT_MAX, ymin = INT_MAX, zmin = INT_MAX;
-        xmax = INT_MIN, ymin = INT_MIN, zmax = INT_MIN;
+        xmax = INT_MIN, ymax = INT_MIN, zmax = INT_MIN;
         for(int i = 0; i < 3; ++i){
             if(vtx[i].x < xmin) xmin = vtx[i].x;
             if(vtx[i].x > xmax) xmax = vtx[i].x;
@@ -82,11 +87,22 @@ struct BoundedBox_t{
             }
         }
     }
+    
+    void set_extremas(const Point_t * v){
+        if(v->x < xmin) xmin = v->x;
+        if(v->x > xmax) xmax = v->x;
+        
+        if(v->y < ymin) ymin = v->y;
+        if(v->y > ymax) ymax = v->y;
+        
+        if(v->z < zmin) zmin = v->z;
+        if(v->z > zmax) zmax = v->z;
+    }
 };
 
 // Triangle DS
 struct Triangle_t{
-    Point_t vertex[3];
+    Point_t * vertex;
     double area;
     double u, v, w; // the bycentric coordinates at that point
     BoundedBox_t * bb;
@@ -94,6 +110,7 @@ struct Triangle_t{
     // constructors
     Triangle_t() : area(0) {}
     Triangle_t(Point_t _v1, Point_t _v2, Point_t _v3){
+        vertex = new Point_t[3];
         vertex[0] = _v1, vertex[1] = _v2, vertex[2] = _v3;
         area = 0.5 * (((_v2 - _v1)).crossProduct((_v3 - _v1))).lenght();
         bb = new BoundedBox_t(vertex);
@@ -219,31 +236,35 @@ int main(int argc, char **argv)
     
     // construct the points in 3D
     vector<Point_t *> points;
+    // make the bounding box for the shape
+    BoundedBox_t bb;
     for(int p = 0; p < posBuf.size(); p+= 3){
         points.push_back(new Point_t(posBuf[p], posBuf[p+1], posBuf[p+2]));
+        // set the extremas for the bouding box
+        bb.set_extremas(points[points.size()-1]);
     }
-    // build the triangles from the points
+    
+    // compute the scalar and the translation and apply to all the points
+    double scalar = scalar_factor(width, height, &bb);
+    double * translation = translation_factor(width, height, scalar, &bb);
+    
+    // apply the scalar to all the points in the shape
+    for(int p = 0; p < points.size(); ++p){
+        points[p]->set_toImage(scalar, translation);
+    }
+    
+    // resize the bounded box
+    bb.xmin = (scalar * bb.xmin) + translation[0], bb.xmax = (scalar * bb.xmax) + translation[0];
+    bb.ymin = (scalar * bb.ymin) + translation[1], bb.ymax = (scalar * bb.ymax) + translation[1];
+    
+    // create the triangles with the new points
     vector<Triangle_t *> triangles;
-    // make the bounding box for each respective triangle
-    for(int v = 0; v < points.size(); v += 3){
-        triangles.push_back(new Triangle_t(*points[v], *points[v+1], *points[v+2]));
+    for(int p = 0; p < points.size(); p += 3){
+        triangles.push_back(new Triangle_t(*(points[p]), *(points[p+1]), *(points[p+2])));
     }
     
-    // get a bounded box for all the bounde boxes
-    BoundedBox_t bb;
-    for(int b = 0; b < triangles.size(); ++b){
-        if(triangles[b]->bb->xmin < bb.xmin) bb.xmin = triangles[b]->bb->xmin;
-        if(triangles[b]->bb->xmax > bb.xmax) bb.xmax = triangles[b]->bb->xmax;
-        
-        if(triangles[b]->bb->ymin < bb.ymin) bb.ymin = triangles[b]->bb->ymin;
-        if(triangles[b]->bb->ymax > bb.ymax) bb.ymax = triangles[b]->bb->ymax;
-        
-        if(triangles[b]->bb->zmin < bb.zmin) bb.zmin = triangles[b]->bb->zmin;
-        if(triangles[b]->bb->zmax > bb.zmax) bb.zmax = triangles[b]->bb->zmax;
-    }
+    // assigment 1 draw all the bounded boxes of the triangles
     
-    // task 1 drawing bounded boxes
-    // write code to conver 3D coordinates into 2D coordinates
     
     image->writeToFile(filename);
     
