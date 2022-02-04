@@ -33,8 +33,20 @@ struct Point_t {
         r = _r, g = _g, b = _b;
     }
     
-    Point_t operator -(Point_t _v2){
+    Point_t operator -(const Point_t _v2) const{
         return {x - _v2.x, y - _v2.y, z - _v2.z};
+    }
+    
+    Point_t operator +(const Point_t _v2) const{
+        return {x + _v2.x, y + _v2.y, z + _v2.z };
+    }
+    
+    Point_t operator *(const double number) const{
+        return {x * number, y * number, z * number};
+    }
+    
+    Point_t operator *(const Point_t _v2) const{
+        return {x * _v2.x, y * _v2.y, z * _v2.z};
     }
     
     Point_t crossProduct(Point_t _v2){
@@ -215,6 +227,42 @@ void per_vertex_color(vector<Triangle_t *> triangles, std::shared_ptr<Image> ima
     delete P;
 }
 
+// linear interpolation between a line
+double * linar_interpolation(const Point_t * P, const Point_t * A, const Point_t * B){
+    double * color = new double[3];
+    // get alpha
+    double a = (*P - *A).lenght() / ( (*A * -1.0) + *B).lenght();
+    color[0] = floor((1 - a) * A->r + a * B->r);
+    color[1] = floor((1 - a) * A->g + a * B->g);
+    color[2] = floor((1 - a) * A->b + a * B->b);
+    return color;
+}
+
+// task 4
+void vertical_color(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, BoundedBox_t * bb){
+    Point_t * Ymax = new Point_t(0, bb->ymax, 0);
+    Ymax->setColors(255, 0, 0);
+    Point_t * Ymin = new Point_t(0, bb->ymin, 0);
+    Ymin->setColors(0, 0, 255);
+    Point_t * P = new Point_t();
+    
+    for(auto T : triangles){
+        for(int y = T->bb->ymin; y<= T->bb->ymax; ++y){
+            for(int x = T->bb->xmin; x <= T->bb->xmax; ++x){
+                P->set_positions(x, y, 0);
+                if(T->inTrinagle(P)){
+                    P->set_positions(0, y, 0); // only care abot the y here
+                    double * c = linar_interpolation(P, Ymax, Ymin);
+                    image->setPixel(x, y, c[0], c[1], c[2]);
+                    delete[] c;
+                }
+            }
+        }
+    }
+    delete Ymax; delete Ymin; delete P;
+}
+
+
 int main(int argc, char **argv)
 {
 	if(argc < 2) {
@@ -314,7 +362,7 @@ int main(int argc, char **argv)
     bb.xmin = (scalar * bb.xmin) + translation[0], bb.xmax = (scalar * bb.xmax) + translation[0];
     bb.ymin = (scalar * bb.ymin) + translation[1], bb.ymax = (scalar * bb.ymax) + translation[1];
     
-    per_vertex_color(triangles, image);
+    // task 5
     
     image->writeToFile(filename);
     
