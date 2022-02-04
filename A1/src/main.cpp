@@ -264,7 +264,9 @@ int main(int argc, char **argv)
     }
     
     // assigment 1 draw all the bounded boxes of the triangles
-    
+    for(int t = 0; t < triangles.size(); ++t){
+        triangles[t]->bb->draw_2D(image, RANDOM_COLORS[t%7][0] * 255, RANDOM_COLORS[t%7][1] * 255, RANDOM_COLORS[t%7][2] * 255);
+    }
     
     image->writeToFile(filename);
     
