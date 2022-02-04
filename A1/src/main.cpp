@@ -23,11 +23,11 @@ double RANDOM_COLORS[7][3] = {
 // bring back all the datastructures from the labs
 struct Point_t {
     double x, y , z; // is in three dimensions
-    unsigned char r, g, b; // define the colors
+    double r, g, b; // define the colors
     
     // constructor
-    Point_t() : x(0), y(0), z(0) {}
-    Point_t(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
+    Point_t() : x(0), y(0), z(0), r(0), g(0), b(0) {}
+    Point_t(double _x, double _y, double _z) : x(_x), y(_y), z(_z), r(0), g(0), b(0) {}
     
     void setColors(unsigned char _r, unsigned char _g, unsigned char _b){
         r = _r, g = _g, b = _b;
@@ -107,8 +107,8 @@ struct BoundedBox_t{
 // Triangle DS
 struct Triangle_t{
     Point_t * vertex;
-    double area;
-    double u, v, w; // the bycentric coordinates at that point
+    float area;
+    float u, v, w; // the bycentric coordinates at that point
     BoundedBox_t * bb;
     
     // constructors
@@ -122,15 +122,14 @@ struct Triangle_t{
     }
     
     // calculate the bycentric coordinates
-    bool inTrinagle(Point_t P){
-        // get the vertex PB x PC / area
-        Triangle_t PBC (P, vertex[1], vertex[2]);
-        Triangle_t PCA (P, vertex[2], vertex[0]);
-        Triangle_t PAB (P, vertex[0], vertex[1]);
+    bool inTrinagle(const Point_t * P){
+        Triangle_t PBC (*P, vertex[1], vertex[2]);
+        Triangle_t PCA (*P, vertex[2], vertex[0]);
+        Triangle_t PAB (*P, vertex[0], vertex[1]);
         
         u = PBC.area / area;
         v = PCA.area / area;
-        w = PAB.area / area;
+        w = 1.0 - u - v;
         
         if(u < 0.0 || u > 1.0f){
             return false;
@@ -151,11 +150,11 @@ struct Triangle_t{
 };
 
 // get color function for blending the colors of the bycentric coordinates
-double * getColor(Point_t P, Triangle_t T){
+double * getColor(const Point_t * P, const Triangle_t * T){
     double * color = new double[3];
-    color[0] = floor(T.vertex[0].r * T.u + T.vertex[1].r * T.u + T.vertex[2].r * T.u);
-    color[1] = floor(T.vertex[0].g * T.v + T.vertex[1].g * T.v + T.vertex[2].g * T.v);
-    color[2] = floor(T.vertex[0].b * T.w + T.vertex[1].b * T.w + T.vertex[2].b * T.w);
+    color[0] = floor(T->vertex[0].r * T->u + T->vertex[1].r * T->v + T->vertex[2].r * T->w);
+    color[1] = floor(T->vertex[0].g * T->u + T->vertex[1].g * T->v + T->vertex[2].g * T->w);
+    color[2] = floor(T->vertex[0].b * T->u + T->vertex[1].b * T->v + T->vertex[2].b * T->w);
     return color;
 }
 
@@ -184,17 +183,36 @@ void draw_BoundingBoxes(vector<Triangle_t *> triangles, std::shared_ptr<Image> i
 
 // task 2
 void draw_triangles(vector<Triangle_t *> triangles, std::shared_ptr<Image> image){
-    Point_t P;
+    Point_t * P = new Point_t();
     for(int t= 0; t < triangles.size();++t){
         for(int x = triangles[t]->bb->xmin; x <= triangles[t]->bb->xmax; ++x){
             for(int y = triangles[t]->bb->ymin; y<= triangles[t]->bb->ymax; ++y){
-                P.set_positions(x, y, 0);
+                P->set_positions(x, y, 0);
                 if(triangles[t]->inTrinagle(P)){
                     image->setPixel(x, y, RANDOM_COLORS[t%7][0]*255, RANDOM_COLORS[t%7][1]*255, RANDOM_COLORS[t%7][2]*255);
                 }
             }
         }
     }
+    delete P;
+}
+
+// task 3
+void per_vertex_color(vector<Triangle_t *> triangles, std::shared_ptr<Image> image){
+    Point_t *  P = new Point_t();
+    for(auto T : triangles){
+        for(int x = T->bb->xmin; x<= T->bb->xmax; ++x){
+            for(int y = T->bb->ymin; y<= T->bb->ymax; ++y){
+                P->set_positions(x, y, 0);
+                if(T->inTrinagle(P)){
+                    double * c = getColor(P, T);
+                    image->setPixel(x, y, c[0], c[1], c[2]);
+                    delete[] c;
+                }
+            }
+        }
+    }
+    delete P;
 }
 
 int main(int argc, char **argv)
@@ -269,8 +287,13 @@ int main(int argc, char **argv)
     BoundedBox_t bb;
     for(int p = 0; p < posBuf.size(); p+= 3){
         points.push_back(new Point_t(posBuf[p], posBuf[p+1], posBuf[p+2]));
-        // set the extremas for the bouding box
+        // set the extremas for the bouding box ---
         bb.set_extremas(points[points.size()-1]);
+    }
+    
+    // add the colors to the vectors for task 3
+    for(int p =0; p < points.size(); ++p){
+        points[p]->setColors(RANDOM_COLORS[p%7][0]*255, RANDOM_COLORS[p%7][1]*255, RANDOM_COLORS[p%7][2]*255);
     }
     
     // compute the scalar and the translation and apply to all the points
@@ -291,8 +314,7 @@ int main(int argc, char **argv)
     bb.xmin = (scalar * bb.xmin) + translation[0], bb.xmax = (scalar * bb.xmax) + translation[0];
     bb.ymin = (scalar * bb.ymin) + translation[1], bb.ymax = (scalar * bb.ymax) + translation[1];
     
-    
-    
+    per_vertex_color(triangles, image);
     
     image->writeToFile(filename);
     
