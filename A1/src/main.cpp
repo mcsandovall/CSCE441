@@ -44,6 +44,10 @@ struct Point_t {
                        ((x * _v2.y) - (y * _v2.x)) };
     }
     
+    void set_positions(double _x, double _y, double _z){
+        x = _x, y = _y, z = _z;
+    }
+    
     double lenght(){
         return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
     }
@@ -112,7 +116,8 @@ struct Triangle_t{
     Triangle_t(Point_t _v1, Point_t _v2, Point_t _v3){
         vertex = new Point_t[3];
         vertex[0] = _v1, vertex[1] = _v2, vertex[2] = _v3;
-        area = 0.5 * (((_v2 - _v1)).crossProduct((_v3 - _v1))).lenght();
+        area = 0.5 * ((vertex[1].x - vertex[0].x) * (vertex[2].y - vertex[0].y) - (vertex[2].x - vertex[0].x) * (vertex[1].y - vertex[0].y));
+        //area = 0.5 * (((_v2 - _v1)).crossProduct((_v3 - _v1))).lenght(); area in 3D
         bb = new BoundedBox_t(vertex);
     }
     
@@ -170,6 +175,28 @@ double * translation_factor(int width, int height, double scalar, const BoundedB
     return t_x_y;
 }
 
+// task 1 draw all the bounded boxes
+void draw_BoundingBoxes(vector<Triangle_t *> triangles, std::shared_ptr<Image> image){
+    for(int t = 0; t < triangles.size(); ++t){
+        triangles[t]->bb->draw_2D(image, RANDOM_COLORS[t%7][0] * 255, RANDOM_COLORS[t%7][1] * 255, RANDOM_COLORS[t%7][2] * 255);
+    }
+}
+
+// task 2
+void draw_triangles(vector<Triangle_t *> triangles, std::shared_ptr<Image> image){
+    Point_t P;
+    for(int t= 0; t < triangles.size();++t){
+        for(int x = triangles[t]->bb->xmin; x <= triangles[t]->bb->xmax; ++x){
+            for(int y = triangles[t]->bb->ymin; y<= triangles[t]->bb->ymax; ++y){
+                P.set_positions(x, y, 0);
+                if(triangles[t]->inTrinagle(P)){
+                    image->setPixel(x, y, RANDOM_COLORS[t%7][0]*255, RANDOM_COLORS[t%7][1]*255, RANDOM_COLORS[t%7][2]*255);
+                }
+            }
+        }
+    }
+}
+
 int main(int argc, char **argv)
 {
 	if(argc < 2) {
@@ -183,6 +210,8 @@ int main(int argc, char **argv)
     int width = atoi(argv[3]);
     // image height
     int height = atoi(argv[4]);
+    // task to be executed
+    //int task = atoi(argv[5]);
     // Create the image like in the labs
     auto image = make_shared<Image>(width, height);
 
@@ -248,25 +277,22 @@ int main(int argc, char **argv)
     double scalar = scalar_factor(width, height, &bb);
     double * translation = translation_factor(width, height, scalar, &bb);
     
-    // apply the scalar to all the points in the shape
-    for(int p = 0; p < points.size(); ++p){
+    // apply the scalar to all the points in the shape and create the triangles
+    vector<Triangle_t *> triangles;
+    for(int p = 0; p < points.size(); p += 3){
         points[p]->set_toImage(scalar, translation);
+        points[p+1]->set_toImage(scalar, translation);
+        points[p+2]->set_toImage(scalar, translation);
+
+        triangles.push_back(new Triangle_t(*(points[p]), *(points[p+1]), *(points[p+2])));
     }
     
     // resize the bounded box
     bb.xmin = (scalar * bb.xmin) + translation[0], bb.xmax = (scalar * bb.xmax) + translation[0];
     bb.ymin = (scalar * bb.ymin) + translation[1], bb.ymax = (scalar * bb.ymax) + translation[1];
     
-    // create the triangles with the new points
-    vector<Triangle_t *> triangles;
-    for(int p = 0; p < points.size(); p += 3){
-        triangles.push_back(new Triangle_t(*(points[p]), *(points[p+1]), *(points[p+2])));
-    }
     
-    // assigment 1 draw all the bounded boxes of the triangles
-    for(int t = 0; t < triangles.size(); ++t){
-        triangles[t]->bb->draw_2D(image, RANDOM_COLORS[t%7][0] * 255, RANDOM_COLORS[t%7][1] * 255, RANDOM_COLORS[t%7][2] * 255);
-    }
+    
     
     image->writeToFile(filename);
     
