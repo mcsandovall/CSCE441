@@ -308,6 +308,39 @@ float calculateDepth(Triangle_t * T){
     return ((T->u * T->vertex[0].z) + (T->v * T->vertex[1].z) + (T->w * T->vertex[2].z));
 }
 
+// task 5 z buffers
+void Z_buffer(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, BoundedBox_t bb){
+    // task 5
+    ZBuffer zbuff(bb.xmax, bb.ymax);
+    zbuff.Clear();
+    
+    // make the gradient for linear interpolation like before
+    Point_t * Zmax = new Point_t(0, 0, bb.zmax);
+    Zmax->setColors(255, 0, 0);
+    Point_t * Zmin = new Point_t(0, 0, bb.zmin);
+    Zmin->setColors(0, 0, 0);
+    Point_t * P = new Point_t();
+    float z;
+    
+    for(auto T : triangles){
+        for(int y = T->bb->ymin; y<= T->bb->ymax; ++y){
+            for(int x = T->bb->xmin; x <= T->bb->xmax; ++x){
+                P->set_positions(x, y, 0);
+                if(T->inTrinagle(P)){
+                    z = calculateDepth(T);
+                    if(zbuff.TestAndSet(x, y, z)){
+                        P->set_positions(0, 0, z); // only care abot z
+                        double * c = linar_interpolation(P, Zmax, Zmin);
+                        image->setPixel(x, y, c[0], c[1], c[2]);
+                        delete[] c;
+                    }
+                }
+            }
+        }
+    }
+    delete Zmax; delete Zmin; delete P;
+}
+
 int main(int argc, char **argv)
 {
 	if(argc < 2) {
@@ -412,25 +445,7 @@ int main(int argc, char **argv)
     bb.xmin = (scalar * bb.xmin) + translation[0], bb.xmax = (scalar * bb.xmax) + translation[0];
     bb.ymin = (scalar * bb.ymin) + translation[1], bb.ymax = (scalar * bb.ymax) + translation[1];
     
-    // task 5
-    ZBuffer zbuff(width, height);
-    zbuff.Clear();
     
-    Point_t * P = new Point_t();
-    for(Triangle_t * T: triangles){
-        for(int x = T->bb->xmin; x <= T->bb->xmax; ++x){
-            for(int y = T->bb->ymin; y <= T->bb->ymax; ++y){
-                P->set_positions(x, y, 0);
-                if(T->inTrinagle(P)){
-                    // calculate the depth
-                    float z = calculateDepth(T);
-                    if(zbuff.TestAndSet(x, y, z)){
-                        image->setPixel(x, y, z*255, 0, 0);
-                    }
-                }
-            }
-        }
-    }
     image->writeToFile(filename);
     
 	return 0;
