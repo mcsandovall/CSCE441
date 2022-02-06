@@ -22,8 +22,17 @@ double RANDOM_COLORS[7][3] = {
 };
 
 // make normal
-typedef struct{
+typedef struct normal{
     double x, y , z;
+    
+    normal() : x(0), y(0), z(0) {}
+    normal(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
+    void scaleNormal(double Scale){
+        x *= Scale, y *= Scale, z *= Scale;
+    }
+    double operator*(const normal n2){ // dot product
+        return (x * n2.x) + (y * n2.y) + (z * n2.z);
+    }
 } normal;
 
 struct Point_t {
@@ -318,7 +327,7 @@ float calculateDepth(Triangle_t * T){
 }
 
 // task 5 z buffers
-void Z_buffer(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, BoundedBox_t bb){
+void Z_buffer(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, BoundedBox_t &bb){
     // task 5
     ZBuffer zbuff(bb.xmax, bb.ymax);
     zbuff.Clear();
@@ -352,13 +361,14 @@ void Z_buffer(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, Boun
 
 normal getNormalColor(Triangle_t * T){
     return {
-        (255 * (0.5 * (T->vertex[0].nml.x * T->u + T->vertex[1].nml.x * T->v + T->vertex[2].nml.x * T->w) + 0.5)),
-        (255 * (0.5 * (T->vertex[0].nml.y * T->u + T->vertex[1].nml.y * T->v + T->vertex[2].nml.y * T->w) + 0.5)),
-        (255 * (0.5 * (T->vertex[0].nml.z * T->u + T->vertex[1].nml.z * T->v + T->vertex[2].nml.z * T->w) + 0.5))
+      (T->vertex[0].nml.x * T->u + T->vertex[1].nml.x * T->v + T->vertex[2].nml.x * T->w),
+      (T->vertex[0].nml.y * T->u + T->vertex[1].nml.y * T->v + T->vertex[2].nml.y * T->w),
+      (T->vertex[0].nml.z * T->u + T->vertex[1].nml.z * T->v + T->vertex[2].nml.z * T->w)
     };
 }
 
-void normalColoring(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, BoundedBox_t bb){
+// task 6 normal coloring
+void normalColoring(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, BoundedBox_t &bb){
     ZBuffer zbuff(bb.xmax, bb.ymax);
     zbuff.Clear();
 
@@ -373,7 +383,7 @@ void normalColoring(vector<Triangle_t *> triangles, std::shared_ptr<Image> image
                     z = calculateDepth(T);
                     if(zbuff.TestAndSet(x, y, z)){
                         n = getNormalColor(T);
-                        image->setPixel(x, y, n.x, n.y, n.z);
+                        image->setPixel(x, y, 255 * (0.5 * n.x + 0.5), 255 * (0.5 * n.y + 0.5), 255 * (0.5 * n.z + 0.5));
                     }
                 }
             }
@@ -382,6 +392,29 @@ void normalColoring(vector<Triangle_t *> triangles, std::shared_ptr<Image> image
     delete P;
 }
 
+// void task 7 simple lighting
+void SimpleLight(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, BoundedBox_t &bb){
+    ZBuffer zbuff(bb.xmax, bb.ymax);
+    zbuff.Clear();
+
+    Point_t * P = new Point_t(); float z; normal n; normal light(1,1,1);
+    light.scaleNormal(1/sqrt(3));
+    for(Triangle_t * T : triangles){
+        for(int x = T->bb->xmin; x <= T->bb->xmax; ++x){
+            for(int y = T->bb->ymin; y <= T->bb->ymax; ++y){
+                P->set_positions(x, y, 0);
+                if(T->inTrinagle(P)){
+                    z = calculateDepth(T);
+                    if(zbuff.TestAndSet(x, y, z)){
+                        n =  getNormalColor(T);
+                        double c = max((light * n),0.0);
+                        image->setPixel(x, y, c*255, c*255, c*255);
+                    }
+                }
+            }
+        }
+    }
+}
 int main(int argc, char **argv)
 {
 	if(argc < 2) {
@@ -486,6 +519,32 @@ int main(int argc, char **argv)
     bb.xmin = (scalar * bb.xmin) + translation[0], bb.xmax = (scalar * bb.xmax) + translation[0];
     bb.ymin = (scalar * bb.ymin) + translation[1], bb.ymax = (scalar * bb.ymax) + translation[1];
     
+    // make a switch for each test case to be tested
+    switch (atoi(argv[5])) {
+        case 1:
+            draw_BoundingBoxes(triangles, image);
+            break;
+        case 2:
+            draw_triangles(triangles, image);
+            break;
+        case 3:
+            per_vertex_color(triangles, image);
+            break;
+        case 4:
+            vertical_color(triangles, image, &bb);
+            break;
+        case 5:
+            Z_buffer(triangles, image, bb);
+            break;
+        case 6:
+            normalColoring(triangles, image, bb);
+            break;
+        case 7:
+            SimpleLight(triangles, image, bb);
+            break;
+        default:
+            break;
+    }
     
     image->writeToFile(filename);
     
