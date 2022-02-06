@@ -20,10 +20,16 @@ double RANDOM_COLORS[7][3] = {
 	{0.3010,    0.7450,    0.9330},
 	{0.6350,    0.0780,    0.1840},
 };
-// bring back all the datastructures from the labs
+
+// make normal
+typedef struct{
+    double x, y , z;
+} normal;
+
 struct Point_t {
     double x, y , z; // is in three dimensions
     double r, g, b; // define the colors
+    normal nml;
     
     // constructor
     Point_t() : x(0), y(0), z(0), r(0), g(0), b(0) {}
@@ -31,6 +37,9 @@ struct Point_t {
     
     void setColors(unsigned char _r, unsigned char _g, unsigned char _b){
         r = _r, g = _g, b = _b;
+    }
+    void setNormal(double _x, double _y, double _z){
+        nml.x = _x, nml.y = _y, nml.z = _z;
     }
     
     Point_t operator -(const Point_t _v2) const{
@@ -341,6 +350,38 @@ void Z_buffer(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, Boun
     delete Zmax; delete Zmin; delete P;
 }
 
+normal getNormalColor(Triangle_t * T){
+    return {
+        (255 * (0.5 * (T->vertex[0].nml.x * T->u + T->vertex[1].nml.x * T->v + T->vertex[2].nml.x * T->w) + 0.5)),
+        (255 * (0.5 * (T->vertex[0].nml.y * T->u + T->vertex[1].nml.y * T->v + T->vertex[2].nml.y * T->w) + 0.5)),
+        (255 * (0.5 * (T->vertex[0].nml.z * T->u + T->vertex[1].nml.z * T->v + T->vertex[2].nml.z * T->w) + 0.5))
+    };
+}
+
+void normalColoring(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, BoundedBox_t bb){
+    ZBuffer zbuff(bb.xmax, bb.ymax);
+    zbuff.Clear();
+
+    Point_t * P = new Point_t();
+    float z; normal n;
+
+    for(auto T : triangles){
+        for(int y = T->bb->ymin; y<= T->bb->ymax; ++y){
+            for(int x = T->bb->xmin; x <= T->bb->xmax; ++x){
+                P->set_positions(x, y, 0);
+                if(T->inTrinagle(P)){
+                    z = calculateDepth(T);
+                    if(zbuff.TestAndSet(x, y, z)){
+                        n = getNormalColor(T);
+                        image->setPixel(x, y, n.x, n.y, n.z);
+                    }
+                }
+            }
+        }
+    }
+    delete P;
+}
+
 int main(int argc, char **argv)
 {
 	if(argc < 2) {
@@ -413,7 +454,7 @@ int main(int argc, char **argv)
     BoundedBox_t bb;
     for(int p = 0; p < posBuf.size(); p+= 3){
         points.push_back(new Point_t(posBuf[p], posBuf[p+1], posBuf[p+2]));
-        //cout << posBuf[p] << " " <<  posBuf[p+1] << " " << posBuf[p+2] << endl;
+        points[points.size()-1]->setNormal(norBuf[p], norBuf[p+1], norBuf[p+2]);
         // set the extremas for the bouding box ---
         bb.set_extremas(points[points.size()-1]);
     }
