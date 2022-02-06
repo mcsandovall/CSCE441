@@ -141,7 +141,7 @@ struct Triangle_t{
         
         u = PBC.area / area;
         v = PCA.area / area;
-        w = 1.0 - u - v;
+        w = 1.0f - u - v;
         
         if(u < 0.0 || u > 1.0f){
             return false;
@@ -159,6 +159,47 @@ struct Triangle_t{
         return true;
     }
     
+};
+
+// Z buffer
+class ZBuffer{
+private:
+    int width, height;
+    float ** pbuffer;
+public:
+    ZBuffer(int _w, int _h){
+        width = _w, height = _h;
+        pbuffer = new float*[width+1];
+        for(int i = 0; i <= width; ++i){
+            pbuffer[i] = new float[height+1];
+        }
+    }
+    ~ZBuffer(){
+        for(int i = 0; i <= width; ++i){
+            delete[] pbuffer[i];
+        }
+        delete[] pbuffer;
+    }
+    ZBuffer( const ZBuffer& ) = delete;
+    ZBuffer& operator=( const ZBuffer& ) = delete;
+    void Clear(){
+        for(int x = 0; x <= width; ++x){
+            for(int y = 0; y <= height; ++y){
+                pbuffer[x][y] = -1 * std::numeric_limits<float>::infinity();
+            }
+        }
+    }
+    float& At(int x, int y){
+        return pbuffer[x][y];
+    }
+    bool TestAndSet(int x, int y, float Depth){
+        float & depthInBuffer = At(x, y);
+        if(Depth > depthInBuffer){
+            depthInBuffer = Depth;
+            return true;
+        }
+        return false;
+    }
 };
 
 // get color function for blending the colors of the bycentric coordinates
@@ -262,6 +303,10 @@ void vertical_color(vector<Triangle_t *> triangles, std::shared_ptr<Image> image
     delete Ymax; delete Ymin; delete P;
 }
 
+//
+float calculateDepth(Triangle_t * T){
+    return ((T->u * T->vertex[0].z) + (T->v * T->vertex[1].z) + (T->w * T->vertex[2].z));
+}
 
 int main(int argc, char **argv)
 {
@@ -335,6 +380,7 @@ int main(int argc, char **argv)
     BoundedBox_t bb;
     for(int p = 0; p < posBuf.size(); p+= 3){
         points.push_back(new Point_t(posBuf[p], posBuf[p+1], posBuf[p+2]));
+        //cout << posBuf[p] << " " <<  posBuf[p+1] << " " << posBuf[p+2] << endl;
         // set the extremas for the bouding box ---
         bb.set_extremas(points[points.size()-1]);
     }
@@ -357,13 +403,34 @@ int main(int argc, char **argv)
 
         triangles.push_back(new Triangle_t(*(points[p]), *(points[p+1]), *(points[p+2])));
     }
-    
+//    cout << endl;
+//    for(auto P : points){
+//        cout << P->x << " " << P->y << " " << P->z << endl;
+//    }
+    //cout << endl;
     // resize the bounded box
     bb.xmin = (scalar * bb.xmin) + translation[0], bb.xmax = (scalar * bb.xmax) + translation[0];
     bb.ymin = (scalar * bb.ymin) + translation[1], bb.ymax = (scalar * bb.ymax) + translation[1];
     
     // task 5
+    ZBuffer zbuff(width, height);
+    zbuff.Clear();
     
+    Point_t * P = new Point_t();
+    for(Triangle_t * T: triangles){
+        for(int x = T->bb->xmin; x <= T->bb->xmax; ++x){
+            for(int y = T->bb->ymin; y <= T->bb->ymax; ++y){
+                P->set_positions(x, y, 0);
+                if(T->inTrinagle(P)){
+                    // calculate the depth
+                    float z = calculateDepth(T);
+                    if(zbuff.TestAndSet(x, y, z)){
+                        image->setPixel(x, y, z*255, 0, 0);
+                    }
+                }
+            }
+        }
+    }
     image->writeToFile(filename);
     
 	return 0;
