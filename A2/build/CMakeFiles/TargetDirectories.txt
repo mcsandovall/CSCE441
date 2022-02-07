@@ -1,0 +1,11 @@
+/Users/mariopinto/Desktop/CSCE 441/CSCE441/A2/build/CMakeFiles/A2.dir
+/Users/mariopinto/Desktop/CSCE 441/CSCE441/A2/build/CMakeFiles/install.dir
+/Users/mariopinto/Desktop/CSCE 441/CSCE441/A2/build/CMakeFiles/ALL_BUILD.dir
+/Users/mariopinto/Desktop/CSCE 441/CSCE441/A2/build/CMakeFiles/ZERO_CHECK.dir
+/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/CMakeFiles/uninstall.dir
+/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/CMakeFiles/install.dir
+/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/CMakeFiles/ALL_BUILD.dir
+/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/CMakeFiles/ZERO_CHECK.dir
+/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/CMakeFiles/update_mappings.dir
+/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/CMakeFiles/glfw.dir
+/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/CMakeFiles/install.dir
