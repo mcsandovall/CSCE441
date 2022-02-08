@@ -23,6 +23,25 @@ shared_ptr<Program> prog;
 shared_ptr<Program> progIM; // immediate mode
 shared_ptr<Shape> shape;
 
+float AngleX = 1.0, AngleY = 1.0, AngleZ = 1.0, RotAngle = 0.2;
+
+// make a struct for the object
+class object{
+private:
+    float tx, ty, tz; // translation relative to parent
+    float rx, ry, rz; // rotation relative to parent
+    float sx, sy, sz; // scaling relative to parent
+    
+    // Hierchal Model
+    object * next_level;
+};
+
+static void render_object(object * curr_obj){
+    if(!curr_obj){return;}
+    
+    
+}
+
 static void error_callback(int error, const char *description)
 {
 	cerr << description << endl;
@@ -38,16 +57,22 @@ static void character_callback(GLFWwindow* window, unsigned int codepoint){
     char letter = (char) codepoint;
     switch (letter) {
         case 'x':
+            AngleX += 0.5;
             break;
         case 'X':
+            AngleX -= 0.5;
             break;
         case 'y':
+            AngleY += 0.5;
             break;
         case 'Y':
+            AngleY -= 0.5;
             break;
         case 'z':
+            AngleZ += 0.5;
             break;
         case 'Z':
+            AngleZ -= 0.5;
             break;
         default:
             break;
@@ -119,35 +144,35 @@ static void render()
 	// Apply projection.
 	P->pushMatrix();
 	P->multMatrix(glm::perspective((float)(45.0*M_PI/180.0), aspect, 0.01f, 100.0f));
-	// Apply camera transform.
-	MV->pushMatrix();
-	MV->translate(glm::vec3(0, 0, -3));
 	
-	// Draw cube.
+	// Begin to draw the robot
 	prog->bind();
     glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
     // Draw the torso
     MV->pushMatrix();
-        MV->translate(0.0,0.2,-2.0); // Where is the torso with respect to the world?
-        //MV->rotate(); // This rotation applies only to the torso
-        MV->scale(0.7,1.2,1.0); // This scale applies only to the torso
-        glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-        shape->draw(prog);
+        MV->translate(0.0,0.5,-1.0); // with respecct to the world
+        MV->rotate(RotAngle, AngleX, AngleY, AngleZ);
+        MV->pushMatrix(); // get the torso's mesh
+            MV->translate(0,0.0,0);
+            MV->scale(0.6,1.0,1.0);
+            glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
+            shape->draw(prog);
+        MV->popMatrix();
+        // Draw the head
+        MV->pushMatrix();
+            MV->translate(0.0,1.07,-1.0);
+            MV->rotate(RotAngle, AngleX, AngleY, AngleZ);
+            MV->pushMatrix();
+                MV->translate(0,0,0);
+                MV->scale(0.4); // remain a cube
+                glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
+                shape->draw(prog);
+            MV->popMatrix();
+        MV->popMatrix();
     MV->popMatrix();
-    // Draw the head
-    MV->pushMatrix();
-        MV->translate(0.0,1.0,-2.0); // Where is the head with respect to the world?
-        //MV->rotate(...); // This rotation applies only to the head
-        MV->scale(0.3); // This scale applies only to the head
-        glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-    MV->popMatrix();
-    // draw
-    shape->draw(prog);
-	progIM->unbind();
-
-	// Pop matrix stacks.
-	MV->popMatrix();
-	P->popMatrix();
+    // End to draw the robot
+    P->popMatrix();
+    progIM->unbind();
 	
 	GLSL::checkError(GET_FILE_LINE);
 }

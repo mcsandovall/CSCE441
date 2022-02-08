@@ -510,11 +510,6 @@ int main(int argc, char **argv)
 
         triangles.push_back(new Triangle_t(*(points[p]), *(points[p+1]), *(points[p+2])));
     }
-//    cout << endl;
-//    for(auto P : points){
-//        cout << P->x << " " << P->y << " " << P->z << endl;
-//    }
-    //cout << endl;
     // resize the bounded box
     bb.xmin = (scalar * bb.xmin) + translation[0], bb.xmax = (scalar * bb.xmax) + translation[0];
     bb.ymin = (scalar * bb.ymin) + translation[1], bb.ymax = (scalar * bb.ymax) + translation[1];
