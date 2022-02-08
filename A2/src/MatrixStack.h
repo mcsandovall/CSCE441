@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _MatrixStack_H_
-#define _MatrixStack_H_
+#ifndef MatrixStack_H
+#define MatrixStack_H
 
 #include <stack>
 #include <memory>

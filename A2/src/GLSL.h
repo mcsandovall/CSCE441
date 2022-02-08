@@ -5,11 +5,13 @@
 //
 
 #pragma once
-#ifndef __GLSL__
-#define __GLSL__
+#ifndef GLSL_H
+#define GLSL_H
 
 #define GLEW_STATIC
 #include <GL/glew.h>
+
+#include <vector>
 
 ///////////////////////////////////////////////////////////////////////////////
 // For printing out the current file and line number                         //
@@ -35,6 +37,7 @@ namespace GLSL {
 	void printShaderInfoLog(GLuint shader);
 	int textFileWrite(const char *filename, const char *s);
 	char *textFileRead(const char *filename);
+	bool validUTF8(std::vector<int> &data);
 }
 
 #endif

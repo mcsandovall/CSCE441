@@ -1,35 +1,17 @@
 {
   "_buildCommand2" : {
-    "command" : "prepareForIndexing",
-    "enableIndexBuildArena" : false,
-    "targets" : null
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildAndRun"
   },
   "buildCommand" : "build",
   "configuredTargets" : [
     {
-      "guid" : "1bf28bc8ba42438e0644b9d0fb54848112573de8a63e6f15ae0e5f7153b216a4"
-    },
-    {
-      "guid" : "1bf28bc8ba42438e0644b9d0fb548481ffa57f4c7fd5fec99042ff7c2f8d7e75"
-    },
-    {
-      "guid" : "1bf28bc8ba42438e0644b9d0fb548481263bd64ab058aa655de9240c3efa9147"
-    },
-    {
-      "guid" : "1bf28bc8ba42438e0644b9d0fb5484814619f9e95943121a4ae932301ce7b3c5"
-    },
-    {
-      "guid" : "1bf28bc8ba42438e0644b9d0fb548481e1ce48fab01114f2630e62ecb4bf1ed3"
-    },
-    {
-      "guid" : "1bf28bc8ba42438e0644b9d0fb54848130735c52651be99f6cbd8045b833a685"
-    },
-    {
-      "guid" : "1bf28bc8ba42438e0644b9d0fb548481ac8eb74051b3acb8a4eaf203774f8626"
+      "guid" : "1bf28bc8ba42438e0644b9d0fb548481eb57cf2e9edf26971503f71db4d1931e"
     }
   ],
   "containerPath" : "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A2/build/A2.xcodeproj",
-  "continueBuildingAfterErrors" : true,
+  "continueBuildingAfterErrors" : false,
   "enableIndexBuildArena" : false,
   "hideShellScriptEnvironment" : false,
   "parameters" : {
@@ -65,12 +47,11 @@
       }
     }
   },
-  "qos" : "default",
   "schemeCommand" : "launch",
   "schemeCommand2" : "launch",
   "shouldCollectMetrics" : false,
   "showNonLoggedProgress" : true,
-  "useDryRun" : true,
+  "useDryRun" : false,
   "useImplicitDependencies" : true,
   "useLegacyBuildLocations" : false,
   "useParallelTargets" : true
