@@ -23,84 +23,81 @@ shared_ptr<Program> prog;
 shared_ptr<Program> progIM; // immediate mode
 shared_ptr<Shape> shape;
 
-float AngleX = 1.0, AngleY = 1.0, AngleZ = 1.0, RotAngle = 0.2;
+float rx = 0.0, ry = 0.5, rz = 0.0, rA = 1;
 
 // make a struct for the object
 class object{
 public:
-    glm::vec3 ParentTranslation;
-    glm::vec3 MeshTranslation; // translation in relation to the parent
-    glm::vec3 Rotation; // rotation realtive to the parent
+    glm::vec3 JTranslation; // translation in relation to the joint
+    glm::vec3 MTranslation; // translation from joint to mesh
+    glm::vec3 CurrentJoint; // location of the current joint
     glm::vec3 Scale;  // scaling relative to parent
+    glm::vec3 Rotation = glm::vec3(0.0,0.0,0.0); // rotation to the object and its children
     
     // Hierchal Model
-    object * next_object;
-    object * next_level;
+    object * next_object = nullptr;
+    object * next_level = nullptr;
+    void setNext_level(object * obj){next_level = obj;}
+    void setNext_object(object * obj){next_object = obj;}
 };
 
-class robot{
+class Robot{
 public:
-    object * head = nullptr;
-    // Follwo the heirarchy
-    /* Torso
-        Head-> Upper Left Arm -> Upper Right arm -> Upper Left Leg -> Upper Right leg
-            Lower left arm -> lower right arm -> lower left leg -> lower right leg*/
-    class Torso : public object{
-    public:
-        Torso(){
-            ParentTranslation = glm::vec3(0,0.5,-1.0); // with respect to the world
-            MeshTranslation =  glm::vec3(0,0,0);
-            Rotation = glm::vec3(AngleX,AngleY,AngleZ);
-            Scale = glm::vec3(0.6,1.0,1.0);
+    object * header;
+    struct torso : object{
+        torso(){
+            JTranslation = glm::vec3(0,0.5,-3.5); // joint in respect to world
+            MTranslation = glm::vec3(0,0,0); // in relation to the joint
+            Scale = glm::vec3(1.0,1.5,1.0); // scale it vertically
+            Rotation = glm::vec3(rx,ry,rz);
         }
-        void SetNext_Object(object * obj){next_object = obj;}
-        void SetNext_Level(object * obj){next_level = obj;}
     };
-    class Head : public object{
-    public:
-        Head(){
-            ParentTranslation = glm::vec3(0,0.5,-1.0); // with respect to the world
-            MeshTranslation =  glm::vec3(0,0,0);
-            Rotation = glm::vec3(AngleX,AngleY,AngleZ);
-            Scale = glm::vec3(0.6,1.0,1.0);
+    struct head : object{
+        head(){
+            JTranslation = glm::vec3(0.0,1.0,0.0);
+            MTranslation = glm::vec3(0,0,0);
+            Scale = glm::vec3(0.5,0.5,1);
         }
-        void SetNext_Object(object * obj){next_object = obj;}
-        void SetNext_Level(object * obj){next_level = obj;}
     };
-    robot(){
-        Torso * t = new Torso(); Head * h = new Head();
-        t->SetNext_Level(h);
-        head = t;
-    }
-    ~robot(){
-        Destroy(head);
-    }
-    void Destroy(object * head){
-        if(!head) return;
-        
-        Destroy(head->next_level);
-        Destroy(head->next_object);
-        delete head;
+    struct arm : object{
+        arm(int sign){
+            if(sign){ // right arm means positive x direction for joint translation
+                JTranslation = glm::vec3(0.5,0.5,0);
+                MTranslation = glm::vec3(0.5,0,0);
+                Scale = glm::vec3(1.0,0.4,1.0);
+            }else{
+                JTranslation = glm::vec3(-1.5,0.5,0);
+                MTranslation = glm::vec3(0.5,0,0);
+                Scale = glm::vec3(1.0,0.4,1.0);
+            }
+        }
+    };
+    
+    Robot(){
+        object * t = new torso(), * h = new head(), * r_a = new arm(1), * la = new arm(0);
+        t->next_level = h; h->next_object = r_a; r_a->next_object = la;
+        header = t;
     }
 };
 
-static void render_object(object * curr_obj, MatrixStack * MV){
-    if(!curr_obj){return;}
-    MV->pushMatrix();
-        MV->translate(curr_obj->ParentTranslation); // with respecct to the world
-        MV->rotate(RotAngle, curr_obj->Rotation);
-        MV->pushMatrix(); // get the torso's mesh
-            MV->translate(curr_obj->MeshTranslation);
+void render_object(object * curr_obj, std::shared_ptr<MatrixStack> MV){
+    if(curr_obj){
+        MV->pushMatrix();
+        MV->translate(curr_obj->JTranslation);
+        //MV->rotate(rA,curr_obj->Rotation);
+            MV->pushMatrix();
+            MV->translate(curr_obj->MTranslation);
             MV->scale(curr_obj->Scale);
-            glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
+            glUniformMatrix4fv(prog->getUniform("MV"),1,GL_FALSE,glm::value_ptr(MV->topMatrix()));
             shape->draw(prog);
+            MV->popMatrix();
+        //recursively call the next level
+        render_object(curr_obj->next_level, MV);
+        //pop the matrix
         MV->popMatrix();
-    // go to next level
-    render_object(curr_obj->next_level, MV);
-    // pop the stack
-    MV->popMatrix();
-    // go to next object on the same level
-    render_object(curr_obj->next_object, MV);
+        //call the next object
+        render_object(curr_obj->next_object, MV);
+    }
 }
 
 static void error_callback(int error, const char *description)
@@ -118,22 +115,22 @@ static void character_callback(GLFWwindow* window, unsigned int codepoint){
     char letter = (char) codepoint;
     switch (letter) {
         case 'x':
-            AngleX += 0.5;
+            rx += 0.5;
             break;
         case 'X':
-            AngleX -= 0.5;
+            rx -= 0.5;
             break;
         case 'y':
-            AngleY += 0.5;
+            ry += 0.5;
             break;
         case 'Y':
-            AngleY -= 0.5;
+            ry -= 0.5;
             break;
         case 'z':
-            AngleZ += 0.5;
+            rz += 0.5;
             break;
         case 'Z':
-            AngleZ -= 0.5;
+            rz -= 0.5;
             break;
         default:
             break;
@@ -210,34 +207,10 @@ static void render()
     MV->translate(glm::vec3(0, 0, -3));
     
 	// Begin to draw the robot
+    Robot r;
 	prog->bind();
     glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
-    // Draw the torso
-    MV->pushMatrix();
-        MV->translate(0.0,0.5,-1.0); // with respecct to the world
-        MV->rotate(RotAngle, AngleX, AngleY, AngleZ);
-        MV->pushMatrix(); // get the torso's mesh
-            MV->translate(0,0.0,0);
-            MV->scale(0.6,1.0,1.0);
-            glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-            shape->draw(prog);
-        MV->popMatrix();
-        // Draw the head
-        MV->pushMatrix();
-            MV->translate(0.0,1.07,-1.0);
-            MV->rotate(RotAngle, AngleX, AngleY, AngleZ);
-            MV->pushMatrix();
-                MV->translate(0,0,0);
-                MV->scale(0.4); // remain a cube
-                glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-                shape->draw(prog);
-            MV->popMatrix();
-        MV->popMatrix();
-    MV->popMatrix();
-    
-    
-    // End to draw the robot
-    P->popMatrix();
+    render_object(r.header, MV);
     progIM->unbind();
 	
 	GLSL::checkError(GET_FILE_LINE);
