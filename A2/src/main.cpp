@@ -24,6 +24,7 @@ shared_ptr<Program> progIM; // immediate mode
 shared_ptr<Shape> shape;
 
 float rx = 0.0, ry = 1, rz = 0.0, rA = 0.5;
+float z = -3.5; // this is the regular z value for better view
 
 // make a struct for the object
 class object{
@@ -42,7 +43,7 @@ public:
         // get the stack
         MV->pushMatrix();
         MV->translate(JTranslation);
-        //MV->rotate(rA, Rotation);
+        //MV->rotate(rA, Rotation); Uncomment this once we get the angles figure out
         // push the rest of the rendering
             MV->pushMatrix();
             MV->translate(MTranslation);
@@ -68,10 +69,10 @@ public:
     object * header;
     struct torso : object{
         torso(){
-            JTranslation = glm::vec3(0,1.0,-3.5); // joint in respect to world
+            JTranslation = glm::vec3(0,1.0,z); // joint in respect to world
             MTranslation = glm::vec3(0,0,0); // in relation to the joint
             Scale = glm::vec3(1.0,1.5,1.0); // scale it vertically
-            Rotation = glm::vec3(0,1,0);
+            Rotation = glm::vec3(rx,ry,rz);
             next_level = new head();
         }
     };
@@ -79,6 +80,7 @@ public:
         head(){
             JTranslation = glm::vec3(0.0,1.0,0.0);
             MTranslation = glm::vec3(0,0,0);
+            //Rotation = glm::vec3(0,-ry,0);
             Scale = glm::vec3(0.5,0.5,1);
             next_object = new arm(1);
         }
@@ -174,6 +176,12 @@ static void character_callback(GLFWwindow* window, unsigned int codepoint){
             break;
         case 'Z':
             rz -= 0.5;
+            break;
+        case '.':
+            z += 0.5;
+            break;
+        case ',':
+            z -= 0.5;
             break;
         default:
             break;
