@@ -23,7 +23,7 @@ shared_ptr<Program> prog;
 shared_ptr<Program> progIM; // immediate mode
 shared_ptr<Shape> shape;
 
-float rx = 0.0, ry = 0.5, rz = 0.0, rA = 1;
+float rx = 0.0, ry = 1, rz = 0.0, rA = 0.5;
 
 // make a struct for the object
 class object{
@@ -39,6 +39,9 @@ public:
     object * next_level = nullptr;
     void setNext_level(object * obj){next_level = obj;}
     void setNext_object(object * obj){next_object = obj;}
+    void self_render(std::shared_ptr<MatrixStack> MV){
+        
+    }
 };
 
 class Robot{
@@ -46,10 +49,10 @@ public:
     object * header;
     struct torso : object{
         torso(){
-            JTranslation = glm::vec3(0,0.5,-3.5); // joint in respect to world
+            JTranslation = glm::vec3(0,1.0,-3.5); // joint in respect to world
             MTranslation = glm::vec3(0,0,0); // in relation to the joint
             Scale = glm::vec3(1.0,1.5,1.0); // scale it vertically
-            Rotation = glm::vec3(rx,ry,rz);
+            Rotation = glm::vec3(0,1,0);
         }
     };
     struct head : object{
@@ -65,17 +68,55 @@ public:
                 JTranslation = glm::vec3(0.5,0.5,0);
                 MTranslation = glm::vec3(0.5,0,0);
                 Scale = glm::vec3(1.0,0.4,1.0);
-            }else{
-                JTranslation = glm::vec3(-1.5,0.5,0);
-                MTranslation = glm::vec3(0.5,0,0);
+                next_level = new lower_arm(1);
+            }else{ // left arm
+                JTranslation = glm::vec3(-0.5,0.5,0);
+                MTranslation = glm::vec3(-0.5,0,0);
                 Scale = glm::vec3(1.0,0.4,1.0);
+                next_level = new lower_arm(0);
             }
         }
+        struct lower_arm : object{
+            lower_arm(int sign){ // right lower arm
+                if(sign){
+                    JTranslation = glm::vec3(1.0,0,0);
+                    MTranslation = glm::vec3(0.4,0,0);
+                    Scale = glm::vec3(0.8,0.3,1);
+                }else{
+                    JTranslation = glm::vec3(-1.0,0,0);
+                    MTranslation = glm::vec3(-0.4,0,0);
+                    Scale = glm::vec3(0.8,0.3,1);
+                }
+            }
+        };
+    };
+    struct leg : object{
+        leg(int sign){
+            if(sign){ // right leg
+                JTranslation = glm::vec3(0.25,-0.5,0);
+                MTranslation = glm::vec3(0,-0.8,0);
+                Scale = glm::vec3(0.45,1.2,1);
+                next_level = new lower_leg();
+            } // lef leg
+            else{
+                JTranslation = glm::vec3(-0.25,-0.5,0);
+                MTranslation = glm::vec3(0,-0.8,0);
+                Scale = glm::vec3(0.45,1.2,1);
+                next_level = new lower_leg();
+            }
+        }
+        struct lower_leg : object{
+            lower_leg(){
+                JTranslation = glm::vec3(0,-0.6,0);
+                MTranslation = glm::vec3(0,-1.3,0);
+                Scale = glm::vec3(0.4,1,1);
+            }
+        };
     };
     
     Robot(){
-        object * t = new torso(), * h = new head(), * r_a = new arm(1), * la = new arm(0);
-        t->next_level = h; h->next_object = r_a; r_a->next_object = la;
+        object * t = new torso(), * h = new head(), * r_a = new arm(1), * la = new arm(0), * rL = new leg(1), * lL = new leg(0);
+        t->next_level = h; h->next_object = r_a; r_a->next_object = la; la->next_object = rL; rL->next_object = lL;
         header = t;
     }
 };
