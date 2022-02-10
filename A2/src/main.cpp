@@ -30,7 +30,6 @@ class object{
 public:
     glm::vec3 JTranslation; // translation in relation to the joint
     glm::vec3 MTranslation; // translation from joint to mesh
-    glm::vec3 CurrentJoint; // location of the current joint
     glm::vec3 Scale;  // scaling relative to parent
     glm::vec3 Rotation = glm::vec3(0.0,0.0,0.0); // rotation to the object and its children
     
@@ -40,7 +39,27 @@ public:
     void setNext_level(object * obj){next_level = obj;}
     void setNext_object(object * obj){next_object = obj;}
     void self_render(std::shared_ptr<MatrixStack> MV){
-        
+        // get the stack
+        MV->pushMatrix();
+        MV->translate(JTranslation);
+        //MV->rotate(rA, Rotation);
+        // push the rest of the rendering
+            MV->pushMatrix();
+            MV->translate(MTranslation);
+            MV->scale(Scale);
+            glUniformMatrix4fv(prog->getUniform("MV"),1,GL_FALSE,glm::value_ptr(MV->topMatrix()));
+            shape->draw(prog);
+            MV->popMatrix();
+        // recursively call its children
+        if(next_level){
+            next_level->self_render(MV);
+        }
+        // pop the stack
+        MV->popMatrix();
+        // call the same level object
+        if(next_object){
+            next_object->self_render(MV);
+        }
     }
 };
 
@@ -53,6 +72,7 @@ public:
             MTranslation = glm::vec3(0,0,0); // in relation to the joint
             Scale = glm::vec3(1.0,1.5,1.0); // scale it vertically
             Rotation = glm::vec3(0,1,0);
+            next_level = new head();
         }
     };
     struct head : object{
@@ -60,6 +80,7 @@ public:
             JTranslation = glm::vec3(0.0,1.0,0.0);
             MTranslation = glm::vec3(0,0,0);
             Scale = glm::vec3(0.5,0.5,1);
+            next_object = new arm(1);
         }
     };
     struct arm : object{
@@ -69,11 +90,13 @@ public:
                 MTranslation = glm::vec3(0.5,0,0);
                 Scale = glm::vec3(1.0,0.4,1.0);
                 next_level = new lower_arm(1);
+                next_object = new arm(0);
             }else{ // left arm
                 JTranslation = glm::vec3(-0.5,0.5,0);
                 MTranslation = glm::vec3(-0.5,0,0);
                 Scale = glm::vec3(1.0,0.4,1.0);
                 next_level = new lower_arm(0);
+                next_object = new leg(1);
             }
         }
         struct lower_arm : object{
@@ -97,6 +120,7 @@ public:
                 MTranslation = glm::vec3(0,-0.8,0);
                 Scale = glm::vec3(0.45,1.2,1);
                 next_level = new lower_leg();
+                next_object = new leg(0);
             } // lef leg
             else{
                 JTranslation = glm::vec3(-0.25,-0.5,0);
@@ -106,7 +130,7 @@ public:
             }
         }
         struct lower_leg : object{
-            lower_leg(){
+            lower_leg(){ // lower left, same on both
                 JTranslation = glm::vec3(0,-0.6,0);
                 MTranslation = glm::vec3(0,-1.3,0);
                 Scale = glm::vec3(0.4,1,1);
@@ -115,31 +139,9 @@ public:
     };
     
     Robot(){
-        object * t = new torso(), * h = new head(), * r_a = new arm(1), * la = new arm(0), * rL = new leg(1), * lL = new leg(0);
-        t->next_level = h; h->next_object = r_a; r_a->next_object = la; la->next_object = rL; rL->next_object = lL;
-        header = t;
+        header = new torso();
     }
 };
-
-void render_object(object * curr_obj, std::shared_ptr<MatrixStack> MV){
-    if(curr_obj){
-        MV->pushMatrix();
-        MV->translate(curr_obj->JTranslation);
-        //MV->rotate(rA,curr_obj->Rotation);
-            MV->pushMatrix();
-            MV->translate(curr_obj->MTranslation);
-            MV->scale(curr_obj->Scale);
-            glUniformMatrix4fv(prog->getUniform("MV"),1,GL_FALSE,glm::value_ptr(MV->topMatrix()));
-            shape->draw(prog);
-            MV->popMatrix();
-        //recursively call the next level
-        render_object(curr_obj->next_level, MV);
-        //pop the matrix
-        MV->popMatrix();
-        //call the next object
-        render_object(curr_obj->next_object, MV);
-    }
-}
 
 static void error_callback(int error, const char *description)
 {
@@ -251,7 +253,7 @@ static void render()
     Robot r;
 	prog->bind();
     glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
-    render_object(r.header, MV);
+    r.header->self_render(MV);
     progIM->unbind();
 	
 	GLSL::checkError(GET_FILE_LINE);
