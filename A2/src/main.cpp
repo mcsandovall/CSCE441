@@ -23,7 +23,7 @@ shared_ptr<Program> prog;
 shared_ptr<Program> progIM; // immediate mode
 shared_ptr<Shape> shape;
 
-float rx = 0.0, ry = 1, rz = 0.0, rA = 0.5;
+float rA = 0; // this is the rotation angle
 float z = -3.5; // this is the regular z value for better view
 
 // make a struct for the object
@@ -33,26 +33,29 @@ public:
     glm::vec3 MTranslation; // translation from joint to mesh
     glm::vec3 Scale;  // scaling relative to parent
     glm::vec3 Rotation = glm::vec3(0.0,0.0,0.0); // rotation to the object and its children
-    
+    glm::vec3 TScale = glm::vec3(1,1,1);
     // Hierchal Model
     object * next_object = nullptr;
     object * next_level = nullptr;
+    object * parent = nullptr;
     void setNext_level(object * obj){next_level = obj;}
     void setNext_object(object * obj){next_object = obj;}
     void self_render(std::shared_ptr<MatrixStack> MV){
         // get the stack
         MV->pushMatrix();
         MV->translate(JTranslation);
-        //MV->rotate(rA, Rotation); Uncomment this once we get the angles figure out
+        MV->rotate(rA, Rotation);
         // push the rest of the rendering
             MV->pushMatrix();
             MV->translate(MTranslation);
             MV->scale(Scale);
+            MV->scale(TScale);
             glUniformMatrix4fv(prog->getUniform("MV"),1,GL_FALSE,glm::value_ptr(MV->topMatrix()));
             shape->draw(prog);
             MV->popMatrix();
         // recursively call its children
         if(next_level){
+            next_level->parent = this;
             next_level->self_render(MV);
         }
         // pop the stack
@@ -67,12 +70,14 @@ public:
 class Robot{
 public:
     object * header;
+    object * current_part;
+    vector<object* > body_parts;
     struct torso : object{
         torso(){
             JTranslation = glm::vec3(0,1.0,z); // joint in respect to world
             MTranslation = glm::vec3(0,0,0); // in relation to the joint
             Scale = glm::vec3(1.0,1.5,1.0); // scale it vertically
-            Rotation = glm::vec3(rx,ry,rz);
+            Rotation = glm::vec3(0,1,0);
             next_level = new head();
         }
     };
@@ -80,7 +85,7 @@ public:
         head(){
             JTranslation = glm::vec3(0.0,1.0,0.0);
             MTranslation = glm::vec3(0,0,0);
-            //Rotation = glm::vec3(0,-ry,0);
+            Rotation = glm::vec3(0,1,0);
             Scale = glm::vec3(0.5,0.5,1);
             next_object = new arm(1);
         }
@@ -90,11 +95,13 @@ public:
             if(sign){ // right arm means positive x direction for joint translation
                 JTranslation = glm::vec3(0.5,0.5,0);
                 MTranslation = glm::vec3(0.5,0,0);
+                Rotation = glm::vec3(0,1,0);
                 Scale = glm::vec3(1.0,0.4,1.0);
                 next_level = new lower_arm(1);
                 next_object = new arm(0);
             }else{ // left arm
                 JTranslation = glm::vec3(-0.5,0.5,0);
+                Rotation = glm::vec3(0,1,0);
                 MTranslation = glm::vec3(-0.5,0,0);
                 Scale = glm::vec3(1.0,0.4,1.0);
                 next_level = new lower_arm(0);
@@ -106,10 +113,12 @@ public:
                 if(sign){
                     JTranslation = glm::vec3(1.0,0,0);
                     MTranslation = glm::vec3(0.4,0,0);
+                    Rotation = glm::vec3(0,1,0);
                     Scale = glm::vec3(0.8,0.3,1);
                 }else{
                     JTranslation = glm::vec3(-1.0,0,0);
                     MTranslation = glm::vec3(-0.4,0,0);
+                    Rotation = glm::vec3(0,1,0);
                     Scale = glm::vec3(0.8,0.3,1);
                 }
             }
@@ -122,12 +131,14 @@ public:
                 MTranslation = glm::vec3(0,-0.8,0);
                 Scale = glm::vec3(0.45,1.2,1);
                 next_level = new lower_leg();
+                Rotation = glm::vec3(0,1,0);
                 next_object = new leg(0);
             } // lef leg
             else{
                 JTranslation = glm::vec3(-0.25,-0.5,0);
                 MTranslation = glm::vec3(0,-0.8,0);
                 Scale = glm::vec3(0.45,1.2,1);
+                Rotation = glm::vec3(0,1,0);
                 next_level = new lower_leg();
             }
         }
@@ -135,15 +146,33 @@ public:
             lower_leg(){ // lower left, same on both
                 JTranslation = glm::vec3(0,-0.6,0);
                 MTranslation = glm::vec3(0,-1.3,0);
+                Rotation = glm::vec3(0,1,0);
                 Scale = glm::vec3(0.4,1,1);
             }
         };
     };
     
+    void fillArray(object * head){
+        if(!header) return;
+        body_parts.push_back(head);
+        
+        if(head->next_level){
+            fillArray(head->next_level);
+        }
+        
+        if(head->next_object){
+            fillArray(head->next_object);
+        }
+    }
+    
     Robot(){
         header = new torso();
+        current_part = header;
+        fillArray(header);
     }
 };
+
+Robot * robot = new Robot();
 
 static void error_callback(int error, const char *description)
 {
@@ -156,32 +185,41 @@ static void key_callback(GLFWwindow *window, int key, int scancode, int action, 
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 }
+
+int Bp = 0; // body part count
 static void character_callback(GLFWwindow* window, unsigned int codepoint){
+    // traverse the body part array in the robot class
+    robot->current_part = robot->body_parts[Bp];
+    // use the robot part to modify its attributes
     char letter = (char) codepoint;
     switch (letter) {
         case 'x':
-            rx += 0.5;
+            robot->current_part->Rotation.x += 0.5;
             break;
         case 'X':
-            rx -= 0.5;
+            robot->current_part->Rotation.x -= 0.5;
             break;
         case 'y':
-            ry += 0.5;
+            robot->current_part->Rotation.y += 0.5;
             break;
         case 'Y':
-            ry -= 0.5;
+            robot->current_part->Rotation.y -= 0.5;
             break;
         case 'z':
-            rz += 0.5;
+            robot->current_part->Rotation.z += 0.5;
             break;
         case 'Z':
-            rz -= 0.5;
+            robot->current_part->Rotation.z -= 0.5;
             break;
-        case '.':
-            z += 0.5;
+        case '.': // traverse the heirarchy forward
+            Bp = ++Bp % (robot->body_parts.size()-1);
+            robot->current_part = robot->body_parts[Bp];
             break;
-        case ',':
-            z -= 0.5;
+        case ',': // traverse the heirachy backwards
+            if(Bp == 0){
+                Bp = robot->body_parts.size();
+            }
+            robot->current_part = robot->body_parts[--Bp % (robot->body_parts.size()-1)];
             break;
         default:
             break;
@@ -258,10 +296,13 @@ static void render()
     MV->translate(glm::vec3(0, 0, -3));
     
 	// Begin to draw the robot
-    Robot r;
 	prog->bind();
     glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
-    r.header->self_render(MV);
+    double t = glfwGetTime(), a = 0.05, f = 2.0;
+    double s = (1 + (a*0.5) + ((a*0.5)* std::sin(2.0 * (3.14) * f * t)));
+    robot->header->self_render(MV);
+    robot->current_part->TScale = glm::vec3(s,s,s);
+    //robot->current_part->Scale *= s;
     progIM->unbind();
 	
 	GLSL::checkError(GET_FILE_LINE);
