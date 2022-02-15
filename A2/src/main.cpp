@@ -22,6 +22,7 @@ string RES_DIR = ""; // Where data files live
 shared_ptr<Program> prog;
 shared_ptr<Program> progIM; // immediate mode
 shared_ptr<Shape> shape;
+shared_ptr<Shape> sphere_shape;
 
 float rA = 0; // this is the rotation angle
 float z = -3.5; // this is the regular z value for better view
@@ -247,7 +248,12 @@ static void init()
 	// Initialize mesh.
 	shape = make_shared<Shape>();
 	shape->loadMesh(RES_DIR + "cube.obj");
+    // make another shape for the sphere
+    sphere_shape = make_shared<Shape>();
+    // load the shpere
+    sphere_shape->loadMesh(RES_DIR + "sphere.obj");
 	shape->init();
+    sphere_shape->init();
 	
 	// Initialize the GLSL programs.
 	prog = make_shared<Program>();
@@ -328,7 +334,7 @@ int main(int argc, char **argv)
 	// glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	// Create a windowed mode window and its OpenGL context.
-	window = glfwCreateWindow(640, 480, "YOUR NAME", NULL, NULL);
+	window = glfwCreateWindow(640, 480, "Mario Sandoval", NULL, NULL);
 	if(!window) {
 		glfwTerminate();
 		return -1;
