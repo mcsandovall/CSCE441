@@ -24,7 +24,7 @@ shared_ptr<Program> progIM; // immediate mode
 shared_ptr<Shape> shape;
 shared_ptr<Shape> sphere_shape;
 
-float rA = 0; // this is the rotation angle
+float rA = 0.5; // this is the rotation angle
 float z = -3.5; // this is the regular z value for better view
 
 // make a struct for the object
