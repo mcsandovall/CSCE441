@@ -46,6 +46,14 @@ public:
         MV->pushMatrix();
         MV->translate(JTranslation);
         MV->rotate(rA, Rotation);
+        
+        // Draw the sphere only if the node has a next_level (no head or lower limbs)
+        MV->pushMatrix();
+        MV->scale(0.5);
+        glUniformMatrix4fv(prog->getUniform("MV"),1,GL_FALSE,glm::value_ptr(MV->topMatrix()));
+            sphere_shape->draw(prog);
+        MV->popMatrix();
+
         // push the rest of the rendering
             MV->pushMatrix();
             MV->translate(MTranslation);
@@ -54,6 +62,7 @@ public:
             glUniformMatrix4fv(prog->getUniform("MV"),1,GL_FALSE,glm::value_ptr(MV->topMatrix()));
             shape->draw(prog);
             MV->popMatrix();
+        
         // recursively call its children
         if(next_level){
             next_level->parent = this;
@@ -128,16 +137,16 @@ public:
     struct leg : object{
         leg(int sign){
             if(sign){ // right leg
-                JTranslation = glm::vec3(0.25,-0.5,0);
-                MTranslation = glm::vec3(0,-0.8,0);
+                JTranslation = glm::vec3(0.25,-0.7,0);
+                MTranslation = glm::vec3(0,-0.65,0);
                 Scale = glm::vec3(0.45,1.2,1);
                 next_level = new lower_leg();
                 Rotation = glm::vec3(0,1,0);
                 next_object = new leg(0);
             } // lef leg
             else{
-                JTranslation = glm::vec3(-0.25,-0.5,0);
-                MTranslation = glm::vec3(0,-0.8,0);
+                JTranslation = glm::vec3(-0.25,-0.7,0);
+                MTranslation = glm::vec3(0,-0.65,0);
                 Scale = glm::vec3(0.45,1.2,1);
                 Rotation = glm::vec3(0,1,0);
                 next_level = new lower_leg();
@@ -145,8 +154,8 @@ public:
         }
         struct lower_leg : object{
             lower_leg(){ // lower left, same on both
-                JTranslation = glm::vec3(0,-0.6,0);
-                MTranslation = glm::vec3(0,-1.3,0);
+                JTranslation = glm::vec3(0,-1.2,0);
+                MTranslation = glm::vec3(0,-0.5,0);
                 Rotation = glm::vec3(0,1,0);
                 Scale = glm::vec3(0.4,1,1);
             }
@@ -311,6 +320,7 @@ static void render()
     //robot->current_part->Scale *= s;
     progIM->unbind();
 	
+    MV->popMatrix();
 	GLSL::checkError(GET_FILE_LINE);
 }
 
