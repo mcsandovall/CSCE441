@@ -212,7 +212,7 @@ static void character_callback(GLFWwindow* window, unsigned int codepoint){
             robot->current_part->Rotation.z -= 0.5;
             break;
         case '.': // traverse the heirarchy forward
-            Bp = ++Bp % (robot->body_parts.size()-1);
+            Bp = ++Bp % (robot->body_parts.size());
             robot->current_part = robot->body_parts[Bp];
             break;
         case ',': // traverse the heirachy backwards
