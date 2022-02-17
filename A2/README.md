@@ -6,7 +6,7 @@ email: mcsandoval@tamu.edu
 
 Highest Completed Task: Task 6 assigmnment done
 
-Recurise transformation:
+Recurise transformation slides:
 http://titan.csit.rmit.edu.au/~e20068/teaching/i3dg&a/2015/hierarchical-modelling.html
 
-Rotation angle at line 23
+Rotation angle at line 27
