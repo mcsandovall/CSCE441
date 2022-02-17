@@ -58,12 +58,12 @@ public:
         // push the rest of the rendering
             MV->pushMatrix();
             MV->translate(MTranslation);
-            MV->scale(Scale);
-            MV->scale(TScale);
             if(rotatePlace){ // this is to rotate in place
                 double t = glfwGetTime();
-                MV->rotate(t,1.0,1.0,1.0);
+                MV->rotate(t,0.0,1.0,0.0);
             }
+            MV->scale(Scale);
+            MV->scale(TScale);
             glUniformMatrix4fv(prog->getUniform("MV"),1,GL_FALSE,glm::value_ptr(MV->topMatrix()));
             shape->draw(prog);
             MV->popMatrix();
