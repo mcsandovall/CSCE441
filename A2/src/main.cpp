@@ -36,6 +36,7 @@ public:
     glm::vec3 Rotation = glm::vec3(0.0,0.0,0.0); // rotation to the object and its children
     glm::vec3 TScale = glm::vec3(1,1,1);
     // Hierchal Model
+    bool rotatePlace = false;
     object * next_object = nullptr;
     object * next_level = nullptr;
     object * parent = nullptr;
@@ -47,7 +48,7 @@ public:
         MV->translate(JTranslation);
         MV->rotate(rA, Rotation);
         
-        // Draw the sphere only if the node has a next_level (no head or lower limbs)
+        // Draw the sphere
         MV->pushMatrix();
         MV->scale(0.5);
         glUniformMatrix4fv(prog->getUniform("MV"),1,GL_FALSE,glm::value_ptr(MV->topMatrix()));
@@ -59,6 +60,10 @@ public:
             MV->translate(MTranslation);
             MV->scale(Scale);
             MV->scale(TScale);
+            if(rotatePlace){ // this is to rotate in place
+                double t = glfwGetTime();
+                MV->rotate(t,1.0,1.0,1.0);
+            }
             glUniformMatrix4fv(prog->getUniform("MV"),1,GL_FALSE,glm::value_ptr(MV->topMatrix()));
             shape->draw(prog);
             MV->popMatrix();
@@ -95,6 +100,7 @@ public:
         head(){
             JTranslation = glm::vec3(0.0,1.0,0.0);
             MTranslation = glm::vec3(0,0,0);
+            rotatePlace = true;
             Rotation = glm::vec3(0,1,0);
             Scale = glm::vec3(0.5,0.5,1);
             next_object = new arm(1);
@@ -140,6 +146,7 @@ public:
                 JTranslation = glm::vec3(0.25,-0.7,0);
                 MTranslation = glm::vec3(0,-0.65,0);
                 Scale = glm::vec3(0.45,1.2,1);
+                rotatePlace = true;
                 next_level = new lower_leg();
                 Rotation = glm::vec3(0,1,0);
                 next_object = new leg(0);
