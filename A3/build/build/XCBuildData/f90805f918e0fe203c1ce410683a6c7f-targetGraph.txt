@@ -1,0 +1,6 @@
+Target dependency graph (3 targets)
+glfw in A3, no dependencies
+ZERO_CHECK in A3, no dependencies
+A3 in A3, depends on:
+glfw in A3 (explicit)
+ZERO_CHECK in A3 (explicit)
