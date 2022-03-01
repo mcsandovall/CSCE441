@@ -73,9 +73,10 @@ static void cursor_position_callback(GLFWwindow* window, double xmouse, double y
 	}
 }
 
+// This function is called keyboard letter is pressed
 static void char_callback(GLFWwindow *window, unsigned int key)
 {
-	keyToggles[key] = !keyToggles[key];
+    keyToggles[key] = !keyToggles[key];
 }
 
 // If the window is resized, capture the new size and reset the viewport
@@ -125,6 +126,12 @@ static void init()
 	prog->addAttribute("aNor");
 	prog->addUniform("MV");
 	prog->addUniform("P");
+    prog->addUniform("MVit"); // add the uniform
+    prog->addUniform("lightPos");
+    prog->addUniform("ka");
+    prog->addUniform("kd");
+    prog->addUniform("ks");
+    prog->addUniform("s");
 	prog->setVerbose(false);
 	
 	camera = make_shared<Camera>();
@@ -152,6 +159,19 @@ static void render()
 	} else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+    // task 2 implement the use for cycles
+    if(keyToggles[(unsigned) 's']){ // cycle shaders
+        // forward shader
+    }
+    if(keyToggles[(unsigned) 'S']){
+        // backwards shader
+    }
+    if(keyToggles[(unsigned) 'm']){ // cycle material
+        // forward material
+    }
+    if(keyToggles[(unsigned) 'M']){
+        // backwards material
+    }
 	
 	// Get current frame buffer size.
 	int width, height;
@@ -165,6 +185,7 @@ static void render()
 	}
 	
 	// Matrix stacks
+    glm::mat4 MVit;
 	auto P = make_shared<MatrixStack>();
 	auto MV = make_shared<MatrixStack>();
 	
@@ -173,13 +194,25 @@ static void render()
 	camera->applyProjectionMatrix(P);
 	MV->pushMatrix();
 	camera->applyViewMatrix(MV);
-	
+    // Task 1 transform the bunny
+    MV->scale(0.5);
+    MV->translate(0.0f,-1.0f,0.0f);
+    
+    // Get the inverse transpose
+    MVit = glm::inverse(glm::transpose(MV->topMatrix()));
+    
+    // draw the bunny
 	prog->bind();
 	glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
-	glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
+    glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
+    glUniformMatrix4fv(prog->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
+    glUniform3f(prog->getUniform("lightPos"), 1.0f, 1.0f, 1.0f);
+    glUniform3f(prog->getUniform("ka"), 0.2f, 0.2f, 0.2f);
+    glUniform3f(prog->getUniform("kd"), 0.5f, 0.5f, 0.7f);
+    glUniform3f(prog->getUniform("ks"), 0.1f, 0.1f, 0.1f);
+    glUniform1f(prog->getUniform("s"), 200.0f);
 	shape->draw(prog);
-	prog->unbind();
-	
+    prog->unbind();
 	MV->popMatrix();
 	P->popMatrix();
 	
