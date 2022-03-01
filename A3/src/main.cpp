@@ -20,6 +20,7 @@
 #include "MatrixStack.h"
 #include "Program.h"
 #include "Shape.h"
+#include <vector>
 
 using namespace std;
 
@@ -29,7 +30,48 @@ bool OFFLINE = false;
 
 shared_ptr<Camera> camera;
 shared_ptr<Program> prog;
+shared_ptr<Program> prog2; 
 shared_ptr<Shape> shape;
+
+// make the class for the materials
+class Material{
+public:
+    glm::vec3 ka,kd,ks;
+    float s;
+    Material() : ka(0.0,0.0,0.0), kd(0.0,0.0,0.0), ks(0.0,0.0,0.0), s(0) {} // constructor
+    Material(glm::vec3 _ka, glm::vec3 _kd, glm::vec3 _ks, float _s) : ka(_ka), kd(_kd), ks(_ks), s(_s) {}
+};
+
+// define the db for the materials
+vector<Material> Materials;
+int material_index = 0;
+
+static void define_materials(){
+    // in here i will define the materials for the objects
+    glm::vec3 _ka, _kd, _ks;
+    float s;
+
+    // first material
+    _ka = glm::vec3(0.2,0.2,0.2);
+    _kd = glm::vec3(0.8,0.7,0.7);
+    _ks = glm::vec3(1.0,0.9,0.8);
+    s = 200;
+    Materials.push_back(Material(_ka,_kd,_ks,s));
+
+    // second material blue
+    _ka = glm::vec3(0.1,0.1,0.1);
+    _kd = glm::vec3(0.1,0.1,1.0);
+    _ks = glm::vec3(0.1,1.0,0.1);
+    s = 100;
+    Materials.push_back(Material(_ka,_kd,_ks,s));
+
+    // third material grey
+    _ka = glm::vec3(0.1,0.1,0.1);
+    _kd = glm::vec3(0.5,0.5,0.7);
+    _ks = glm::vec3(0.1,0.1,0.1);
+    s = 200;
+    Materials.push_back(Material(_ka,_kd,_ks,s));
+}
 
 bool keyToggles[256] = {false}; // only for English keyboards!
 
@@ -76,6 +118,17 @@ static void cursor_position_callback(GLFWwindow* window, double xmouse, double y
 // This function is called keyboard letter is pressed
 static void char_callback(GLFWwindow *window, unsigned int key)
 {
+    
+    if(keyToggles[(unsigned) 'm']){ // cycle material
+        // forward material
+        material_index = ++material_index % (Materials.size());
+    }
+    if(keyToggles[(unsigned) 'M']){
+        // backwards material
+        if(material_index == 0) material_index = Materials.size()-1;
+        --material_index;
+    }
+    
     keyToggles[key] = !keyToggles[key];
 }
 
@@ -126,12 +179,6 @@ static void init()
 	prog->addAttribute("aNor");
 	prog->addUniform("MV");
 	prog->addUniform("P");
-    prog->addUniform("MVit"); // add the uniform
-    prog->addUniform("lightPos");
-    prog->addUniform("ka");
-    prog->addUniform("kd");
-    prog->addUniform("ks");
-    prog->addUniform("s");
 	prog->setVerbose(false);
 	
 	camera = make_shared<Camera>();
@@ -159,19 +206,6 @@ static void render()
 	} else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
-    // task 2 implement the use for cycles
-    if(keyToggles[(unsigned) 's']){ // cycle shaders
-        // forward shader
-    }
-    if(keyToggles[(unsigned) 'S']){
-        // backwards shader
-    }
-    if(keyToggles[(unsigned) 'm']){ // cycle material
-        // forward material
-    }
-    if(keyToggles[(unsigned) 'M']){
-        // backwards material
-    }
 	
 	// Get current frame buffer size.
 	int width, height;
@@ -203,16 +237,13 @@ static void render()
     
     // draw the bunny
 	prog->bind();
-	glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
+    glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
     glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-    glUniformMatrix4fv(prog->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
-    glUniform3f(prog->getUniform("lightPos"), 1.0f, 1.0f, 1.0f);
-    glUniform3f(prog->getUniform("ka"), 0.2f, 0.2f, 0.2f);
-    glUniform3f(prog->getUniform("kd"), 0.5f, 0.5f, 0.7f);
-    glUniform3f(prog->getUniform("ks"), 0.1f, 0.1f, 0.1f);
-    glUniform1f(prog->getUniform("s"), 200.0f);
-	shape->draw(prog);
+    shape->draw(prog);
     prog->unbind();
+    
+    // another program with the previous shaders
+    
 	MV->popMatrix();
 	P->popMatrix();
 	
@@ -233,6 +264,9 @@ int main(int argc, char **argv)
 	}
 	RESOURCE_DIR = argv[1] + string("/");
 	
+    // add materials to the database
+    define_materials();
+    
 	// Optional argument
 	if(argc >= 3) {
 		OFFLINE = atoi(argv[2]) != 0;
@@ -245,7 +279,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	// Create a windowed mode window and its OpenGL context.
-	window = glfwCreateWindow(640, 480, "YOUR NAME", NULL, NULL);
+	window = glfwCreateWindow(640, 480, "Mario Sandoval", NULL, NULL);
 	if(!window) {
 		glfwTerminate();
 		return -1;
