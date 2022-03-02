@@ -13,4 +13,3 @@ void main()
     gl_Position = P * (MV * aPos);
     color = 0.5 * aNor + vec3(0.5, 0.5, 0.5);
 }
-

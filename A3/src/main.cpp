@@ -24,6 +24,11 @@
 
 using namespace std;
 
+enum SHADER_TYPE{
+    NORMAL,
+    PHONG
+};
+
 GLFWwindow *window; // Main application window
 string RESOURCE_DIR = "./"; // Where the resources are loaded from
 bool OFFLINE = false;
@@ -41,6 +46,82 @@ public:
     Material() : ka(0.0,0.0,0.0), kd(0.0,0.0,0.0), ks(0.0,0.0,0.0), s(0) {} // constructor
     Material(glm::vec3 _ka, glm::vec3 _kd, glm::vec3 _ks, float _s) : ka(_ka), kd(_kd), ks(_ks), s(_s) {}
 };
+
+class Shader{
+public:
+    shared_ptr<Program> program;
+    shared_ptr<Shader> next, prev;
+    SHADER_TYPE type;
+    Shader(string vertex_file, string frag_file, SHADER_TYPE _type) : next(nullptr), prev(nullptr){
+        program = make_shared<Program>();
+        program->setShaderNames(RESOURCE_DIR + vertex_file, RESOURCE_DIR + frag_file);
+        program->setVerbose(true);
+        program->init();
+        program->addAttribute("aPos");
+        program->addAttribute("aNor");
+        program->addUniform("MV");
+        program->addUniform("P");
+        if(type == PHONG){
+            prog->addUniform("MVit"); // add the uniform
+            prog->addUniform("lightPos");
+            prog->addUniform("ka");
+            prog->addUniform("kd");
+            prog->addUniform("ks");
+            prog->addUniform("s");
+            type = _type;
+        }
+        type = _type;
+        program->setVerbose(false);
+    }
+    void render(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
+        program->bind();
+        glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
+        glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
+        if(type == PHONG){
+            // make the MVit
+            glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
+            glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
+            glUniform3f(prog->getUniform("lightPos"), 1.0f, 1.0f, 1.0f);
+            glUniform3f(prog->getUniform("ka"), 0.1f, 0.1f, 0.1f);
+            glUniform3f(prog->getUniform("kd"), 0.5f, 0.5f, 0.7f);
+            glUniform3f(prog->getUniform("ks"), 0.1f, 0.1f, 0.1f);
+            glUniform1f(prog->getUniform("s"), 200.0f);
+        }
+        shape->draw(program);
+        program->unbind();
+    }
+};
+
+class Shader_Collection{
+public:
+    shared_ptr<Shader> header, current;
+    Shader_Collection() : header(nullptr), current(nullptr){}
+    void push_back(string vert_file, string frag_file, SHADER_TYPE _type){
+        shared_ptr<Shader> newShader = make_shared<Shader>(vert_file,frag_file, _type);
+        if(!header){
+            header = newShader;
+            current = newShader;
+            return;
+        }
+        shared_ptr<Shader> _current  = header;
+        while(_current->next != nullptr){
+            _current = current->next;
+        }
+        header->prev = newShader;
+        newShader->prev = _current;
+        newShader->next = header;
+        _current->next = newShader;
+    }
+    void move_forward(){
+        current = current->next;
+    }
+    void move_backward(){
+        current = current->prev;
+    }
+};
+
+// make a pointer to a shared collection
+shared_ptr<Shader_Collection> shader_collection;
 
 // define the db for the materials
 vector<Material> Materials;
@@ -171,15 +252,8 @@ static void init()
 	// Enable z-buffer test.
 	glEnable(GL_DEPTH_TEST);
 
-	prog = make_shared<Program>();
-	prog->setShaderNames(RESOURCE_DIR + "normal_vert.glsl", RESOURCE_DIR + "normal_frag.glsl");
-	prog->setVerbose(true);
-	prog->init();
-	prog->addAttribute("aPos");
-	prog->addAttribute("aNor");
-	prog->addUniform("MV");
-	prog->addUniform("P");
-	prog->setVerbose(false);
+    shader_collection = make_shared<Shader_Collection>();
+    shader_collection->push_back("normal_vert.glsl", "normal_frag.glsl",NORMAL);
 	
 	camera = make_shared<Camera>();
 	camera->setInitDistance(2.0f); // Camera's initial Z translation
@@ -236,13 +310,7 @@ static void render()
     MVit = glm::inverse(glm::transpose(MV->topMatrix()));
     
     // draw the bunny
-	prog->bind();
-    glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
-    glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-    shape->draw(prog);
-    prog->unbind();
-    
-    // another program with the previous shaders
+    shader_collection->current->render(P, MV);
     
 	MV->popMatrix();
 	P->popMatrix();
