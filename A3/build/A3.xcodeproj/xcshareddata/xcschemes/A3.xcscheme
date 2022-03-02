@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FB71FC22295740D7B88B329B"
+               BlueprintIdentifier = "6D392561249F4F91959E291A"
                BuildableName = "A3"
                BlueprintName = "A3"
                ReferencedContainer = "container:build/A3.xcodeproj">
@@ -44,7 +44,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FB71FC22295740D7B88B329B"
+            BlueprintIdentifier = "6D392561249F4F91959E291A"
             BuildableName = "A3"
             BlueprintName = "A3"
             ReferencedContainer = "container:build/A3.xcodeproj">
@@ -67,7 +67,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FB71FC22295740D7B88B329B"
+            BlueprintIdentifier = "6D392561249F4F91959E291A"
             BuildableName = "A3"
             BlueprintName = "A3"
             ReferencedContainer = "container:build/A3.xcodeproj">

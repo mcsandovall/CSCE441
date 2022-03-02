@@ -63,13 +63,13 @@ public:
         program->addAttribute("aNor");
         program->addUniform("MV");
         program->addUniform("P");
-        if(type == PHONG){
-            prog->addUniform("MVit"); // add the uniform
-            prog->addUniform("lightPos");
-            prog->addUniform("ka");
-            prog->addUniform("kd");
-            prog->addUniform("ks");
-            prog->addUniform("s");
+        if(_type == PHONG){
+            program->addUniform("MVit"); // add the uniform
+            program->addUniform("lightPos");
+            program->addUniform("ka");
+            program->addUniform("kd");
+            program->addUniform("ks");
+            program->addUniform("s");
             type = _type;
         }
         type = _type;
@@ -83,11 +83,11 @@ public:
             // make the MVit
             glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
             glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
-            glUniform3f(prog->getUniform("lightPos"), 1.0f, 1.0f, 1.0f);
-            glUniform3f(prog->getUniform("ka"), 0.1f, 0.1f, 0.1f);
-            glUniform3f(prog->getUniform("kd"), 0.5f, 0.5f, 0.7f);
-            glUniform3f(prog->getUniform("ks"), 0.1f, 0.1f, 0.1f);
-            glUniform1f(prog->getUniform("s"), 200.0f);
+            glUniform3f(program->getUniform("lightPos"), 1.0f, 1.0f, 1.0f);
+            glUniform3f(program->getUniform("ka"), materials[m_index].ka.x,materials[m_index].ka.y,materials[m_index].ka.z);
+            glUniform3f(program->getUniform("kd"), materials[m_index].kd.x,materials[m_index].kd.y,materials[m_index].kd.z);
+            glUniform3f(program->getUniform("ks"), materials[m_index].ks.x,materials[m_index].ks.y,materials[m_index].ks.z);
+            glUniform1f(program->getUniform("s"), materials[m_index].s);
         }
         shape->draw(program);
         program->unbind();
@@ -106,30 +106,26 @@ public:
 
 class Shader_Collection{
 public:
-    shared_ptr<Shader> header, current;
-    Shader_Collection() : header(nullptr), current(nullptr){}
+    shared_ptr<Shader> header, tail, current;
+    Shader_Collection() : header(nullptr),tail(nullptr), current(nullptr){}
     void push_back(string vert_file, string frag_file, SHADER_TYPE _type){
         shared_ptr<Shader> newShader = make_shared<Shader>(vert_file,frag_file, _type);
         if(!header){ // make the first shader
             header = newShader;
-            header->prev = header; header->next = header;
+            tail = newShader;
             current = newShader;
-            current->prev = current; current->next = current;
             return;
         }
-        shared_ptr<Shader> _current  = header;
-        while(_current->next != nullptr){
-            _current = current->next;
-        }
-        header->prev = newShader;
-        newShader->prev = _current;
-        newShader->next = header;
-        _current->next = newShader;
+        tail->next = newShader;
+        newShader->prev = tail;
+        tail = tail->next;
     }
     void move_forward(){
+        if(!current->next)return;
         current = current->next;
     }
     void move_backward(){
+        if(!current->prev)return;
         current = current->prev;
     }
 };
@@ -137,11 +133,7 @@ public:
 // make a pointer to a shared collection
 shared_ptr<Shader_Collection> shader_collection;
 
-// define the db for the materials
-vector<Material> Materials;
-int material_index = 0;
-
-static void define_materials(){
+static void define_materials(vector<Material> &materials){
     // in here i will define the materials for the objects
     glm::vec3 _ka, _kd, _ks;
     float s;
@@ -151,21 +143,21 @@ static void define_materials(){
     _kd = glm::vec3(0.8,0.7,0.7);
     _ks = glm::vec3(1.0,0.9,0.8);
     s = 200;
-    Materials.push_back(Material(_ka,_kd,_ks,s));
+    materials.push_back(Material(_ka,_kd,_ks,s));
 
     // second material blue
     _ka = glm::vec3(0.1,0.1,0.1);
     _kd = glm::vec3(0.1,0.1,1.0);
     _ks = glm::vec3(0.1,1.0,0.1);
     s = 100;
-    Materials.push_back(Material(_ka,_kd,_ks,s));
+    materials.push_back(Material(_ka,_kd,_ks,s));
 
     // third material grey
     _ka = glm::vec3(0.1,0.1,0.1);
     _kd = glm::vec3(0.5,0.5,0.7);
     _ks = glm::vec3(0.1,0.1,0.1);
     s = 200;
-    Materials.push_back(Material(_ka,_kd,_ks,s));
+    materials.push_back(Material(_ka,_kd,_ks,s));
 }
 
 bool keyToggles[256] = {false}; // only for English keyboards!
@@ -273,6 +265,8 @@ static void init()
     shader_collection = make_shared<Shader_Collection>();
     shader_collection->push_back("normal_vert.glsl", "normal_frag.glsl",NORMAL);
     shader_collection->push_back("phong_vert.glsl", "phong_frag.glsl", PHONG);
+    // set the materials for the phong shader
+    define_materials(shader_collection->tail->materials);
 	
 	camera = make_shared<Camera>();
 	camera->setInitDistance(2.0f); // Camera's initial Z translation
@@ -346,9 +340,6 @@ int main(int argc, char **argv)
 		return 0;
 	}
 	RESOURCE_DIR = argv[1] + string("/");
-	
-    // add materials to the database
-    define_materials();
     
 	// Optional argument
 	if(argc >= 3) {
