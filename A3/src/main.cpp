@@ -52,6 +52,8 @@ public:
     shared_ptr<Program> program;
     shared_ptr<Shader> next, prev;
     SHADER_TYPE type;
+    vector<Material> materials;
+    int m_index = 0;
     Shader(string vertex_file, string frag_file, SHADER_TYPE _type) : next(nullptr), prev(nullptr){
         program = make_shared<Program>();
         program->setShaderNames(RESOURCE_DIR + vertex_file, RESOURCE_DIR + frag_file);
@@ -90,6 +92,16 @@ public:
         shape->draw(program);
         program->unbind();
     }
+    void next_material(){
+        if(materials.size() == 0) return;
+        m_index = ++m_index % materials.size();
+    }
+    
+    void prev_material(){
+        if(materials.size() == 0) return;
+        if(m_index == 0) m_index = materials.size()-1;
+        m_index = --m_index;
+    }
 };
 
 class Shader_Collection{
@@ -98,9 +110,11 @@ public:
     Shader_Collection() : header(nullptr), current(nullptr){}
     void push_back(string vert_file, string frag_file, SHADER_TYPE _type){
         shared_ptr<Shader> newShader = make_shared<Shader>(vert_file,frag_file, _type);
-        if(!header){
+        if(!header){ // make the first shader
             header = newShader;
+            header->prev = header; header->next = header;
             current = newShader;
+            current->prev = current; current->next = current;
             return;
         }
         shared_ptr<Shader> _current  = header;
@@ -202,14 +216,18 @@ static void char_callback(GLFWwindow *window, unsigned int key)
     
     if(keyToggles[(unsigned) 'm']){ // cycle material
         // forward material
-        material_index = ++material_index % (Materials.size());
+        shader_collection->current->next_material();
     }
     if(keyToggles[(unsigned) 'M']){
         // backwards material
-        if(material_index == 0) material_index = Materials.size()-1;
-        --material_index;
+        shader_collection->current->prev_material();
     }
-    
+    if(keyToggles[(unsigned) 's']){
+        shader_collection->move_forward();
+    }
+    if(keyToggles[(unsigned) 'S']){
+        shader_collection->move_backward();
+    }
     keyToggles[key] = !keyToggles[key];
 }
 
@@ -254,6 +272,7 @@ static void init()
 
     shader_collection = make_shared<Shader_Collection>();
     shader_collection->push_back("normal_vert.glsl", "normal_frag.glsl",NORMAL);
+    shader_collection->push_back("phong_vert.glsl", "phong_frag.glsl", PHONG);
 	
 	camera = make_shared<Camera>();
 	camera->setInitDistance(2.0f); // Camera's initial Z translation
@@ -293,7 +312,6 @@ static void render()
 	}
 	
 	// Matrix stacks
-    glm::mat4 MVit;
 	auto P = make_shared<MatrixStack>();
 	auto MV = make_shared<MatrixStack>();
 	
@@ -305,9 +323,6 @@ static void render()
     // Task 1 transform the bunny
     MV->scale(0.5);
     MV->translate(0.0f,-1.0f,0.0f);
-    
-    // Get the inverse transpose
-    MVit = glm::inverse(glm::transpose(MV->topMatrix()));
     
     // draw the bunny
     shader_collection->current->render(P, MV);
