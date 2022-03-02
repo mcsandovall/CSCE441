@@ -46,14 +46,22 @@ public:
     Material() : ka(0.0,0.0,0.0), kd(0.0,0.0,0.0), ks(0.0,0.0,0.0), s(0) {} // constructor
     Material(glm::vec3 _ka, glm::vec3 _kd, glm::vec3 _ks, float _s) : ka(_ka), kd(_kd), ks(_ks), s(_s) {}
 };
-
+// class for the lights
+class Light{
+public:
+    glm::vec3 lightPos, lightColor;
+    Light() : lightPos(1.0,1.0,1.0), lightColor(1.0,1.0,1.0){}
+    Light(glm::vec3 _lp, glm::vec3 _lc) : lightPos(_lp), lightColor(_lc){}
+};
+// class for the shaders
 class Shader{
 public:
     shared_ptr<Program> program;
     shared_ptr<Shader> next, prev;
     SHADER_TYPE type;
     vector<Material> materials;
-    int m_index = 0;
+    vector<Light> lights;
+    int m_index = 0, l_index = 0;
     Shader(string vertex_file, string frag_file, SHADER_TYPE _type) : next(nullptr), prev(nullptr){
         program = make_shared<Program>();
         program->setShaderNames(RESOURCE_DIR + vertex_file, RESOURCE_DIR + frag_file);
@@ -70,6 +78,10 @@ public:
             program->addUniform("kd");
             program->addUniform("ks");
             program->addUniform("s");
+            program->addUniform("light0Pos");
+            program->addUniform("light1Pos");
+            program->addUniform("light0Color");
+            program->addUniform("light1Color");
             type = _type;
         }
         type = _type;
@@ -87,7 +99,11 @@ public:
             glUniform3f(program->getUniform("ka"), materials[m_index].ka.x,materials[m_index].ka.y,materials[m_index].ka.z);
             glUniform3f(program->getUniform("kd"), materials[m_index].kd.x,materials[m_index].kd.y,materials[m_index].kd.z);
             glUniform3f(program->getUniform("ks"), materials[m_index].ks.x,materials[m_index].ks.y,materials[m_index].ks.z);
-            glUniform1f(program->getUniform("s"), materials[m_index].s);
+            glUniform1f(program->getUniform("s"),  materials[m_index].s);
+            glUniform3f(program->getUniform("light0Pos"), lights[0].lightPos.x,lights[0].lightPos.y,lights[0].lightPos.z);
+            glUniform3f(program->getUniform("light1Pos"), lights[1].lightPos.x,lights[1].lightPos.y,lights[1].lightPos.z);
+            glUniform3f(program->getUniform("light0Color"), lights[0].lightColor.x,lights[0].lightColor.y,lights[0].lightColor.z);
+            glUniform3f(program->getUniform("light1Color"), lights[1].lightColor.x,lights[1].lightColor.y,lights[1].lightColor.z);
         }
         shape->draw(program);
         program->unbind();
@@ -100,10 +116,23 @@ public:
     void prev_material(){
         if(materials.size() == 0) return;
         if(m_index == 0) m_index = materials.size()-1;
-        m_index = --m_index;
+        --m_index;
+    }
+    void next_ligth(){
+        if(lights.size() == 0)return;
+        l_index = ++l_index % lights.size();
+    }
+    void prev_light(){
+        if(lights.size() == 0)return;
+        if(l_index == 0) l_index = lights.size()-1;
+        --l_index;
+    }
+    Light * current_light(){
+        if(lights.size() == 0) return nullptr;
+        return &lights[l_index];
     }
 };
-
+// class that has the collection of shaders
 class Shader_Collection{
 public:
     shared_ptr<Shader> header, tail, current;
@@ -160,6 +189,21 @@ static void define_materials(vector<Material> &materials){
     materials.push_back(Material(_ka,_kd,_ks,s));
 }
 
+void define_lights(vector<Light> &lights){
+    // here i will define the lights to be passed into the vecotr of the shader
+    glm::vec3 _lp, _lc;
+    
+    // light 1
+    _lp = glm::vec3(1.0,1.0,1.0);
+    _lc = glm::vec3(0.8, 0.8, 0.8);
+    lights.push_back(Light(_lp,_lc));
+    
+    // light 2
+    _lp = glm::vec3(-1.0, 1.0, 1.0);
+    _lc = glm::vec3(0.2, 0.2, 0.0);
+    lights.push_back(Light(_lp,_lc));
+}
+
 bool keyToggles[256] = {false}; // only for English keyboards!
 
 // This function is called when a GLFW error occurs
@@ -205,20 +249,19 @@ static void cursor_position_callback(GLFWwindow* window, double xmouse, double y
 // This function is called keyboard letter is pressed
 static void char_callback(GLFWwindow *window, unsigned int key)
 {
-    
-    if(keyToggles[(unsigned) 'm']){ // cycle material
+    if(keyToggles[(unsigned) 's']){ // move the shader
+        shader_collection->move_forward();
+    }
+    if(keyToggles[(unsigned) 'S']){ // move the shader
+        shader_collection->move_backward();
+    }
+    if(keyToggles[(unsigned) 'm']){ // move materials
         // forward material
         shader_collection->current->next_material();
     }
-    if(keyToggles[(unsigned) 'M']){
+    if(keyToggles[(unsigned) 'M']){ // move the materials
         // backwards material
         shader_collection->current->prev_material();
-    }
-    if(keyToggles[(unsigned) 's']){
-        shader_collection->move_forward();
-    }
-    if(keyToggles[(unsigned) 'S']){
-        shader_collection->move_backward();
     }
     keyToggles[key] = !keyToggles[key];
 }
@@ -267,6 +310,8 @@ static void init()
     shader_collection->push_back("phong_vert.glsl", "phong_frag.glsl", PHONG);
     // set the materials for the phong shader
     define_materials(shader_collection->tail->materials);
+    // set the lights for the phong shaders
+    define_lights(shader_collection->tail->lights);
 	
 	camera = make_shared<Camera>();
 	camera->setInitDistance(2.0f); // Camera's initial Z translation
@@ -293,6 +338,12 @@ static void render()
 	} else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+    if(keyToggles[(unsigned) 'l']){
+        shader_collection->current->next_ligth();
+    }
+    if(keyToggles[(unsigned) 'L']){
+        shader_collection->current->prev_light();
+    }
 	
 	// Get current frame buffer size.
 	int width, height;

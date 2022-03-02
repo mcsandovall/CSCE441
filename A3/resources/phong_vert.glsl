@@ -12,8 +12,6 @@ attribute vec3 aNor; // in object space
 varying vec3 cNor; // in camera space
 varying vec3 cPos; // in camera space
 
-varying vec3 color; // Pass to fragment shader
-
 void main()
 {
     gl_Position = P * (MV * aPos);
