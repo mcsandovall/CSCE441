@@ -344,6 +344,18 @@ static void render()
     if(keyToggles[(unsigned) 'L']){
         shader_collection->current->prev_light();
     }
+    if(keyToggles[(unsigned) 'x']){// toggle the light in x dir
+        shader_collection->current->current_light()->lightPos.x += 0.2;
+    }
+    if(keyToggles[(unsigned) 'X']){// toggle the light in x dir
+        shader_collection->current->current_light()->lightPos.x -= 0.2;
+    }
+    if(keyToggles[(unsigned) 'y']){// toggle the light in x dir
+        shader_collection->current->current_light()->lightPos.y += 0.2;
+    }
+    if(keyToggles[(unsigned) 'Y']){// toggle the light in x dir
+        shader_collection->current->current_light()->lightPos.y += 0.2;
+    }
 	
 	// Get current frame buffer size.
 	int width, height;
