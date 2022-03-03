@@ -26,7 +26,9 @@ using namespace std;
 
 enum SHADER_TYPE{
     NORMAL,
-    PHONG
+    PHONG,
+    SILHOUETTE,
+    CELL
 };
 
 GLFWwindow *window; // Main application window
@@ -82,7 +84,9 @@ public:
             program->addUniform("light1Pos");
             program->addUniform("light0Color");
             program->addUniform("light1Color");
-            type = _type;
+        }
+        if(_type == SILHOUETTE){
+            program->addUniform("MVit");
         }
         type = _type;
         program->setVerbose(false);
@@ -104,6 +108,10 @@ public:
             glUniform3f(program->getUniform("light1Pos"), lights[1].lightPos.x,lights[1].lightPos.y,lights[1].lightPos.z);
             glUniform3f(program->getUniform("light0Color"), lights[0].lightColor.x,lights[0].lightColor.y,lights[0].lightColor.z);
             glUniform3f(program->getUniform("light1Color"), lights[1].lightColor.x,lights[1].lightColor.y,lights[1].lightColor.z);
+        }
+        if(type == SILHOUETTE){
+            glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
+            glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
         }
         _shape->draw(program);
         program->unbind();
@@ -312,6 +320,9 @@ static void init()
     define_materials(shader_collection->tail->materials);
     // set the lights for the phong shaders
     define_lights(shader_collection->tail->lights);
+    
+    // add the silhouette shader
+    shader_collection->push_back("silh_vert.glsl", "silh_frag.glsl", SILHOUETTE);
 	
 	camera = make_shared<Camera>();
 	camera->setInitDistance(2.0f); // Camera's initial Z translation

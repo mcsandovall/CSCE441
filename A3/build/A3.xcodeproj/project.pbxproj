@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		1A0351F35EDD42C0A866D466 /* ZERO_CHECK */ = {
+		043DE76813A249EEAC5F6687 /* ZERO_CHECK */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 6692A5FF4D3D44F6AD550E6B /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildConfigurationList = 8CD914D5E70D4B67A9880F64 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
 			buildPhases = (
 				2EA52F2CE8BCC7F22C949CD6 /* Generate CMakeFiles/ZERO_CHECK */,
 			);
@@ -18,34 +18,35 @@
 			name = ZERO_CHECK;
 			productName = ZERO_CHECK;
 		};
-		4ECE9155630D4B26A9764C03 /* ALL_BUILD */ = {
+		65D7ECB7F80B4FB09D1ED6FA /* ALL_BUILD */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 8D0B867EAFE947EFAF3AE7AB /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildConfigurationList = 010F69E2D1F54EA29F027534 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
 			buildPhases = (
 				5A37017EB64984568C06939A /* Generate CMakeFiles/ALL_BUILD */,
 			);
 			dependencies = (
-				48548E1C2E614B068DD6F7F0 /* PBXTargetDependency */,
-				26A5239E56F542B0B2C62571 /* PBXTargetDependency */,
-				5140A1E0B541417BB87F993B /* PBXTargetDependency */,
+				8ED194BCFBAD478FBF2A9B20 /* PBXTargetDependency */,
+				9BB6EC6BFF7D4476B3344420 /* PBXTargetDependency */,
+				6C0783A2132944DAA41A8746 /* PBXTargetDependency */,
 			);
 			name = ALL_BUILD;
 			productName = ALL_BUILD;
 		};
-		69C0A5D9DF7349128FEA36FE /* update_mappings */ = {
+		89CB6C4ED8B743E08F994626 /* install */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 197D6F97A34E43A98421EB1D /* Build configuration list for PBXAggregateTarget "update_mappings" */;
+			buildConfigurationList = CA8F4CAB8CB043FDA991B458 /* Build configuration list for PBXAggregateTarget "install" */;
 			buildPhases = (
-				3A659B3D617059C7304B8B3C /* Generate /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/CMakeFiles/update_mappings */,
+				93426DA6A4AC2C2AC9CE883C /* CMake PostBuild Rules */,
 			);
 			dependencies = (
+				9AA843786F2F4849943F4B4B /* PBXTargetDependency */,
 			);
-			name = update_mappings;
-			productName = update_mappings;
+			name = install;
+			productName = install;
 		};
-		BF562AEBE27E4D22B4DD0598 /* uninstall */ = {
+		8EF135520F8640D8AA80104D /* uninstall */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = AB26310426934AFA88AC87C0 /* Build configuration list for PBXAggregateTarget "uninstall" */;
+			buildConfigurationList = F5A33658AFB3406AAE1D868C /* Build configuration list for PBXAggregateTarget "uninstall" */;
 			buildPhases = (
 				9B415717891300A7C02367F9 /* Generate /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/CMakeFiles/uninstall */,
 			);
@@ -54,208 +55,215 @@
 			name = uninstall;
 			productName = uninstall;
 		};
-		EC612326100B46A08C2B0D13 /* install */ = {
+		9617296BDA0F45059738FFBF /* update_mappings */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 326ABB3797B44DBBB0FE9152 /* Build configuration list for PBXAggregateTarget "install" */;
+			buildConfigurationList = 2DE650EE022546DD95665611 /* Build configuration list for PBXAggregateTarget "update_mappings" */;
 			buildPhases = (
-				93426DA6A4AC2C2AC9CE883C /* CMake PostBuild Rules */,
+				3A659B3D617059C7304B8B3C /* Generate /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/CMakeFiles/update_mappings */,
 			);
 			dependencies = (
-				64C6A0007F294E0691766594 /* PBXTargetDependency */,
 			);
-			name = install;
-			productName = install;
+			name = update_mappings;
+			productName = update_mappings;
 		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		045AD28FF5404BC983983EC3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/vulkan.c */ = {isa = PBXBuildFile; fileRef = 8C7AEF4E0A3548DEABA30F98 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/vulkan.c */; };
-		05B294A14BAE4A8DBFB4EAB5 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.h */ = {isa = PBXBuildFile; fileRef = 3859B48A881B49F7A76040E6 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.h */; };
-		091018B915B647FBA2534EBE /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_init.m */ = {isa = PBXBuildFile; fileRef = 23BCE2C4AACD40598A1342AD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_init.m */; };
-		1B66C1B55AAB4ABEB4A0FDE1 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.h */ = {isa = PBXBuildFile; fileRef = D6EB07D57B7C434CA7566DAE /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.h */; };
-		3A59E5D7E13745B2B5106CEF /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.cpp */ = {isa = PBXBuildFile; fileRef = F25044D976C2416BA490FA63 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.cpp */; };
-		3EA88ACFD8CD4D3B8FD6EC02 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.c */ = {isa = PBXBuildFile; fileRef = DEA6F058CC3244F18EFEB2F7 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.c */; };
-		432C225A098646E9888373A3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/glfw_config.h */ = {isa = PBXBuildFile; fileRef = 05D12022C2BB4BF1A63A2331 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/glfw_config.h */; };
-		44AADF3F89E74233A235B940 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/main.cpp */ = {isa = PBXBuildFile; fileRef = 864F548388184AF19C91B1C3 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/main.cpp */; };
-		47455CF034DB406FB1B8D9E5 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/tiny_obj_loader.h */ = {isa = PBXBuildFile; fileRef = 6CD8EA862F1C48B1A3F049DD /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/tiny_obj_loader.h */; };
-		477B714C71B9414FB92E6671 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/internal.h */ = {isa = PBXBuildFile; fileRef = E248D875A11C49129FCFA95D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/internal.h */; };
-		5180B52283EC472983D3E090 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.h */ = {isa = PBXBuildFile; fileRef = E693E8F6178145A5A9E6FEAC /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.h */; };
-		668B53BF1CB6453FA2F82B5F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.h */ = {isa = PBXBuildFile; fileRef = 4D3CCE703D3046E8BDF8531B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.h */; };
-		708AE96B67EF4E73B1FACA24 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3.h */ = {isa = PBXBuildFile; fileRef = 2642B1946580478DAD566FB3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3.h */; };
-		767E968292504F898FE9C6F3 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.cpp */ = {isa = PBXBuildFile; fileRef = C1D83E3CAFCC48D6AFD19881 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.cpp */; };
-		79C7B634256C42B182B44262 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 3F4FEF5451F6475C8F613ECF /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */; };
-		7BA98396527945E4A7052BFE /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.cpp */ = {isa = PBXBuildFile; fileRef = 40B56489258342D6B14E6BBF /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.cpp */; };
-		8019214520494F2B89BB05EB /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3native.h */ = {isa = PBXBuildFile; fileRef = 4327909584EB4D82B18BD1F2 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3native.h */; };
-		81383D4855814931AD5DD924 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_vert.glsl */ = {isa = PBXBuildFile; fileRef = 321E3F9AA3E043ED97415BA1 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_vert.glsl */; };
-		855B3F4233F74B8282C1F660 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.h */ = {isa = PBXBuildFile; fileRef = DA45363A901C476B915A97B4 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.h */; };
-		8BB135EB8E3E4D9598ECDC17 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.c */ = {isa = PBXBuildFile; fileRef = D4C03D976DC44C42B6F180EF /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.c */; };
-		8DA37B9A9316402A8699304F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_time.c */ = {isa = PBXBuildFile; fileRef = 8A97F08E63FD47C98D0FFECD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_time.c */; };
-		9166D51DFE0F48DB8186F56C /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/input.c */ = {isa = PBXBuildFile; fileRef = E899D02A3CAE494CA0615D1D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/input.c */; };
-		9A1A5F4CB6A24B45B100B7F5 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.c */ = {isa = PBXBuildFile; fileRef = 2467BA1686384691913AFDCB /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.c */; };
-		9B02EAA25DB34E2698745C26 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.h */ = {isa = PBXBuildFile; fileRef = 6C0D0E1CA13349799D52C66D /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.h */; };
-		9C65C02E473E4BFC898AB364 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.cpp */ = {isa = PBXBuildFile; fileRef = F0C90F2FA51A49AF8210AE37 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.cpp */; };
-		A3F26A81384E4F78BE905B7B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_platform.h */ = {isa = PBXBuildFile; fileRef = E6F9CB4C47DF4BD3BF7993DD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_platform.h */; };
-		A510B3A947F84AC887D6CFA7 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_frag.glsl */ = {isa = PBXBuildFile; fileRef = 39703FD4F65B4B66A3A37DDA /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_frag.glsl */; };
-		A92C53477EE34030ACAA5CC6 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.h */ = {isa = PBXBuildFile; fileRef = 63F1B6911B0C4F8CAA159CB0 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.h */; };
-		AFC3F6FBF67F434F962D9D9D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.m */ = {isa = PBXBuildFile; fileRef = 0C4E5AF00AF74240801395BA /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.m */; };
-		B3F50EE4830B49C6ABDCC143 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.m */ = {isa = PBXBuildFile; fileRef = A5C339DBDDB2421E917F2562 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.m */; };
-		B439D8FB7DBB437CB6BADFF7 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/context.c */ = {isa = PBXBuildFile; fileRef = F289626D88C049B58E72FD5D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/context.c */; };
-		BA57B9DBA25047CDAA6A3E7C /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.h */ = {isa = PBXBuildFile; fileRef = 6D3D1558C19B44F990BCFD92 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.h */; };
-		C1EC2FF81878403CA8BF3001 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.h */ = {isa = PBXBuildFile; fileRef = 6029321648514F3E8A40DB1D /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.h */; };
-		C3BFD36EF86141C6AA88BAF8 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_monitor.m */ = {isa = PBXBuildFile; fileRef = 02ECDFBC0CE54C3B9FFEBFA3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_monitor.m */; };
-		C3DBC4BB6FDC437B97FFA460 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 4FD77A3084DC4507955DFBAA /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */; };
-		C5E1BA3135BB4155880A7AD2 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.h */ = {isa = PBXBuildFile; fileRef = 1CC7731C89624A42A3929CC7 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.h */; };
-		C5E4D10E7A544625AB5A5279 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_window.m */ = {isa = PBXBuildFile; fileRef = 4B4084611E5E4823A5BB3D6B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_window.m */; };
-		DB519407407D482CBA5BD11E /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_frag.glsl */ = {isa = PBXBuildFile; fileRef = 517F9C0DB443422D9821F2EC /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_frag.glsl */; };
-		DE2E885A59F049FC8C8D4343 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/stb_image_write.h */ = {isa = PBXBuildFile; fileRef = A44C38D86755404BBBCFA6E4 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/stb_image_write.h */; };
-		DFB4A1FE4E4040168C444DE7 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/window.c */ = {isa = PBXBuildFile; fileRef = A64FC376C1274121809F48FC /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/window.c */; };
-		E04ED48ACC5E4327BE8BFEB6 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.cpp */ = {isa = PBXBuildFile; fileRef = DAE5D706A93E47BCA3B0F286 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.cpp */; };
-		E5F9EA043F92406481549E8F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h */ = {isa = PBXBuildFile; fileRef = 9027C7872F2C405D8EA93687 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h */; };
-		E854AB841A4C4C7283740DBE /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_vert.glsl */ = {isa = PBXBuildFile; fileRef = 89258501027E46DBA2E6BFD8 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_vert.glsl */; };
-		FBE7C568EAAD4DA58ECF5DF2 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/init.c */ = {isa = PBXBuildFile; fileRef = 51F336FD13A04AB2943B2CA9 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/init.c */; };
-		FD781EFA172544898A5EF92D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/monitor.c */ = {isa = PBXBuildFile; fileRef = BBA6AA3895B94283984E0F9E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/monitor.c */; };
+		003D8C895F3E455D9AE6F787 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_vert.glsl */ = {isa = PBXBuildFile; fileRef = 34DC1D0E54A04569BBB52345 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_vert.glsl */; };
+		0063D7D5373A449691343E7E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.h */ = {isa = PBXBuildFile; fileRef = 0B597881A69C4ACF8E3694EA /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.h */; };
+		05B3465587654C18A88F5F4C /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.h */ = {isa = PBXBuildFile; fileRef = ABC793A7028C4EB686264F55 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.h */; };
+		08C469FE6E9B43E7B2D14774 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_frag.glsl */ = {isa = PBXBuildFile; fileRef = A509858741BC410ABA6982C1 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_frag.glsl */; };
+		0B0265F422EB4FB5AF146D72 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_platform.h */ = {isa = PBXBuildFile; fileRef = 5A74401116E645F78B769DE8 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_platform.h */; };
+		0E6C6496AAF942DD8CD6A847 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_frag.glsl */ = {isa = PBXBuildFile; fileRef = CB8677120D0A4D89B2314F16 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_frag.glsl */; };
+		113DB7FCE1AC4C4AA489C64A /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.h */ = {isa = PBXBuildFile; fileRef = 86221D4B67254EB3AB9296AC /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.h */; };
+		120B049C1001410A868E1457 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.c */ = {isa = PBXBuildFile; fileRef = 4A3EF0745C09410E893114C6 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.c */; };
+		1295CBAB2BB649A3BEB36F9C /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3native.h */ = {isa = PBXBuildFile; fileRef = 70C862A674654E5980F76C03 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3native.h */; };
+		19F5768E529E4F06BA0C83DC /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 837C88652E4241CE83FA3117 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */; };
+		1CC5DCF7F4AE4899BCAA7EE0 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/silh_frag.glsl */ = {isa = PBXBuildFile; fileRef = 2F33A05D48A740DF8A48DDB2 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/silh_frag.glsl */; };
+		2A6E9C829AC04346A6B7F854 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.h */ = {isa = PBXBuildFile; fileRef = BFFAB01FBA70433E974224EC /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.h */; };
+		2A72DA983CEA4F54AF2E6F7F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/monitor.c */ = {isa = PBXBuildFile; fileRef = C28FD3E84872491596A7C2F4 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/monitor.c */; };
+		30C2D2B6517C4BE5813215C2 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 674F456AD3B64141804F85B7 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */; };
+		30E08AEB96484C71B1B9B560 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.h */ = {isa = PBXBuildFile; fileRef = F9F3EFA6F3C54B589731A85B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.h */; };
+		329DCCD067DF47D4B3EE25E1 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.m */ = {isa = PBXBuildFile; fileRef = 2CA84468236E4711B3879E3D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.m */; };
+		3A615F64E2C84A81BBA63891 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h */ = {isa = PBXBuildFile; fileRef = 4A7E378D5FF74484AB12FE3D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h */; };
+		3A62C1AB196D41B68836187B /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_vert.glsl */ = {isa = PBXBuildFile; fileRef = D4F20A57917B42E58B40E422 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_vert.glsl */; };
+		4238F75F215548F6877D5A89 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.h */ = {isa = PBXBuildFile; fileRef = 5949B487185A467BA60073A3 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.h */; };
+		5721861F2FC643D9A07C7379 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.c */ = {isa = PBXBuildFile; fileRef = D65FDE3E01A64120BD10EB65 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.c */; };
+		607ABD2D41244C1DBD1D829E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_monitor.m */ = {isa = PBXBuildFile; fileRef = FCEA860D0A85459996F4585C /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_monitor.m */; };
+		6719155A5EDC43B5BBCBA918 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.cpp */ = {isa = PBXBuildFile; fileRef = F0F17C4ACE774CE6B752156B /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.cpp */; };
+		716DFD68F250447CA7F6D365 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/cell_frag.glsl */ = {isa = PBXBuildFile; fileRef = 2C62CC5B7A8E4244A71BDC3F /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/cell_frag.glsl */; };
+		7C9502FC2E594D6F9651CCB5 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/silh_vert.glsl */ = {isa = PBXBuildFile; fileRef = E484AB1F0910461B80EB0AD7 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/silh_vert.glsl */; };
+		7CF1EAECB1B04FA0A46503E3 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/stb_image_write.h */ = {isa = PBXBuildFile; fileRef = 52B74C966F654A808977E5FB /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/stb_image_write.h */; };
+		8C4A3B793F47439CA3D1D5D3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/window.c */ = {isa = PBXBuildFile; fileRef = 602B89F3C6D54CF48EF86945 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/window.c */; };
+		9020BBA4DFC840DC9139FCC8 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.cpp */ = {isa = PBXBuildFile; fileRef = 0F672DC4B2BC4A70AFCA9076 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.cpp */; };
+		90AC201F43AD4CD7973161CF /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.c */ = {isa = PBXBuildFile; fileRef = 64A3AAB106EA4D9BB248583F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.c */; };
+		90EE322EB74F46029ADEFDCA /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/init.c */ = {isa = PBXBuildFile; fileRef = 662D3916E7984611BA93268B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/init.c */; };
+		90F2E2151CAD410C8DEA8685 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_window.m */ = {isa = PBXBuildFile; fileRef = 042648F5D11544D1A02AB5BD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_window.m */; };
+		95B2F5F0792D456095861E6E /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/tiny_obj_loader.h */ = {isa = PBXBuildFile; fileRef = 5DB3C8999089490698A45933 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/tiny_obj_loader.h */; };
+		9643473A658349EBA19492AA /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3.h */ = {isa = PBXBuildFile; fileRef = 049834C187BB4162A9B03F33 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3.h */; };
+		9A4B519897E54A2295D5CF79 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_init.m */ = {isa = PBXBuildFile; fileRef = BA67718545C0412CB460CE23 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_init.m */; };
+		9BD8BE7869674E2996971129 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/vulkan.c */ = {isa = PBXBuildFile; fileRef = 92765F23CED74029B285588F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/vulkan.c */; };
+		9D4353ABED5844ADB0EB74B5 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/internal.h */ = {isa = PBXBuildFile; fileRef = 5FD1C29639AF44F893079BC3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/internal.h */; };
+		9F6E4B07E1614636BEA8A2C0 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.m */ = {isa = PBXBuildFile; fileRef = 43FC1A608AFB48E9A6442977 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.m */; };
+		A41DB533C9874D94A8073E49 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.h */ = {isa = PBXBuildFile; fileRef = DBAD453003B24605BB076CF0 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.h */; };
+		B32BA9CDAE6942819A5B43B1 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/main.cpp */ = {isa = PBXBuildFile; fileRef = 9E56435EA5EA4DAC898BB110 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/main.cpp */; };
+		C2C4E69CFC4645A3A28A2C3F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/context.c */ = {isa = PBXBuildFile; fileRef = 5F04834010464ABCAFBF7674 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/context.c */; };
+		C600CD504D334EAB84C4FF84 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/input.c */ = {isa = PBXBuildFile; fileRef = B5C292E2561F4E289CF3FB7C /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/input.c */; };
+		C85FE0E5DF1E445CA943F9DD /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.h */ = {isa = PBXBuildFile; fileRef = 96F0894E4549405EA75F7045 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.h */; };
+		D3BC89B50F074604A92AD191 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.cpp */ = {isa = PBXBuildFile; fileRef = F2F0E10DF203453DAC586F17 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.cpp */; };
+		D52AE38028104BF5AC056424 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.h */ = {isa = PBXBuildFile; fileRef = D7C540DAA36B41179FD58D21 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.h */; };
+		E7D87F65ED97483689CEC23A /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.cpp */ = {isa = PBXBuildFile; fileRef = A1F57F604ACD42499A61FF22 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.cpp */; };
+		ECB3A3137B074EDFAB96A886 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.cpp */ = {isa = PBXBuildFile; fileRef = 8D6FB6FD5CAD4B7D8E9DF8E1 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.cpp */; };
+		F58F5D4371DD4FA1BAEA97C6 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/cell_vert.glsl */ = {isa = PBXBuildFile; fileRef = 7A3B1B5851E34610994931BE /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/cell_vert.glsl */; };
+		F753FD97450D424C9759A268 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.h */ = {isa = PBXBuildFile; fileRef = D5402E7B2B694480BBB0134E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.h */; };
+		FCE7111A76CB4B4B94F23B7E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_time.c */ = {isa = PBXBuildFile; fileRef = 16A496780849499EA6000F1F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_time.c */; };
+		FF501F36056A4B169EAD84CF /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/glfw_config.h */ = {isa = PBXBuildFile; fileRef = 09076B9BE0F94897B9EE3E7D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/glfw_config.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
-		25B5A3159328446FA2C26FD7 /* MinSizeRel */ = {
+		0720B936E5A243478C58D98A /* MinSizeRel */ = {
 			isa = PBXBuildStyle;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 			};
 			name = MinSizeRel;
 		};
-		3EC48E309C6749D2BFE17CD1 /* Release */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = Release;
-		};
-		A960F80BA406406C89BD1721 /* Debug */ = {
+		51754990270C474F836ACEEB /* Debug */ = {
 			isa = PBXBuildStyle;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 			};
 			name = Debug;
 		};
-		D543C702173B47488AA4C6D1 /* RelWithDebInfo */ = {
+		B41B357E2C2A45C1B941AB86 /* RelWithDebInfo */ = {
 			isa = PBXBuildStyle;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 			};
 			name = RelWithDebInfo;
 		};
+		E9683C5C8DAD4995A84ADFE7 /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
 /* End PBXBuildStyle section */
 
 /* Begin PBXContainerItemProxy section */
-		344CCCB79AB84E7BBC4417C2 /* PBXContainerItemProxy */ = {
+		2E173BD008E4411D9E22CC35 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 93B897FB400648C5AA1653AC /* Project object */;
+			containerPortal = 91AC9C0139CB4DC7A868350D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 4ECE9155630D4B26A9764C03;
-			remoteInfo = ALL_BUILD;
+			remoteGlobalIDString = 5DE2A1F25A0C4B3E99488983;
+			remoteInfo = glfw;
 		};
-		40E3AE0B9448466D96AC7006 /* PBXContainerItemProxy */ = {
+		5A1AEB229B084D079163D6DC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 93B897FB400648C5AA1653AC /* Project object */;
+			containerPortal = 91AC9C0139CB4DC7A868350D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 6D392561249F4F91959E291A;
+			remoteGlobalIDString = 043DE76813A249EEAC5F6687;
+			remoteInfo = ZERO_CHECK;
+		};
+		AC3755255537498B8E5C1E32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 91AC9C0139CB4DC7A868350D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F360A59C2FF84C1093FDEE48;
 			remoteInfo = A3;
 		};
-		4D00C3257F66436AB40A037F /* PBXContainerItemProxy */ = {
+		D30575D27F314637812D89AE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 93B897FB400648C5AA1653AC /* Project object */;
+			containerPortal = 91AC9C0139CB4DC7A868350D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1A0351F35EDD42C0A866D466;
-			remoteInfo = ZERO_CHECK;
-		};
-		5369656822BD4998B9325B31 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93B897FB400648C5AA1653AC /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 726E3B0C2A354078AB9A6140;
+			remoteGlobalIDString = 5DE2A1F25A0C4B3E99488983;
 			remoteInfo = glfw;
 		};
-		94284C1B9910492E8687B5AA /* PBXContainerItemProxy */ = {
+		D86F5117FBD648CEA8AB87D3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 93B897FB400648C5AA1653AC /* Project object */;
+			containerPortal = 91AC9C0139CB4DC7A868350D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1A0351F35EDD42C0A866D466;
+			remoteGlobalIDString = 043DE76813A249EEAC5F6687;
 			remoteInfo = ZERO_CHECK;
 		};
-		9739EA56E4484BD69E6CA7E8 /* PBXContainerItemProxy */ = {
+		F1FD4822598B48F6A63A9161 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 93B897FB400648C5AA1653AC /* Project object */;
+			containerPortal = 91AC9C0139CB4DC7A868350D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 726E3B0C2A354078AB9A6140;
-			remoteInfo = glfw;
+			remoteGlobalIDString = 65D7ECB7F80B4FB09D1ED6FA;
+			remoteInfo = ALL_BUILD;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		02ECDFBC0CE54C3B9FFEBFA3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_monitor.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_monitor.m; path = "../../glfw-3.3.6/src/cocoa_monitor.m"; sourceTree = SOURCE_ROOT; };
-		05D12022C2BB4BF1A63A2331 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/glfw_config.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfw_config.h; path = "../../glfw-3.3.6/debug/src/glfw_config.h"; sourceTree = SOURCE_ROOT; };
-		0C4E5AF00AF74240801395BA /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_joystick.m; path = "../../glfw-3.3.6/src/cocoa_joystick.m"; sourceTree = SOURCE_ROOT; };
-		1AEB972E6E6D45F589CFBA43 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h.in */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = mappings.h.in; path = "../../glfw-3.3.6/src/mappings.h.in"; sourceTree = SOURCE_ROOT; };
-		1CC7731C89624A42A3929CC7 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Camera.h; path = src/Camera.h; sourceTree = SOURCE_ROOT; };
-		23BCE2C4AACD40598A1342AD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_init.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_init.m; path = "../../glfw-3.3.6/src/cocoa_init.m"; sourceTree = SOURCE_ROOT; };
-		2467BA1686384691913AFDCB /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = posix_thread.c; path = "../../glfw-3.3.6/src/posix_thread.c"; sourceTree = SOURCE_ROOT; };
-		2642B1946580478DAD566FB3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfw3.h; path = "../../glfw-3.3.6/include/GLFW/glfw3.h"; sourceTree = SOURCE_ROOT; };
-		321E3F9AA3E043ED97415BA1 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_vert.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = normal_vert.glsl; path = resources/normal_vert.glsl; sourceTree = SOURCE_ROOT; };
-		3859B48A881B49F7A76040E6 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = GLSL.h; path = src/GLSL.h; sourceTree = SOURCE_ROOT; };
-		39703FD4F65B4B66A3A37DDA /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_frag.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = normal_frag.glsl; path = resources/normal_frag.glsl; sourceTree = SOURCE_ROOT; };
-		3F4FEF5451F6475C8F613ECF /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = "../../glfw-3.3.6/src/CMakeLists.txt"; sourceTree = SOURCE_ROOT; };
-		40B56489258342D6B14E6BBF /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = MatrixStack.cpp; path = src/MatrixStack.cpp; sourceTree = SOURCE_ROOT; };
-		4327909584EB4D82B18BD1F2 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3native.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfw3native.h; path = "../../glfw-3.3.6/include/GLFW/glfw3native.h"; sourceTree = SOURCE_ROOT; };
-		4B4084611E5E4823A5BB3D6B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_window.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_window.m; path = "../../glfw-3.3.6/src/cocoa_window.m"; sourceTree = SOURCE_ROOT; };
-		4D3CCE703D3046E8BDF8531B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = cocoa_joystick.h; path = "../../glfw-3.3.6/src/cocoa_joystick.h"; sourceTree = SOURCE_ROOT; };
-		4FD77A3084DC4507955DFBAA /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		50F6CF5D09EC496193BE4136 /* glfw */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libglfw3.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		517F9C0DB443422D9821F2EC /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_frag.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = phong_frag.glsl; path = resources/phong_frag.glsl; sourceTree = SOURCE_ROOT; };
-		51F336FD13A04AB2943B2CA9 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/init.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = init.c; path = "../../glfw-3.3.6/src/init.c"; sourceTree = SOURCE_ROOT; };
-		6029321648514F3E8A40DB1D /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Program.h; path = src/Program.h; sourceTree = SOURCE_ROOT; };
-		63F1B6911B0C4F8CAA159CB0 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MatrixStack.h; path = src/MatrixStack.h; sourceTree = SOURCE_ROOT; };
-		6C0D0E1CA13349799D52C66D /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Shape.h; path = src/Shape.h; sourceTree = SOURCE_ROOT; };
-		6CD8EA862F1C48B1A3F049DD /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/tiny_obj_loader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = tiny_obj_loader.h; path = src/tiny_obj_loader.h; sourceTree = SOURCE_ROOT; };
-		6D3D1558C19B44F990BCFD92 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = nsgl_context.h; path = "../../glfw-3.3.6/src/nsgl_context.h"; sourceTree = SOURCE_ROOT; };
-		6D9CF6C6AC22468181D72D39 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		8397BE9B73254437B8838611 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/CMake/GenerateMappings.cmake */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = GenerateMappings.cmake; path = "../../glfw-3.3.6/CMake/GenerateMappings.cmake"; sourceTree = SOURCE_ROOT; };
-		864F548388184AF19C91B1C3 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
-		89258501027E46DBA2E6BFD8 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_vert.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = phong_vert.glsl; path = resources/phong_vert.glsl; sourceTree = SOURCE_ROOT; };
-		8A97F08E63FD47C98D0FFECD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_time.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = cocoa_time.c; path = "../../glfw-3.3.6/src/cocoa_time.c"; sourceTree = SOURCE_ROOT; };
-		8C7AEF4E0A3548DEABA30F98 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/vulkan.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = vulkan.c; path = "../../glfw-3.3.6/src/vulkan.c"; sourceTree = SOURCE_ROOT; };
-		9027C7872F2C405D8EA93687 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = mappings.h; path = "../../glfw-3.3.6/src/mappings.h"; sourceTree = SOURCE_ROOT; };
-		9F71C530C8DF49999C544013 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = "../../glfw-3.3.6/CMakeLists.txt"; sourceTree = SOURCE_ROOT; };
-		A44C38D86755404BBBCFA6E4 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/stb_image_write.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = stb_image_write.h; path = src/stb_image_write.h; sourceTree = SOURCE_ROOT; };
-		A5C339DBDDB2421E917F2562 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = nsgl_context.m; path = "../../glfw-3.3.6/src/nsgl_context.m"; sourceTree = SOURCE_ROOT; };
-		A64FC376C1274121809F48FC /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/window.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = window.c; path = "../../glfw-3.3.6/src/window.c"; sourceTree = SOURCE_ROOT; };
-		BAEE360BF2B945889DB608F0 /* A3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = A3; sourceTree = BUILT_PRODUCTS_DIR; };
-		BBA6AA3895B94283984E0F9E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/monitor.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = monitor.c; path = "../../glfw-3.3.6/src/monitor.c"; sourceTree = SOURCE_ROOT; };
-		C1D83E3CAFCC48D6AFD19881 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = GLSL.cpp; path = src/GLSL.cpp; sourceTree = SOURCE_ROOT; };
-		D4C03D976DC44C42B6F180EF /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = osmesa_context.c; path = "../../glfw-3.3.6/src/osmesa_context.c"; sourceTree = SOURCE_ROOT; };
-		D6EB07D57B7C434CA7566DAE /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = posix_thread.h; path = "../../glfw-3.3.6/src/posix_thread.h"; sourceTree = SOURCE_ROOT; };
-		DA45363A901C476B915A97B4 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = osmesa_context.h; path = "../../glfw-3.3.6/src/osmesa_context.h"; sourceTree = SOURCE_ROOT; };
-		DAE5D706A93E47BCA3B0F286 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Camera.cpp; path = src/Camera.cpp; sourceTree = SOURCE_ROOT; };
-		DEA6F058CC3244F18EFEB2F7 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = egl_context.c; path = "../../glfw-3.3.6/src/egl_context.c"; sourceTree = SOURCE_ROOT; };
-		E248D875A11C49129FCFA95D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/internal.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = internal.h; path = "../../glfw-3.3.6/src/internal.h"; sourceTree = SOURCE_ROOT; };
-		E693E8F6178145A5A9E6FEAC /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = egl_context.h; path = "../../glfw-3.3.6/src/egl_context.h"; sourceTree = SOURCE_ROOT; };
-		E6F9CB4C47DF4BD3BF7993DD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_platform.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = cocoa_platform.h; path = "../../glfw-3.3.6/src/cocoa_platform.h"; sourceTree = SOURCE_ROOT; };
-		E899D02A3CAE494CA0615D1D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/input.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = input.c; path = "../../glfw-3.3.6/src/input.c"; sourceTree = SOURCE_ROOT; };
-		F0C90F2FA51A49AF8210AE37 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Program.cpp; path = src/Program.cpp; sourceTree = SOURCE_ROOT; };
-		F25044D976C2416BA490FA63 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Shape.cpp; path = src/Shape.cpp; sourceTree = SOURCE_ROOT; };
-		F289626D88C049B58E72FD5D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/context.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = context.c; path = "../../glfw-3.3.6/src/context.c"; sourceTree = SOURCE_ROOT; };
-		FFAF2845E3E24D609B84E202 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = "../../glfw-3.3.6/src/CMakeLists.txt"; sourceTree = SOURCE_ROOT; };
+		042648F5D11544D1A02AB5BD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_window.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_window.m; path = "../../glfw-3.3.6/src/cocoa_window.m"; sourceTree = SOURCE_ROOT; };
+		04749E1645934E40BFEA1594 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		049834C187BB4162A9B03F33 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfw3.h; path = "../../glfw-3.3.6/include/GLFW/glfw3.h"; sourceTree = SOURCE_ROOT; };
+		09076B9BE0F94897B9EE3E7D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/glfw_config.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfw_config.h; path = "../../glfw-3.3.6/debug/src/glfw_config.h"; sourceTree = SOURCE_ROOT; };
+		0B597881A69C4ACF8E3694EA /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = egl_context.h; path = "../../glfw-3.3.6/src/egl_context.h"; sourceTree = SOURCE_ROOT; };
+		0F672DC4B2BC4A70AFCA9076 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Program.cpp; path = src/Program.cpp; sourceTree = SOURCE_ROOT; };
+		16A496780849499EA6000F1F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_time.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = cocoa_time.c; path = "../../glfw-3.3.6/src/cocoa_time.c"; sourceTree = SOURCE_ROOT; };
+		2C62CC5B7A8E4244A71BDC3F /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/cell_frag.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = cell_frag.glsl; path = resources/cell_frag.glsl; sourceTree = SOURCE_ROOT; };
+		2CA84468236E4711B3879E3D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_joystick.m; path = "../../glfw-3.3.6/src/cocoa_joystick.m"; sourceTree = SOURCE_ROOT; };
+		2F33A05D48A740DF8A48DDB2 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/silh_frag.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = silh_frag.glsl; path = resources/silh_frag.glsl; sourceTree = SOURCE_ROOT; };
+		34DC1D0E54A04569BBB52345 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_vert.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = phong_vert.glsl; path = resources/phong_vert.glsl; sourceTree = SOURCE_ROOT; };
+		43FC1A608AFB48E9A6442977 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = nsgl_context.m; path = "../../glfw-3.3.6/src/nsgl_context.m"; sourceTree = SOURCE_ROOT; };
+		4A3EF0745C09410E893114C6 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = posix_thread.c; path = "../../glfw-3.3.6/src/posix_thread.c"; sourceTree = SOURCE_ROOT; };
+		4A7E378D5FF74484AB12FE3D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = mappings.h; path = "../../glfw-3.3.6/src/mappings.h"; sourceTree = SOURCE_ROOT; };
+		52B74C966F654A808977E5FB /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/stb_image_write.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = stb_image_write.h; path = src/stb_image_write.h; sourceTree = SOURCE_ROOT; };
+		5949B487185A467BA60073A3 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Shape.h; path = src/Shape.h; sourceTree = SOURCE_ROOT; };
+		5A74401116E645F78B769DE8 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_platform.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = cocoa_platform.h; path = "../../glfw-3.3.6/src/cocoa_platform.h"; sourceTree = SOURCE_ROOT; };
+		5DB3C8999089490698A45933 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/tiny_obj_loader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = tiny_obj_loader.h; path = src/tiny_obj_loader.h; sourceTree = SOURCE_ROOT; };
+		5F04834010464ABCAFBF7674 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/context.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = context.c; path = "../../glfw-3.3.6/src/context.c"; sourceTree = SOURCE_ROOT; };
+		5FD1C29639AF44F893079BC3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/internal.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = internal.h; path = "../../glfw-3.3.6/src/internal.h"; sourceTree = SOURCE_ROOT; };
+		602B89F3C6D54CF48EF86945 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/window.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = window.c; path = "../../glfw-3.3.6/src/window.c"; sourceTree = SOURCE_ROOT; };
+		64A3AAB106EA4D9BB248583F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = egl_context.c; path = "../../glfw-3.3.6/src/egl_context.c"; sourceTree = SOURCE_ROOT; };
+		662D3916E7984611BA93268B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/init.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = init.c; path = "../../glfw-3.3.6/src/init.c"; sourceTree = SOURCE_ROOT; };
+		674F456AD3B64141804F85B7 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = "../../glfw-3.3.6/src/CMakeLists.txt"; sourceTree = SOURCE_ROOT; };
+		7084D31B466D406B95988A4B /* A3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = A3; sourceTree = BUILT_PRODUCTS_DIR; };
+		70C862A674654E5980F76C03 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3native.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfw3native.h; path = "../../glfw-3.3.6/include/GLFW/glfw3native.h"; sourceTree = SOURCE_ROOT; };
+		7A3B1B5851E34610994931BE /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/cell_vert.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = cell_vert.glsl; path = resources/cell_vert.glsl; sourceTree = SOURCE_ROOT; };
+		837C88652E4241CE83FA3117 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		86221D4B67254EB3AB9296AC /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = GLSL.h; path = src/GLSL.h; sourceTree = SOURCE_ROOT; };
+		8D6FB6FD5CAD4B7D8E9DF8E1 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Camera.cpp; path = src/Camera.cpp; sourceTree = SOURCE_ROOT; };
+		92765F23CED74029B285588F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/vulkan.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = vulkan.c; path = "../../glfw-3.3.6/src/vulkan.c"; sourceTree = SOURCE_ROOT; };
+		96F0894E4549405EA75F7045 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = MatrixStack.h; path = src/MatrixStack.h; sourceTree = SOURCE_ROOT; };
+		9A54BEA2B2A34AAA83B78A31 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/CMake/GenerateMappings.cmake */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = GenerateMappings.cmake; path = "../../glfw-3.3.6/CMake/GenerateMappings.cmake"; sourceTree = SOURCE_ROOT; };
+		9E56435EA5EA4DAC898BB110 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
+		A00AC1E4BD904BB685D8BC9A /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = "../../glfw-3.3.6/CMakeLists.txt"; sourceTree = SOURCE_ROOT; };
+		A1F57F604ACD42499A61FF22 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = GLSL.cpp; path = src/GLSL.cpp; sourceTree = SOURCE_ROOT; };
+		A509858741BC410ABA6982C1 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_frag.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = normal_frag.glsl; path = resources/normal_frag.glsl; sourceTree = SOURCE_ROOT; };
+		ABC793A7028C4EB686264F55 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Program.h; path = src/Program.h; sourceTree = SOURCE_ROOT; };
+		B5C292E2561F4E289CF3FB7C /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/input.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = input.c; path = "../../glfw-3.3.6/src/input.c"; sourceTree = SOURCE_ROOT; };
+		BA67718545C0412CB460CE23 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_init.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_init.m; path = "../../glfw-3.3.6/src/cocoa_init.m"; sourceTree = SOURCE_ROOT; };
+		BFFAB01FBA70433E974224EC /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = posix_thread.h; path = "../../glfw-3.3.6/src/posix_thread.h"; sourceTree = SOURCE_ROOT; };
+		C28FD3E84872491596A7C2F4 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/monitor.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = monitor.c; path = "../../glfw-3.3.6/src/monitor.c"; sourceTree = SOURCE_ROOT; };
+		C97AB3829CF24930ADFE01B9 /* glfw */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libglfw3.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB8677120D0A4D89B2314F16 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_frag.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = phong_frag.glsl; path = resources/phong_frag.glsl; sourceTree = SOURCE_ROOT; };
+		D4F20A57917B42E58B40E422 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_vert.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = normal_vert.glsl; path = resources/normal_vert.glsl; sourceTree = SOURCE_ROOT; };
+		D5402E7B2B694480BBB0134E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = cocoa_joystick.h; path = "../../glfw-3.3.6/src/cocoa_joystick.h"; sourceTree = SOURCE_ROOT; };
+		D65FDE3E01A64120BD10EB65 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = osmesa_context.c; path = "../../glfw-3.3.6/src/osmesa_context.c"; sourceTree = SOURCE_ROOT; };
+		D7C540DAA36B41179FD58D21 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Camera.h; path = src/Camera.h; sourceTree = SOURCE_ROOT; };
+		DBAD453003B24605BB076CF0 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = osmesa_context.h; path = "../../glfw-3.3.6/src/osmesa_context.h"; sourceTree = SOURCE_ROOT; };
+		E484AB1F0910461B80EB0AD7 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/silh_vert.glsl */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = silh_vert.glsl; path = resources/silh_vert.glsl; sourceTree = SOURCE_ROOT; };
+		EBC1B475FCD547B3B2C94096 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = "../../glfw-3.3.6/src/CMakeLists.txt"; sourceTree = SOURCE_ROOT; };
+		F0F17C4ACE774CE6B752156B /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Shape.cpp; path = src/Shape.cpp; sourceTree = SOURCE_ROOT; };
+		F2F0E10DF203453DAC586F17 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = MatrixStack.cpp; path = src/MatrixStack.cpp; sourceTree = SOURCE_ROOT; };
+		F70F64FA69134FFCA8490D9E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h.in */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = mappings.h.in; path = "../../glfw-3.3.6/src/mappings.h.in"; sourceTree = SOURCE_ROOT; };
+		F9F3EFA6F3C54B589731A85B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = nsgl_context.h; path = "../../glfw-3.3.6/src/nsgl_context.h"; sourceTree = SOURCE_ROOT; };
+		FCEA860D0A85459996F4585C /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_monitor.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_monitor.m; path = "../../glfw-3.3.6/src/cocoa_monitor.m"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		01BA1EAEC5F1428A9576CFEE /* Frameworks */ = {
+		B971CFC0986C48479D0E5A2E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F6744A4F22214CF6A97D0731 /* Frameworks */ = {
+		F49482CE2B5F4D14B36042CF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -265,219 +273,205 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4BE904DD333E46D2B3A5351E /* ALL_BUILD */ = {
+		21DDC82A6F4B4EF686162325 = {
 			isa = PBXGroup;
 			children = (
-				CEAAFE708950417498F09E38 /* CMake Rules */,
-				6D9CF6C6AC22468181D72D39 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */,
+				A42E1F12C28C4C409AE63A07 /* A3 */,
+				D129B0530E5D4B16BD4BFF18 /* ALL_BUILD */,
+				2A353B42868F4DD7932D3C92 /* GLFW3 */,
+				5F1859DCCD474F5988F813D9 /* Products */,
+				CF8F0D9A67494F61870D8652 /* Frameworks */,
 			);
-			name = ALL_BUILD;
 			sourceTree = "<group>";
 		};
-		5559120457C44164A2AD52C4 /* Header Files */ = {
+		2A353B42868F4DD7932D3C92 /* GLFW3 */ = {
 			isa = PBXGroup;
 			children = (
-				05D12022C2BB4BF1A63A2331 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/glfw_config.h */,
-				2642B1946580478DAD566FB3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3.h */,
-				4327909584EB4D82B18BD1F2 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3native.h */,
-				4D3CCE703D3046E8BDF8531B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.h */,
-				E6F9CB4C47DF4BD3BF7993DD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_platform.h */,
-				E693E8F6178145A5A9E6FEAC /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.h */,
-				E248D875A11C49129FCFA95D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/internal.h */,
-				9027C7872F2C405D8EA93687 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h */,
-				6D3D1558C19B44F990BCFD92 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.h */,
-				DA45363A901C476B915A97B4 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.h */,
-				D6EB07D57B7C434CA7566DAE /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.h */,
+				42FEC94902EB4E87907F9254 /* uninstall */,
+				413F2AD7D451481A951872AB /* update_mappings */,
+				AC1FDFFC9D6A44879476C9BC /* glfw */,
 			);
-			name = "Header Files";
+			name = GLFW3;
 			sourceTree = "<group>";
 		};
-		5C138D69683944A79E91CB0C /* glfw */ = {
+		30C3EB2100814434A8FD250B /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
-				CCCCE7C3AE1542D4BCE9E631 /* Source Files */,
-				5559120457C44164A2AD52C4 /* Header Files */,
-				3F4FEF5451F6475C8F613ECF /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */,
+				BA67718545C0412CB460CE23 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_init.m */,
+				2CA84468236E4711B3879E3D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.m */,
+				FCEA860D0A85459996F4585C /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_monitor.m */,
+				16A496780849499EA6000F1F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_time.c */,
+				042648F5D11544D1A02AB5BD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_window.m */,
+				5F04834010464ABCAFBF7674 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/context.c */,
+				64A3AAB106EA4D9BB248583F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.c */,
+				662D3916E7984611BA93268B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/init.c */,
+				B5C292E2561F4E289CF3FB7C /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/input.c */,
+				C28FD3E84872491596A7C2F4 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/monitor.c */,
+				43FC1A608AFB48E9A6442977 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.m */,
+				D65FDE3E01A64120BD10EB65 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.c */,
+				4A3EF0745C09410E893114C6 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.c */,
+				92765F23CED74029B285588F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/vulkan.c */,
+				602B89F3C6D54CF48EF86945 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/window.c */,
 			);
-			name = glfw;
+			name = "Source Files";
 			sourceTree = "<group>";
 		};
-		65D90F30DAF74323898FF3B3 /* Header Files */ = {
-			isa = PBXGroup;
-			children = (
-				1AEB972E6E6D45F589CFBA43 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h.in */,
-			);
-			name = "Header Files";
-			sourceTree = "<group>";
-		};
-		A11DD830F4B542CD9EBE0F84 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				BAEE360BF2B945889DB608F0 /* A3 */,
-				50F6CF5D09EC496193BE4136 /* glfw */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		A1D54444E5CA4091ACEB92D9 /* CMake Rules */ = {
+		3B3759D56B7E49C9859C4A49 /* CMake Rules */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
-		A27C3BCFF8824BEF9B6A8333 /* Header Files */ = {
+		413F2AD7D451481A951872AB /* update_mappings */ = {
 			isa = PBXGroup;
 			children = (
-				1CC7731C89624A42A3929CC7 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.h */,
-				3859B48A881B49F7A76040E6 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.h */,
-				63F1B6911B0C4F8CAA159CB0 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.h */,
-				6029321648514F3E8A40DB1D /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.h */,
-				6C0D0E1CA13349799D52C66D /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.h */,
-				A44C38D86755404BBBCFA6E4 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/stb_image_write.h */,
-				6CD8EA862F1C48B1A3F049DD /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/tiny_obj_loader.h */,
+				4FC0357E76F44BEA9B880311 /* Header Files */,
+				3B3759D56B7E49C9859C4A49 /* CMake Rules */,
+				9A54BEA2B2A34AAA83B78A31 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/CMake/GenerateMappings.cmake */,
+				EBC1B475FCD547B3B2C94096 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */,
 			);
-			name = "Header Files";
+			name = update_mappings;
 			sourceTree = "<group>";
 		};
-		A88BCC65F21742F0865895BF /* uninstall */ = {
+		42FEC94902EB4E87907F9254 /* uninstall */ = {
 			isa = PBXGroup;
 			children = (
-				F1193CEEE90E4AE08BF26B73 /* CMake Rules */,
-				9F71C530C8DF49999C544013 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/CMakeLists.txt */,
+				BB723CE49AC0466E9935E791 /* CMake Rules */,
+				A00AC1E4BD904BB685D8BC9A /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/CMakeLists.txt */,
 			);
 			name = uninstall;
 			sourceTree = "<group>";
 		};
-		C120DDB60D314709BADD1857 /* Frameworks */ = {
+		4FC0357E76F44BEA9B880311 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				F70F64FA69134FFCA8490D9E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h.in */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5F1859DCCD474F5988F813D9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7084D31B466D406B95988A4B /* A3 */,
+				C97AB3829CF24930ADFE01B9 /* glfw */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		88E5FE9A79D8407DBCB9D1E3 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				D7C540DAA36B41179FD58D21 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.h */,
+				86221D4B67254EB3AB9296AC /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.h */,
+				96F0894E4549405EA75F7045 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.h */,
+				ABC793A7028C4EB686264F55 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.h */,
+				5949B487185A467BA60073A3 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.h */,
+				52B74C966F654A808977E5FB /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/stb_image_write.h */,
+				5DB3C8999089490698A45933 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/tiny_obj_loader.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		8AF950E9B30F4FB99EA2E0F2 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		A42E1F12C28C4C409AE63A07 /* A3 */ = {
+			isa = PBXGroup;
+			children = (
+				E33E0CA192ED4D64AF71053F /* Source Files */,
+				88E5FE9A79D8407DBCB9D1E3 /* Header Files */,
+				837C88652E4241CE83FA3117 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */,
+				2C62CC5B7A8E4244A71BDC3F /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/cell_frag.glsl */,
+				7A3B1B5851E34610994931BE /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/cell_vert.glsl */,
+				A509858741BC410ABA6982C1 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_frag.glsl */,
+				D4F20A57917B42E58B40E422 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_vert.glsl */,
+				CB8677120D0A4D89B2314F16 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_frag.glsl */,
+				34DC1D0E54A04569BBB52345 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_vert.glsl */,
+				2F33A05D48A740DF8A48DDB2 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/silh_frag.glsl */,
+				E484AB1F0910461B80EB0AD7 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/silh_vert.glsl */,
+			);
+			name = A3;
+			sourceTree = "<group>";
+		};
+		AC1FDFFC9D6A44879476C9BC /* glfw */ = {
+			isa = PBXGroup;
+			children = (
+				30C3EB2100814434A8FD250B /* Source Files */,
+				DF7EE1FCF4DF49A1808313EC /* Header Files */,
+				674F456AD3B64141804F85B7 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */,
+			);
+			name = glfw;
+			sourceTree = "<group>";
+		};
+		BB723CE49AC0466E9935E791 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		CF8F0D9A67494F61870D8652 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C5712BA9EEDD4F80A481240F /* update_mappings */ = {
+		D129B0530E5D4B16BD4BFF18 /* ALL_BUILD */ = {
 			isa = PBXGroup;
 			children = (
-				65D90F30DAF74323898FF3B3 /* Header Files */,
-				A1D54444E5CA4091ACEB92D9 /* CMake Rules */,
-				8397BE9B73254437B8838611 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/CMake/GenerateMappings.cmake */,
-				FFAF2845E3E24D609B84E202 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/CMakeLists.txt */,
+				8AF950E9B30F4FB99EA2E0F2 /* CMake Rules */,
+				04749E1645934E40BFEA1594 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */,
 			);
-			name = update_mappings;
+			name = ALL_BUILD;
 			sourceTree = "<group>";
 		};
-		CCCCE7C3AE1542D4BCE9E631 /* Source Files */ = {
+		DF7EE1FCF4DF49A1808313EC /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
-				23BCE2C4AACD40598A1342AD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_init.m */,
-				0C4E5AF00AF74240801395BA /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.m */,
-				02ECDFBC0CE54C3B9FFEBFA3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_monitor.m */,
-				8A97F08E63FD47C98D0FFECD /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_time.c */,
-				4B4084611E5E4823A5BB3D6B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_window.m */,
-				F289626D88C049B58E72FD5D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/context.c */,
-				DEA6F058CC3244F18EFEB2F7 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.c */,
-				51F336FD13A04AB2943B2CA9 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/init.c */,
-				E899D02A3CAE494CA0615D1D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/input.c */,
-				BBA6AA3895B94283984E0F9E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/monitor.c */,
-				A5C339DBDDB2421E917F2562 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.m */,
-				D4C03D976DC44C42B6F180EF /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.c */,
-				2467BA1686384691913AFDCB /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.c */,
-				8C7AEF4E0A3548DEABA30F98 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/vulkan.c */,
-				A64FC376C1274121809F48FC /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/window.c */,
+				09076B9BE0F94897B9EE3E7D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/glfw_config.h */,
+				049834C187BB4162A9B03F33 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3.h */,
+				70C862A674654E5980F76C03 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include/GLFW/glfw3native.h */,
+				D5402E7B2B694480BBB0134E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.h */,
+				5A74401116E645F78B769DE8 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_platform.h */,
+				0B597881A69C4ACF8E3694EA /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.h */,
+				5FD1C29639AF44F893079BC3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/internal.h */,
+				4A7E378D5FF74484AB12FE3D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/mappings.h */,
+				F9F3EFA6F3C54B589731A85B /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.h */,
+				DBAD453003B24605BB076CF0 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.h */,
+				BFFAB01FBA70433E974224EC /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		E33E0CA192ED4D64AF71053F /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				8D6FB6FD5CAD4B7D8E9DF8E1 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.cpp */,
+				A1F57F604ACD42499A61FF22 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.cpp */,
+				F2F0E10DF203453DAC586F17 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.cpp */,
+				0F672DC4B2BC4A70AFCA9076 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.cpp */,
+				F0F17C4ACE774CE6B752156B /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.cpp */,
+				9E56435EA5EA4DAC898BB110 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/main.cpp */,
 			);
 			name = "Source Files";
-			sourceTree = "<group>";
-		};
-		CEAAFE708950417498F09E38 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
-		DF880DCA247445B4B4635F4C /* Source Files */ = {
-			isa = PBXGroup;
-			children = (
-				DAE5D706A93E47BCA3B0F286 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.cpp */,
-				C1D83E3CAFCC48D6AFD19881 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.cpp */,
-				40B56489258342D6B14E6BBF /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.cpp */,
-				F0C90F2FA51A49AF8210AE37 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.cpp */,
-				F25044D976C2416BA490FA63 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.cpp */,
-				864F548388184AF19C91B1C3 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/main.cpp */,
-			);
-			name = "Source Files";
-			sourceTree = "<group>";
-		};
-		E9B93D275A4847B1836BF145 /* A3 */ = {
-			isa = PBXGroup;
-			children = (
-				DF880DCA247445B4B4635F4C /* Source Files */,
-				A27C3BCFF8824BEF9B6A8333 /* Header Files */,
-				4FD77A3084DC4507955DFBAA /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/CMakeLists.txt */,
-				39703FD4F65B4B66A3A37DDA /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_frag.glsl */,
-				321E3F9AA3E043ED97415BA1 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/normal_vert.glsl */,
-				517F9C0DB443422D9821F2EC /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_frag.glsl */,
-				89258501027E46DBA2E6BFD8 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/resources/phong_vert.glsl */,
-			);
-			name = A3;
-			sourceTree = "<group>";
-		};
-		EB0B54B5148E40999B6A2133 = {
-			isa = PBXGroup;
-			children = (
-				E9B93D275A4847B1836BF145 /* A3 */,
-				4BE904DD333E46D2B3A5351E /* ALL_BUILD */,
-				EB807E407D274331A751A403 /* GLFW3 */,
-				A11DD830F4B542CD9EBE0F84 /* Products */,
-				C120DDB60D314709BADD1857 /* Frameworks */,
-			);
-			sourceTree = "<group>";
-		};
-		EB807E407D274331A751A403 /* GLFW3 */ = {
-			isa = PBXGroup;
-			children = (
-				A88BCC65F21742F0865895BF /* uninstall */,
-				C5712BA9EEDD4F80A481240F /* update_mappings */,
-				5C138D69683944A79E91CB0C /* glfw */,
-			);
-			name = GLFW3;
-			sourceTree = "<group>";
-		};
-		F1193CEEE90E4AE08BF26B73 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6D392561249F4F91959E291A /* A3 */ = {
+		5DE2A1F25A0C4B3E99488983 /* glfw */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 793EA939D639447CBFFA7D60 /* Build configuration list for PBXNativeTarget "A3" */;
+			buildConfigurationList = 5D6AFAAD844E468D8B2E05E2 /* Build configuration list for PBXNativeTarget "glfw" */;
 			buildPhases = (
-				3A64688FB1944FC39DD0FA5D /* Sources */,
-				F6744A4F22214CF6A97D0731 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F9CDDB99490349D3BD8F2252 /* PBXTargetDependency */,
-				F1A2F2F71D82499A97570140 /* PBXTargetDependency */,
-			);
-			name = A3;
-			productName = A3;
-			productReference = BAEE360BF2B945889DB608F0 /* A3 */;
-			productType = "com.apple.product-type.tool";
-		};
-		726E3B0C2A354078AB9A6140 /* glfw */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 047B83CAAA36402AA47E3DE8 /* Build configuration list for PBXNativeTarget "glfw" */;
-			buildPhases = (
-				EB4F42B25C834E6DB8B46248 /* Sources */,
-				01BA1EAEC5F1428A9576CFEE /* Frameworks */,
+				1FDA6532A3AB48C89B97DB65 /* Sources */,
+				B971CFC0986C48479D0E5A2E /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -485,40 +479,58 @@
 			);
 			name = glfw;
 			productName = glfw;
-			productReference = 50F6CF5D09EC496193BE4136 /* glfw */;
+			productReference = C97AB3829CF24930ADFE01B9 /* glfw */;
 			productType = "com.apple.product-type.library.static";
+		};
+		F360A59C2FF84C1093FDEE48 /* A3 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 928F7DF6721E4BDA866A0DD8 /* Build configuration list for PBXNativeTarget "A3" */;
+			buildPhases = (
+				80E43CF4F1CC4EC08FD8B950 /* Sources */,
+				F49482CE2B5F4D14B36042CF /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C1FE5658E7AE4947B7C64CAA /* PBXTargetDependency */,
+				92892FBD00A84BEC8E690C03 /* PBXTargetDependency */,
+			);
+			name = A3;
+			productName = A3;
+			productReference = 7084D31B466D406B95988A4B /* A3 */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		93B897FB400648C5AA1653AC /* Project object */ = {
+		91AC9C0139CB4DC7A868350D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1320;
 			};
-			buildConfigurationList = 63812EE4ABEA43689E890C34 /* Build configuration list for PBXProject "A3" */;
+			buildConfigurationList = 09D0A7D9D48D48D5A1CAD9D5 /* Build configuration list for PBXProject "A3" */;
 			buildSettings = {
 			};
 			buildStyles = (
-				A960F80BA406406C89BD1721 /* Debug */,
-				3EC48E309C6749D2BFE17CD1 /* Release */,
-				25B5A3159328446FA2C26FD7 /* MinSizeRel */,
-				D543C702173B47488AA4C6D1 /* RelWithDebInfo */,
+				51754990270C474F836ACEEB /* Debug */,
+				E9683C5C8DAD4995A84ADFE7 /* Release */,
+				0720B936E5A243478C58D98A /* MinSizeRel */,
+				B41B357E2C2A45C1B941AB86 /* RelWithDebInfo */,
 			);
 			compatibilityVersion = "Xcode 3.2";
 			hasScannedForEncodings = 0;
-			mainGroup = EB0B54B5148E40999B6A2133;
+			mainGroup = 21DDC82A6F4B4EF686162325;
 			projectDirPath = ../;
 			projectRoot = "";
 			targets = (
-				4ECE9155630D4B26A9764C03 /* ALL_BUILD */,
-				6D392561249F4F91959E291A /* A3 */,
-				1A0351F35EDD42C0A866D466 /* ZERO_CHECK */,
-				726E3B0C2A354078AB9A6140 /* glfw */,
-				EC612326100B46A08C2B0D13 /* install */,
-				BF562AEBE27E4D22B4DD0598 /* uninstall */,
-				69C0A5D9DF7349128FEA36FE /* update_mappings */,
+				65D7ECB7F80B4FB09D1ED6FA /* ALL_BUILD */,
+				F360A59C2FF84C1093FDEE48 /* A3 */,
+				043DE76813A249EEAC5F6687 /* ZERO_CHECK */,
+				5DE2A1F25A0C4B3E99488983 /* glfw */,
+				89CB6C4ED8B743E08F994626 /* install */,
+				8EF135520F8640D8AA80104D /* uninstall */,
+				9617296BDA0F45059738FFBF /* update_mappings */,
 			);
 		};
 /* End PBXProject section */
@@ -765,356 +777,97 @@ exit 0";
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		3A64688FB1944FC39DD0FA5D /* Sources */ = {
+		1FDA6532A3AB48C89B97DB65 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E04ED48ACC5E4327BE8BFEB6 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.cpp */,
-				767E968292504F898FE9C6F3 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.cpp */,
-				7BA98396527945E4A7052BFE /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.cpp */,
-				9C65C02E473E4BFC898AB364 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.cpp */,
-				3A59E5D7E13745B2B5106CEF /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.cpp */,
-				44AADF3F89E74233A235B940 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/main.cpp */,
+				9A4B519897E54A2295D5CF79 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_init.m */,
+				329DCCD067DF47D4B3EE25E1 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.m */,
+				607ABD2D41244C1DBD1D829E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_monitor.m */,
+				FCE7111A76CB4B4B94F23B7E /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_time.c */,
+				90F2E2151CAD410C8DEA8685 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_window.m */,
+				C2C4E69CFC4645A3A28A2C3F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/context.c */,
+				90AC201F43AD4CD7973161CF /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.c */,
+				90EE322EB74F46029ADEFDCA /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/init.c */,
+				C600CD504D334EAB84C4FF84 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/input.c */,
+				2A72DA983CEA4F54AF2E6F7F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/monitor.c */,
+				9F6E4B07E1614636BEA8A2C0 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.m */,
+				5721861F2FC643D9A07C7379 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.c */,
+				120B049C1001410A868E1457 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.c */,
+				9BD8BE7869674E2996971129 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/vulkan.c */,
+				8C4A3B793F47439CA3D1D5D3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/window.c */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EB4F42B25C834E6DB8B46248 /* Sources */ = {
+		80E43CF4F1CC4EC08FD8B950 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				091018B915B647FBA2534EBE /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_init.m */,
-				AFC3F6FBF67F434F962D9D9D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_joystick.m */,
-				C3BFD36EF86141C6AA88BAF8 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_monitor.m */,
-				8DA37B9A9316402A8699304F /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_time.c */,
-				C5E4D10E7A544625AB5A5279 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/cocoa_window.m */,
-				B439D8FB7DBB437CB6BADFF7 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/context.c */,
-				3EA88ACFD8CD4D3B8FD6EC02 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/egl_context.c */,
-				FBE7C568EAAD4DA58ECF5DF2 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/init.c */,
-				9166D51DFE0F48DB8186F56C /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/input.c */,
-				FD781EFA172544898A5EF92D /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/monitor.c */,
-				B3F50EE4830B49C6ABDCC143 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/nsgl_context.m */,
-				8BB135EB8E3E4D9598ECDC17 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/osmesa_context.c */,
-				9A1A5F4CB6A24B45B100B7F5 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/posix_thread.c */,
-				045AD28FF5404BC983983EC3 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/vulkan.c */,
-				DFB4A1FE4E4040168C444DE7 /* /Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src/window.c */,
+				ECB3A3137B074EDFAB96A886 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Camera.cpp */,
+				E7D87F65ED97483689CEC23A /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/GLSL.cpp */,
+				D3BC89B50F074604A92AD191 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/MatrixStack.cpp */,
+				9020BBA4DFC840DC9139FCC8 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Program.cpp */,
+				6719155A5EDC43B5BBCBA918 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/Shape.cpp */,
+				B32BA9CDAE6942819A5B43B1 /* /Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/src/main.cpp */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		26A5239E56F542B0B2C62571 /* PBXTargetDependency */ = {
+		6C0783A2132944DAA41A8746 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 726E3B0C2A354078AB9A6140 /* glfw */;
-			targetProxy = 9739EA56E4484BD69E6CA7E8 /* PBXContainerItemProxy */;
+			target = 043DE76813A249EEAC5F6687 /* ZERO_CHECK */;
+			targetProxy = 5A1AEB229B084D079163D6DC /* PBXContainerItemProxy */;
 		};
-		48548E1C2E614B068DD6F7F0 /* PBXTargetDependency */ = {
+		8ED194BCFBAD478FBF2A9B20 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6D392561249F4F91959E291A /* A3 */;
-			targetProxy = 40E3AE0B9448466D96AC7006 /* PBXContainerItemProxy */;
+			target = F360A59C2FF84C1093FDEE48 /* A3 */;
+			targetProxy = AC3755255537498B8E5C1E32 /* PBXContainerItemProxy */;
 		};
-		5140A1E0B541417BB87F993B /* PBXTargetDependency */ = {
+		92892FBD00A84BEC8E690C03 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1A0351F35EDD42C0A866D466 /* ZERO_CHECK */;
-			targetProxy = 4D00C3257F66436AB40A037F /* PBXContainerItemProxy */;
+			target = 043DE76813A249EEAC5F6687 /* ZERO_CHECK */;
+			targetProxy = D86F5117FBD648CEA8AB87D3 /* PBXContainerItemProxy */;
 		};
-		64C6A0007F294E0691766594 /* PBXTargetDependency */ = {
+		9AA843786F2F4849943F4B4B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4ECE9155630D4B26A9764C03 /* ALL_BUILD */;
-			targetProxy = 344CCCB79AB84E7BBC4417C2 /* PBXContainerItemProxy */;
+			target = 65D7ECB7F80B4FB09D1ED6FA /* ALL_BUILD */;
+			targetProxy = F1FD4822598B48F6A63A9161 /* PBXContainerItemProxy */;
 		};
-		F1A2F2F71D82499A97570140 /* PBXTargetDependency */ = {
+		9BB6EC6BFF7D4476B3344420 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1A0351F35EDD42C0A866D466 /* ZERO_CHECK */;
-			targetProxy = 94284C1B9910492E8687B5AA /* PBXContainerItemProxy */;
+			target = 5DE2A1F25A0C4B3E99488983 /* glfw */;
+			targetProxy = D30575D27F314637812D89AE /* PBXContainerItemProxy */;
 		};
-		F9CDDB99490349D3BD8F2252 /* PBXTargetDependency */ = {
+		C1FE5658E7AE4947B7C64CAA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 726E3B0C2A354078AB9A6140 /* glfw */;
-			targetProxy = 5369656822BD4998B9325B31 /* PBXContainerItemProxy */;
+			target = 5DE2A1F25A0C4B3E99488983 /* glfw */;
+			targetProxy = 2E173BD008E4411D9E22CC35 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		0814F428B89344529EB58852 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk;
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build/build";
-			};
-			name = Debug;
-		};
-		08386A4DC071415F98EA230F /* MinSizeRel */ = {
+		10FD3DA3E79E4CB48388B955 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = x86_64;
 				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = "";
-				EXECUTABLE_SUFFIX = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",_GLFW_USE_CONFIG_H,"$(inherited)");
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/include\"","$(inherited)");
+				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src\"","$(inherited)");
 				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = " -Wall -pedantic     -DNDEBUG '-std=gnu++17' ";
-				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/MinSizeRel/libglfw3.a\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/lib/libGLEW.a\"","-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo","-framework Cocoa","-framework IOKit","-framework CoreFoundation","$(inherited)");
+				OTHER_CFLAGS = ("    -DNDEBUG -fPIC -Wall '-std=gnu99' ","$(inherited)");
+				OTHER_LIBTOOLFLAGS = ("");
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = A3;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = MinSizeRel;
-		};
-		097CB43A9CFA4199ADC15FAC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Debug;
-		};
-		0CFEACAEF249431D82642841 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = MinSizeRel;
-		};
-		166BACD890BB4B67AA2994F2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = uninstall;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Release;
-		};
-		192A10C9159E4D769DF7C6F8 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = RelWithDebInfo;
-		};
-		20DFA179B7E7484BA97300F1 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = RelWithDebInfo;
-		};
-		25F78ECA2CF74148AA81D276 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = install;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Debug;
-		};
-		28978922577C4CEC98CA6512 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk;
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build/build";
-			};
-			name = MinSizeRel;
-		};
-		3335870048BD4E4EA187A02B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Release;
-		};
-		3DB83F51B75C4B2C9873D68C /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = MinSizeRel;
-		};
-		5D6AE50B9ED243D0A83B9F59 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = install;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = MinSizeRel;
-		};
-		661FDD0681D74CB0B05076EE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Debug;
-		};
-		6763B7D309EB4A00B55EDE60 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = update_mappings;
+				PRODUCT_NAME = glfw3;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src";
 				USE_HEADERMAP = NO;
@@ -1122,7 +875,7 @@ exit 0";
 			};
 			name = MinSizeRel;
 		};
-		69D1BA4A5F1147A9BEE0161B /* MinSizeRel */ = {
+		17B12CB969D4434EA09C5D1E /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = x86_64;
@@ -1136,15 +889,64 @@ exit 0";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = ("","$(inherited)");
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = uninstall;
+				PRODUCT_NAME = ZERO_CHECK;
 				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = ("$(inherited)");
 			};
 			name = MinSizeRel;
 		};
-		77AAE621228E466C8D4E1C0A /* RelWithDebInfo */ = {
+		19E8DEA3216542448F62E7C4 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk;
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build/build";
+			};
+			name = MinSizeRel;
+		};
+		21B1825B368A4861AE6C3C58 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk;
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build/build";
+			};
+			name = RelWithDebInfo;
+		};
+		290FF719EF264BF383877794 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk;
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build/build";
+			};
+			name = Release;
+		};
+		36DC93F6FA8D43CF86ABBDFD /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		3C6978FCEE7E44D688436C67 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = x86_64;
@@ -1166,7 +968,7 @@ exit 0";
 			};
 			name = RelWithDebInfo;
 		};
-		8009106CBEB74ABB9038E7D1 /* RelWithDebInfo */ = {
+		4018FA25FC444CEDA1C4B204 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = x86_64;
@@ -1193,7 +995,455 @@ exit 0";
 			};
 			name = RelWithDebInfo;
 		};
-		85327825A3944EA7A3172DF9 /* Debug */ = {
+		43C380D52F4C4399B5619D05 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/include\"","$(inherited)");
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -Wall -pedantic     -DNDEBUG '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/MinSizeRel/libglfw3.a\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/lib/libGLEW.a\"","-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo","-framework Cocoa","-framework IOKit","-framework CoreFoundation","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = A3;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		5771509480BD4BE38D00F257 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = uninstall;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		65A94F29F0D547D188FE6D1A /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		695CA1ED5BEA4EC399F0F23B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk;
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build/build";
+			};
+			name = Debug;
+		};
+		6FCA66962B9D43D192D2A89A /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		720E06A4ECE14EF381A1D058 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = uninstall;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		721D52599E284305A43BC810 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = uninstall;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		72317FF3AB7C432BB686F028 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = uninstall;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		790773D7052E493096C5F087 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/include\"","$(inherited)");
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -Wall -pedantic        -DNDEBUG '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/RelWithDebInfo/libglfw3.a\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/lib/libGLEW.a\"","-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo","-framework Cocoa","-framework IOKit","-framework CoreFoundation","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = A3;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		8E45A108DB204022A1D33DF3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		9464F4E72EE24FEBB53B2B04 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = update_mappings;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		9725BD9A17754486BC4A1FC1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		9AAF1CCB44FB460F9DBA6F6C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		AA2ECC7CEFD44DA3AA81D461 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = update_mappings;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		AF18C62DD9BD4EC996E7A57E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		B7B335F3A3224D1F9B58B9F9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/include\"","$(inherited)");
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -Wall -pedantic     -DNDEBUG '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/Release/libglfw3.a\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/lib/libGLEW.a\"","-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo","-framework Cocoa","-framework IOKit","-framework CoreFoundation","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = A3;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		C24A82F6AEF949E19F841700 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",_GLFW_USE_CONFIG_H,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src\"","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = ("    -DNDEBUG -fPIC -Wall '-std=gnu99' ","$(inherited)");
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfw3;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		C868EE1B774B4A8291ED9BA6 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = update_mappings;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		CA9D76F99A0741D0B6C3F607 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/include\"","$(inherited)");
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CPLUSPLUSFLAGS = " -Wall -pedantic    '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/Debug/libglfw3.a\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/lib/libGLEW.a\"","-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo","-framework Cocoa","-framework IOKit","-framework CoreFoundation","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = A3;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		DDCEC779CD434CF9BE2E1BD0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = x86_64;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		E8B1C23EF32E4CB2B3DA27C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = x86_64;
@@ -1220,60 +1470,7 @@ exit 0";
 			};
 			name = Debug;
 		};
-		8BE18585D6A3450188181B08 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",_GLFW_USE_CONFIG_H,"$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src\"","$(inherited)");
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = ("    -DNDEBUG -fPIC -Wall '-std=gnu99' ","$(inherited)");
-				OTHER_LIBTOOLFLAGS = ("");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = glfw3;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Release;
-		};
-		8FB008AA8A6E43AC95BF64A8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = "";
-				EXECUTABLE_SUFFIX = "";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/include\"","$(inherited)");
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = " -Wall -pedantic    '-std=gnu++17' ";
-				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/Debug/libglfw3.a\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/lib/libGLEW.a\"","-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo","-framework Cocoa","-framework IOKit","-framework CoreFoundation","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = A3;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Debug;
-		};
-		9BFF7A8CED7A4A39A6F4519F /* RelWithDebInfo */ = {
+		E8FC7748A0F94E96A8A698D1 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = x86_64;
@@ -1287,85 +1484,15 @@ exit 0";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = ("","$(inherited)");
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = update_mappings;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = RelWithDebInfo;
-		};
-		9F48EC323949488D915B4F34 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = update_mappings;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Release;
-		};
-		A48D40A2EDAE430CB10F7D70 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = "";
-				EXECUTABLE_SUFFIX = "";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/include\"","$(inherited)");
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = " -Wall -pedantic        -DNDEBUG '-std=gnu++17' ";
-				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/RelWithDebInfo/libglfw3.a\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/lib/libGLEW.a\"","-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo","-framework Cocoa","-framework IOKit","-framework CoreFoundation","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = A3;
+				PRODUCT_NAME = ALL_BUILD;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = ("$(inherited)");
 			};
-			name = RelWithDebInfo;
+			name = MinSizeRel;
 		};
-		A49D0E2D1FDF42A58F8E045D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Release;
-		};
-		A4A758B8CF9F4C31862A4384 /* Release */ = {
+		EBABFC2491A84EED9A0C9E21 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = x86_64;
@@ -1387,100 +1514,7 @@ exit 0";
 			};
 			name = Release;
 		};
-		A9B2FBF7BDDD45309DF66FAB /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk;
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build/build";
-			};
-			name = RelWithDebInfo;
-		};
-		B9B5E2DDA45A480B8F80A822 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",_GLFW_USE_CONFIG_H,"$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/src\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src\"","$(inherited)");
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = ("    -DNDEBUG -fPIC -Wall '-std=gnu99' ","$(inherited)");
-				OTHER_LIBTOOLFLAGS = ("");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = glfw3;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = MinSizeRel;
-		};
-		BC1411F000204BB4B8B33495 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.1.sdk;
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build/build";
-			};
-			name = Release;
-		};
-		C367B1E8739341CA8D12B9D1 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = uninstall;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = RelWithDebInfo;
-		};
-		D3C59B29E4B44B46A8784FB3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = "";
-				EXECUTABLE_SUFFIX = "";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("\"/Users/mariopinto/Desktop/CSCE 441/glm-master\"","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/include\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/include\"","$(inherited)");
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = " -Wall -pedantic     -DNDEBUG '-std=gnu++17' ";
-				OTHER_LDFLAGS = (" -Wl,-search_paths_first -Wl,-headerpad_max_install_names","\"/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug/src/Release/libglfw3.a\"","\"/Users/mariopinto/Desktop/CSCE 441/glew-2.1.0/lib/libGLEW.a\"","-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo","-framework Cocoa","-framework IOKit","-framework CoreFoundation","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = A3;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A3/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Release;
-		};
-		DCDB5425EEFC44F19453C35E /* Debug */ = {
+		F90E082E1E194B86B9C7E0B3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = x86_64;
@@ -1502,120 +1536,98 @@ exit 0";
 			};
 			name = Debug;
 		};
-		DE00A43D7B024BDDA6273184 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = x86_64;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = uninstall;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/mariopinto/Desktop/CSCE 441/glfw-3.3.6/debug";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Debug;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		047B83CAAA36402AA47E3DE8 /* Build configuration list for PBXNativeTarget "glfw" */ = {
+		010F69E2D1F54EA29F027534 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				85327825A3944EA7A3172DF9 /* Debug */,
-				8BE18585D6A3450188181B08 /* Release */,
-				B9B5E2DDA45A480B8F80A822 /* MinSizeRel */,
-				8009106CBEB74ABB9038E7D1 /* RelWithDebInfo */,
+				AF18C62DD9BD4EC996E7A57E /* Debug */,
+				9725BD9A17754486BC4A1FC1 /* Release */,
+				E8FC7748A0F94E96A8A698D1 /* MinSizeRel */,
+				65A94F29F0D547D188FE6D1A /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		197D6F97A34E43A98421EB1D /* Build configuration list for PBXAggregateTarget "update_mappings" */ = {
+		09D0A7D9D48D48D5A1CAD9D5 /* Build configuration list for PBXProject "A3" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DCDB5425EEFC44F19453C35E /* Debug */,
-				9F48EC323949488D915B4F34 /* Release */,
-				6763B7D309EB4A00B55EDE60 /* MinSizeRel */,
-				9BFF7A8CED7A4A39A6F4519F /* RelWithDebInfo */,
+				695CA1ED5BEA4EC399F0F23B /* Debug */,
+				290FF719EF264BF383877794 /* Release */,
+				19E8DEA3216542448F62E7C4 /* MinSizeRel */,
+				21B1825B368A4861AE6C3C58 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		326ABB3797B44DBBB0FE9152 /* Build configuration list for PBXAggregateTarget "install" */ = {
+		2DE650EE022546DD95665611 /* Build configuration list for PBXAggregateTarget "update_mappings" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				25F78ECA2CF74148AA81D276 /* Debug */,
-				A4A758B8CF9F4C31862A4384 /* Release */,
-				5D6AE50B9ED243D0A83B9F59 /* MinSizeRel */,
-				77AAE621228E466C8D4E1C0A /* RelWithDebInfo */,
+				F90E082E1E194B86B9C7E0B3 /* Debug */,
+				AA2ECC7CEFD44DA3AA81D461 /* Release */,
+				C868EE1B774B4A8291ED9BA6 /* MinSizeRel */,
+				9464F4E72EE24FEBB53B2B04 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		63812EE4ABEA43689E890C34 /* Build configuration list for PBXProject "A3" */ = {
+		5D6AFAAD844E468D8B2E05E2 /* Build configuration list for PBXNativeTarget "glfw" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0814F428B89344529EB58852 /* Debug */,
-				BC1411F000204BB4B8B33495 /* Release */,
-				28978922577C4CEC98CA6512 /* MinSizeRel */,
-				A9B2FBF7BDDD45309DF66FAB /* RelWithDebInfo */,
+				E8B1C23EF32E4CB2B3DA27C2 /* Debug */,
+				C24A82F6AEF949E19F841700 /* Release */,
+				10FD3DA3E79E4CB48388B955 /* MinSizeRel */,
+				4018FA25FC444CEDA1C4B204 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		6692A5FF4D3D44F6AD550E6B /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+		8CD914D5E70D4B67A9880F64 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				661FDD0681D74CB0B05076EE /* Debug */,
-				A49D0E2D1FDF42A58F8E045D /* Release */,
-				0CFEACAEF249431D82642841 /* MinSizeRel */,
-				20DFA179B7E7484BA97300F1 /* RelWithDebInfo */,
+				9AAF1CCB44FB460F9DBA6F6C /* Debug */,
+				DDCEC779CD434CF9BE2E1BD0 /* Release */,
+				17B12CB969D4434EA09C5D1E /* MinSizeRel */,
+				6FCA66962B9D43D192D2A89A /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		793EA939D639447CBFFA7D60 /* Build configuration list for PBXNativeTarget "A3" */ = {
+		928F7DF6721E4BDA866A0DD8 /* Build configuration list for PBXNativeTarget "A3" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8FB008AA8A6E43AC95BF64A8 /* Debug */,
-				D3C59B29E4B44B46A8784FB3 /* Release */,
-				08386A4DC071415F98EA230F /* MinSizeRel */,
-				A48D40A2EDAE430CB10F7D70 /* RelWithDebInfo */,
+				CA9D76F99A0741D0B6C3F607 /* Debug */,
+				B7B335F3A3224D1F9B58B9F9 /* Release */,
+				43C380D52F4C4399B5619D05 /* MinSizeRel */,
+				790773D7052E493096C5F087 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		8D0B867EAFE947EFAF3AE7AB /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+		CA8F4CAB8CB043FDA991B458 /* Build configuration list for PBXAggregateTarget "install" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				097CB43A9CFA4199ADC15FAC /* Debug */,
-				3335870048BD4E4EA187A02B /* Release */,
-				3DB83F51B75C4B2C9873D68C /* MinSizeRel */,
-				192A10C9159E4D769DF7C6F8 /* RelWithDebInfo */,
+				8E45A108DB204022A1D33DF3 /* Debug */,
+				EBABFC2491A84EED9A0C9E21 /* Release */,
+				36DC93F6FA8D43CF86ABBDFD /* MinSizeRel */,
+				3C6978FCEE7E44D688436C67 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		AB26310426934AFA88AC87C0 /* Build configuration list for PBXAggregateTarget "uninstall" */ = {
+		F5A33658AFB3406AAE1D868C /* Build configuration list for PBXAggregateTarget "uninstall" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DE00A43D7B024BDDA6273184 /* Debug */,
-				166BACD890BB4B67AA2994F2 /* Release */,
-				69D1BA4A5F1147A9BEE0161B /* MinSizeRel */,
-				C367B1E8739341CA8D12B9D1 /* RelWithDebInfo */,
+				72317FF3AB7C432BB686F028 /* Debug */,
+				5771509480BD4BE38D00F257 /* Release */,
+				721D52599E284305A43BC810 /* MinSizeRel */,
+				720E06A4ECE14EF381A1D058 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 93B897FB400648C5AA1653AC /* Project object */;
+	rootObject = 91AC9C0139CB4DC7A868350D /* Project object */;
 }
