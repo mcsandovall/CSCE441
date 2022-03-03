@@ -8,10 +8,7 @@ void main(){
     n = normalize(cNor);
     e = normalize(-cPos);
     d = dot(n,e);
-    if(d < 0.3){
-        color = vec3(0.0);
-    }else{
-        color = vec3(1.0);
-    }
+    if(d < 0.3) color = vec3(0.0);
+    else color = vec3(1.0);
     gl_FragColor = vec4(color, 1.0);
 }

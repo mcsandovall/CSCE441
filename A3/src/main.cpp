@@ -73,7 +73,7 @@ public:
         program->addAttribute("aNor");
         program->addUniform("MV");
         program->addUniform("P");
-        if(_type == PHONG){
+        if(_type == PHONG || _type == CELL){
             program->addUniform("MVit"); // add the uniform
             program->addUniform("lightPos");
             program->addUniform("ka");
@@ -95,7 +95,7 @@ public:
         program->bind();
         glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
         glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-        if(type == PHONG){
+        if(type == PHONG || type == CELL){
             // make the MVit
             glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
             glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
@@ -324,6 +324,13 @@ static void init()
     // add the silhouette shader
     shader_collection->push_back("silh_vert.glsl", "silh_frag.glsl", SILHOUETTE);
 	
+    // add the cell shader
+    shader_collection->push_back("cell_vert.glsl", "cell_frag.glsl", CELL);
+    //set the materials for this shader
+    define_materials(shader_collection->tail->materials);
+    //set the lights
+    define_lights(shader_collection->tail->lights);
+    
 	camera = make_shared<Camera>();
 	camera->setInitDistance(2.0f); // Camera's initial Z translation
 	
