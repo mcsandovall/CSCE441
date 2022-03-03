@@ -34,9 +34,9 @@ string RESOURCE_DIR = "./"; // Where the resources are loaded from
 bool OFFLINE = false;
 
 shared_ptr<Camera> camera;
-shared_ptr<Program> prog;
-shared_ptr<Program> prog2; 
 shared_ptr<Shape> shape;
+shared_ptr<Shape> tea_shape;
+
 
 // make the class for the materials
 class Material{
@@ -87,7 +87,7 @@ public:
         type = _type;
         program->setVerbose(false);
     }
-    void render(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
+    void render(shared_ptr<Shape> _shape,shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
         program->bind();
         glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
         glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
@@ -105,7 +105,7 @@ public:
             glUniform3f(program->getUniform("light0Color"), lights[0].lightColor.x,lights[0].lightColor.y,lights[0].lightColor.z);
             glUniform3f(program->getUniform("light1Color"), lights[1].lightColor.x,lights[1].lightColor.y,lights[1].lightColor.z);
         }
-        shape->draw(program);
+        _shape->draw(program);
         program->unbind();
     }
     void next_material(){
@@ -319,6 +319,10 @@ static void init()
 	shape = make_shared<Shape>();
 	shape->loadMesh(RESOURCE_DIR + "bunny.obj");
 	shape->init();
+    
+    tea_shape = make_shared<Shape>();
+    tea_shape->loadMesh(RESOURCE_DIR + "teapot.obj");
+    tea_shape->init();
 	
 	GLSL::checkError(GET_FILE_LINE);
 }
@@ -372,19 +376,41 @@ static void render()
 	auto P = make_shared<MatrixStack>();
 	auto MV = make_shared<MatrixStack>();
 	
+    // Matrix stacks for the teapot
+    auto _MV = make_shared<MatrixStack>();
+    
 	// Apply camera transforms
 	P->pushMatrix();
 	camera->applyProjectionMatrix(P);
 	MV->pushMatrix();
 	camera->applyViewMatrix(MV);
+    
+    _MV->pushMatrix();
+    camera->applyViewMatrix(_MV);
+    
     // Task 1 transform the bunny
     MV->scale(0.5);
-    MV->translate(0.0f,-1.0f,0.0f);
+    MV->translate(-1.0f,-1.0f,0.0f);
+    // make the bunny rotate
+    MV->rotate(t, 0.0f,1.0f,0.0f);
+    
+    // Transform the teapot
+    _MV->scale(0.5);
+    _MV->translate(1.0,0.0,0.0);
+    _MV->rotate(-3.10,0.0,1.0,0.0);
+    
+    //shear rotate
+    glm::mat4 S(1.0f);
+    S[0][1] = -0.5f * cos(t);
+    _MV->multMatrix(S);
     
     // draw the bunny
-    shader_collection->current->render(P, MV);
+    shader_collection->current->render(shape,P, MV);
+    // draw the teapot
+    shader_collection->current->render(tea_shape, P, _MV);
     
 	MV->popMatrix();
+    _MV->popMatrix();
 	P->popMatrix();
 	
 	GLSL::checkError(GET_FILE_LINE);
