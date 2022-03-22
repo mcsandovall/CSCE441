@@ -1,0 +1,14 @@
+Target dependency graph (7 targets)
+ZERO_CHECK in A4, no dependencies
+glfw in A4, no dependencies
+A4 in A4, depends on:
+ZERO_CHECK in A4 (explicit)
+glfw in A4 (explicit)
+ALL_BUILD in A4, depends on:
+A4 in A4 (explicit)
+ZERO_CHECK in A4 (explicit)
+glfw in A4 (explicit)
+install in A4, depends on:
+ALL_BUILD in A4 (explicit)
+uninstall in A4, no dependencies
+update_mappings in A4, no dependencies

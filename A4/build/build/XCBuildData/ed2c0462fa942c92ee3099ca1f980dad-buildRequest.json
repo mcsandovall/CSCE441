@@ -1,0 +1,77 @@
+{
+  "_buildCommand2" : {
+    "command" : "prepareForIndexing",
+    "enableIndexBuildArena" : false,
+    "targets" : null
+  },
+  "buildCommand" : "build",
+  "configuredTargets" : [
+    {
+      "guid" : "1a0e070e276fae1e0280a835c905713753a15f5d291a440457e3ff6ae0685666"
+    },
+    {
+      "guid" : "1a0e070e276fae1e0280a835c90571375aeec0b29fc1376573d669dad6012aa9"
+    },
+    {
+      "guid" : "1a0e070e276fae1e0280a835c9057137c56daa1f9665e7d0c749d4d4afbb8b18"
+    },
+    {
+      "guid" : "1a0e070e276fae1e0280a835c9057137bafb96197e4cffc20090d6c84ea8d8c3"
+    },
+    {
+      "guid" : "1a0e070e276fae1e0280a835c90571373d27e031348672ccfe599d1e06040086"
+    },
+    {
+      "guid" : "1a0e070e276fae1e0280a835c9057137151b4429498ec2c53a9411ed604a03c0"
+    },
+    {
+      "guid" : "1a0e070e276fae1e0280a835c905713764fe306f0ea521dca10c75db756ecd38"
+    }
+  ],
+  "containerPath" : "/Users/mariopinto/Desktop/CSCE 441/CSCE441/A4/build/A3.xcodeproj",
+  "continueBuildingAfterErrors" : true,
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "x86_64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "platform" : "macosx",
+      "sdk" : "macosx12.1",
+      "sdkVariant" : "macos",
+      "supportedArchitectures" : [
+        "arm64e",
+        "arm64",
+        "x86_64"
+      ],
+      "targetArchitecture" : "x86_64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "",
+      "buildProductsPath" : "",
+      "derivedDataPath" : "/Users/mariopinto/Library/Developer/Xcode/DerivedData",
+      "indexDataStoreFolderPath" : "/Users/mariopinto/Library/Developer/Xcode/DerivedData/A3-dudpwcxhsebtjicnrnonsrjnwcbu/Index/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/mariopinto/Library/Developer/Xcode/DerivedData/A3-dudpwcxhsebtjicnrnonsrjnwcbu/Index/PrecompiledHeaders",
+      "pchPath" : ""
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "synthesized" : {
+        "table" : {
+          "ENABLE_PREVIEWS" : "NO"
+        }
+      }
+    }
+  },
+  "qos" : "default",
+  "schemeCommand" : "launch",
+  "schemeCommand2" : "launch",
+  "shouldCollectMetrics" : false,
+  "showNonLoggedProgress" : true,
+  "useDryRun" : true,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}
