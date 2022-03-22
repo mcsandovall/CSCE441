@@ -21,15 +21,10 @@
 #include "Program.h"
 #include "Shape.h"
 #include <vector>
+#include "Shader.h"
 
 using namespace std;
 
-enum SHADER_TYPE{
-    NORMAL,
-    PHONG,
-    SILHOUETTE,
-    CELL
-};
 
 GLFWwindow *window; // Main application window
 string RESOURCE_DIR = "./"; // Where the resources are loaded from
@@ -39,59 +34,36 @@ shared_ptr<Camera> camera;
 shared_ptr<Shape> shape;
 shared_ptr<Shape> tea_shape;
 
-
-// make the class for the materials
-class Material{
-public:
-    glm::vec3 ka,kd,ks;
-    float s;
-    Material() : ka(0.0,0.0,0.0), kd(0.0,0.0,0.0), ks(0.0,0.0,0.0), s(0) {} // constructor
-    Material(glm::vec3 _ka, glm::vec3 _kd, glm::vec3 _ks, float _s) : ka(_ka), kd(_kd), ks(_ks), s(_s) {}
-};
-// class for the lights
-class Light{
-public:
-    glm::vec3 lightPos, lightColor;
-    Light() : lightPos(1.0,1.0,1.0), lightColor(1.0,1.0,1.0){}
-    Light(glm::vec3 _lp, glm::vec3 _lc) : lightPos(_lp), lightColor(_lc){}
-};
-// class for the shaders
-class Shader{
-public:
-    shared_ptr<Program> program;
-    shared_ptr<Shader> next, prev;
-    SHADER_TYPE type;
-    vector<Material> materials;
-    vector<Light> lights;
-    int m_index = 0, l_index = 0;
-    Shader(string vertex_file, string frag_file, SHADER_TYPE _type) : next(nullptr), prev(nullptr){
-        program = make_shared<Program>();
-        program->setShaderNames(RESOURCE_DIR + vertex_file, RESOURCE_DIR + frag_file);
-        program->setVerbose(true);
-        program->init();
-        program->addAttribute("aPos");
-        program->addAttribute("aNor");
-        program->addUniform("MV");
-        program->addUniform("P");
-        if(_type == PHONG || _type == CELL){
-            program->addUniform("MVit"); // add the uniform
-            program->addUniform("lightPos");
-            program->addUniform("ka");
-            program->addUniform("kd");
-            program->addUniform("ks");
-            program->addUniform("s");
-            program->addUniform("light0Pos");
-            program->addUniform("light1Pos");
-            program->addUniform("light0Color");
-            program->addUniform("light1Color");
-        }
-        if(_type == SILHOUETTE){
-            program->addUniform("MVit");
-        }
-        type = _type;
-        program->setVerbose(false);
+Shader::Shader(string vertex_file, string frag_file, SHADER_TYPE _type){
+    next = nullptr;
+    prev = nullptr;
+    program = make_shared<Program>();
+    program->setShaderNames(RESOURCE_DIR + vertex_file, RESOURCE_DIR + frag_file);
+    program->setVerbose(true);
+    program->init();
+    program->addAttribute("aPos");
+    program->addAttribute("aNor");
+    program->addUniform("MV");
+    program->addUniform("P");
+    if(_type == PHONG || _type == CELL){
+        program->addUniform("MVit"); // add the uniform
+        program->addUniform("lightPos");
+        program->addUniform("ka");
+        program->addUniform("kd");
+        program->addUniform("ks");
+        program->addUniform("s");
+        program->addUniform("light0Pos");
+        program->addUniform("light1Pos");
+        program->addUniform("light0Color");
+        program->addUniform("light1Color");
     }
-    void render(shared_ptr<Shape> _shape,shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
+    if(_type == SILHOUETTE){
+        program->addUniform("MVit");
+    }
+    type = _type;
+    program->setVerbose(false);
+}
+void Shader::bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
         program->bind();
         glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
         glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
@@ -113,59 +85,53 @@ public:
             glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
             glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
         }
-        _shape->draw(program);
-        program->unbind();
     }
-    void next_material(){
+void Shader::program_unbind(){
+    program->unbind();
+}
+    void Shader::next_material(){
         if(materials.size() == 0) return;
         m_index = ++m_index % materials.size();
     }
     
-    void prev_material(){
+    void Shader::prev_material(){
         if(materials.size() == 0) return;
         if(m_index == 0) m_index = materials.size()-1;
         --m_index;
     }
-    void next_ligth(){
+    void Shader::next_ligth(){
         if(lights.size() == 0)return;
         l_index = ++l_index % lights.size();
     }
-    void prev_light(){
-        if(lights.size() == 0)return;
-        if(l_index == 0) l_index = lights.size()-1;
-        --l_index;
+void Shader::prev_light(){
+    if(lights.size() == 0)return;
+    if(l_index == 0) l_index = lights.size()-1;
+    --l_index;
+}
+Light * Shader::current_light(){
+    if(lights.size() == 0) return nullptr;
+    return &lights[l_index];
+}
+void Shader_Collection::push_back(string vert_file, string frag_file, SHADER_TYPE _type){
+    shared_ptr<Shader> newShader = make_shared<Shader>(vert_file,frag_file, _type);
+    if(!header){ // make the first shader
+        header = newShader;
+        tail = newShader;
+        current = newShader;
+        return;
     }
-    Light * current_light(){
-        if(lights.size() == 0) return nullptr;
-        return &lights[l_index];
-    }
-};
-// class that has the collection of shaders
-class Shader_Collection{
-public:
-    shared_ptr<Shader> header, tail, current;
-    Shader_Collection() : header(nullptr),tail(nullptr), current(nullptr){}
-    void push_back(string vert_file, string frag_file, SHADER_TYPE _type){
-        shared_ptr<Shader> newShader = make_shared<Shader>(vert_file,frag_file, _type);
-        if(!header){ // make the first shader
-            header = newShader;
-            tail = newShader;
-            current = newShader;
-            return;
-        }
-        tail->next = newShader;
-        newShader->prev = tail;
-        tail = tail->next;
-    }
-    void move_forward(){
-        if(!current->next)return;
-        current = current->next;
-    }
-    void move_backward(){
-        if(!current->prev)return;
-        current = current->prev;
-    }
-};
+    tail->next = newShader;
+    newShader->prev = tail;
+    tail = tail->next;
+}
+void Shader_Collection::move_forward(){
+    if(!current->next)return;
+    current = current->next;
+}
+void Shader_Collection::move_backward(){
+    if(!current->prev)return;
+    current = current->prev;
+}
 
 // make a pointer to a shared collection
 shared_ptr<Shader_Collection> shader_collection;
@@ -423,13 +389,16 @@ static void render()
     _MV->multMatrix(S);
     
     // draw the bunny
-    shader_collection->current->render(shape,P, MV);
+    shader_collection->current->bind(P, MV);
+    shape->draw(shader_collection->current->program);
     // draw the teapot
-    shader_collection->current->render(tea_shape, P, _MV);
+    shader_collection->current->bind(P, _MV);
+    tea_shape->draw(shader_collection->current->program);
     
 	MV->popMatrix();
     _MV->popMatrix();
 	P->popMatrix();
+    shader_collection->current->program_unbind();
 	
 	GLSL::checkError(GET_FILE_LINE);
 	

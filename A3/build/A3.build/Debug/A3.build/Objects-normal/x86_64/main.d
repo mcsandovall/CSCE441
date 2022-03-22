@@ -254,4 +254,5 @@ dependencies: /Users/mariopinto/Desktop/CSCE\ 441/CSCE441/A3/src/main.cpp \
   /Users/mariopinto/Desktop/CSCE\ 441/CSCE441/A3/src/GLSL.h \
   /Users/mariopinto/Desktop/CSCE\ 441/CSCE441/A3/src/MatrixStack.h \
   /Users/mariopinto/Desktop/CSCE\ 441/CSCE441/A3/src/Program.h \
-  /Users/mariopinto/Desktop/CSCE\ 441/CSCE441/A3/src/Shape.h
+  /Users/mariopinto/Desktop/CSCE\ 441/CSCE441/A3/src/Shape.h \
+  /Users/mariopinto/Desktop/CSCE\ 441/CSCE441/A3/src/Shader.h

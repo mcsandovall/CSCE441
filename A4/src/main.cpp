@@ -33,6 +33,8 @@ bool OFFLINE = false;
 shared_ptr<Camera> camera;
 shared_ptr<Shape> shape;
 shared_ptr<Shape> tea_shape;
+// make a pointer to a shared collection
+shared_ptr<Shader_Collection> shader_collection;
 
 Shader::Shader(string vertex_file, string frag_file, SHADER_TYPE _type){
     next = nullptr;
@@ -133,9 +135,6 @@ void Shader_Collection::move_backward(){
     current = current->prev;
 }
 
-// make a pointer to a shared collection
-shared_ptr<Shader_Collection> shader_collection;
-
 static void define_materials(vector<Material> &materials){
     // in here i will define the materials for the objects
     glm::vec3 _ka, _kd, _ks;
@@ -177,6 +176,47 @@ void define_lights(vector<Light> &lights){
     _lc = glm::vec3(0.2, 0.2, 0.0);
     lights.push_back(Light(_lp,_lc));
 }
+
+/**
+ Assigment 4 start code. Implement in different file once it works
+ */
+
+enum OBJECT_TYPE{
+    BUNNY,
+    TEAPOT
+};
+
+class Object{
+public:
+    glm::vec3 Translate, Rotate, Scale;
+    glm::mat4 Shear;
+    double angle;
+    OBJECT_TYPE type;
+    shared_ptr<Shape> _shape;
+    
+    Object() : Translate(glm::vec3(0)), Rotate(glm::vec3(0)), Scale(glm::vec3(0)), Shear(glm::mat4(1.0f)), angle(1.0) {}
+    ~Object(){}
+    Object(OBJECT_TYPE _type): Translate(glm::vec3(0)), Rotate(glm::vec3(0)), Scale(glm::vec3(0)), Shear(glm::mat4(1.0f)), angle(1.0) { // load the object into the shape
+        _shape = make_shared<Shape>();
+        if(_type == BUNNY){
+            _shape->loadMesh(RESOURCE_DIR + "bunny.obj");
+        }else{
+            _shape->loadMesh(RESOURCE_DIR + "teapot.obj");
+        }
+        _shape->init();
+    }
+    void draw_shape(shared_ptr<Shader> shader, shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
+        MV->pushMatrix();
+        MV->translate(Translate);
+        MV->scale(Scale);
+        MV->rotate(angle, Rotate);
+        MV->multMatrix(Shear);
+        shader->bind(P, MV);
+        _shape->draw(shader->program);
+        shader->program_unbind();
+        MV->popMatrix();
+    }
+};
 
 bool keyToggles[256] = {false}; // only for English keyboards!
 
@@ -268,6 +308,8 @@ static void saveImage(const char *filepath, GLFWwindow *w)
 	}
 }
 
+shared_ptr<Object> shape1,shape2;
+
 // This function is called once to initialize the scene and OpenGL
 static void init()
 {
@@ -300,13 +342,9 @@ static void init()
 	camera = make_shared<Camera>();
 	camera->setInitDistance(2.0f); // Camera's initial Z translation
 	
-	shape = make_shared<Shape>();
-	shape->loadMesh(RESOURCE_DIR + "bunny.obj");
-	shape->init();
+    shape1 = make_shared<Object>(BUNNY);
     
-    tea_shape = make_shared<Shape>();
-    tea_shape->loadMesh(RESOURCE_DIR + "teapot.obj");
-    tea_shape->init();
+    shape2 = make_shared<Object>(TEAPOT);
 	
 	GLSL::checkError(GET_FILE_LINE);
 }
@@ -359,9 +397,6 @@ static void render()
 	// Matrix stacks
 	auto P = make_shared<MatrixStack>();
 	auto MV = make_shared<MatrixStack>();
-	
-    // Matrix stacks for the teapot
-    auto _MV = make_shared<MatrixStack>();
     
 	// Apply camera transforms
 	P->pushMatrix();
@@ -369,34 +404,23 @@ static void render()
 	MV->pushMatrix();
 	camera->applyViewMatrix(MV);
     
-    _MV->pushMatrix();
-    camera->applyViewMatrix(_MV);
+    shape1->Scale = glm::vec3(0.5);
+    shape1->Translate = glm::vec3(-0.5f,-0.5f,0.0f);
+    shape1->Rotate = glm::vec3(0.0,1.0f,0.0);
+    shape1->angle = t;
     
-    // Task 1 transform the bunny
-    MV->scale(0.5);
-    MV->translate(-1.0f,-1.0f,0.0f);
-    // make the bunny rotate
-    MV->rotate(t, 0.0f,1.0f,0.0f);
+    shape2->Scale = glm::vec3(0.5);
+    shape2->Translate = glm::vec3(0.5,0.0,0.0);
+    shape2->Rotate = glm::vec3(0.0,1.0,0.0);
+    shape2->angle = M_PI;
+    shape2->Shear = glm::mat4(1.0f);
+    shape2->Shear[0][1] = -0.5f * cos(t);
     
-    // Transform the teapot
-    _MV->scale(0.5);
-    _MV->translate(1.0,0.0,0.0);
-    _MV->rotate(-3.10,0.0,1.0,0.0);
+    // draw the the bunny and teapot
+    shape1->draw_shape(shader_collection->current, P, MV);
+    shape2->draw_shape(shader_collection->current, P, MV);
     
-    //shear rotate
-    glm::mat4 S(1.0f);
-    S[0][1] = -0.5f * cos(t);
-    _MV->multMatrix(S);
-    
-    // draw the bunny
-    shader_collection->current->bind(P, MV);
-    shape->draw(shader_collection->current->program);
-    // draw the teapot
-    shader_collection->current->bind(P, _MV);
-    tea_shape->draw(shader_collection->current->program);
-    
-	MV->popMatrix();
-    _MV->popMatrix();
+    MV->popMatrix();
 	P->popMatrix();
     shader_collection->current->program_unbind();
 	
