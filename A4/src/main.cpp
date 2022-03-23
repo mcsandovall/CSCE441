@@ -31,14 +31,11 @@ string RESOURCE_DIR = "./"; // Where the resources are loaded from
 bool OFFLINE = false;
 
 shared_ptr<Camera> camera;
-shared_ptr<Shape> shape;
-shared_ptr<Shape> tea_shape;
+shared_ptr<Shader> shader;
 // make a pointer to a shared collection
-shared_ptr<Shader_Collection> shader_collection;
 
-Shader::Shader(string vertex_file, string frag_file, SHADER_TYPE _type){
-    next = nullptr;
-    prev = nullptr;
+// Shader class function implementation
+Shader::Shader(string vertex_file, string frag_file){
     program = make_shared<Program>();
     program->setShaderNames(RESOURCE_DIR + vertex_file, RESOURCE_DIR + frag_file);
     program->setVerbose(true);
@@ -47,134 +44,30 @@ Shader::Shader(string vertex_file, string frag_file, SHADER_TYPE _type){
     program->addAttribute("aNor");
     program->addUniform("MV");
     program->addUniform("P");
-    if(_type == PHONG || _type == CELL){
-        program->addUniform("MVit"); // add the uniform
-        program->addUniform("lightPos");
-        program->addUniform("ka");
-        program->addUniform("kd");
-        program->addUniform("ks");
-        program->addUniform("s");
-        program->addUniform("light0Pos");
-        program->addUniform("light1Pos");
-        program->addUniform("light0Color");
-        program->addUniform("light1Color");
-    }
-    if(_type == SILHOUETTE){
-        program->addUniform("MVit");
-    }
-    type = _type;
+    program->addUniform("MVit"); // add the uniform
+    program->addUniform("lightPos");
+    program->addUniform("ka");
+    program->addUniform("kd");
+    program->addUniform("ks");
+    program->addUniform("s");
     program->setVerbose(false);
 }
-void Shader::bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
+void Shader::bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M){
         program->bind();
         glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
         glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-        if(type == PHONG || type == CELL){
-            // make the MVit
-            glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
-            glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
-            glUniform3f(program->getUniform("lightPos"), 1.0f, 1.0f, 1.0f);
-            glUniform3f(program->getUniform("ka"), materials[m_index].ka.x,materials[m_index].ka.y,materials[m_index].ka.z);
-            glUniform3f(program->getUniform("kd"), materials[m_index].kd.x,materials[m_index].kd.y,materials[m_index].kd.z);
-            glUniform3f(program->getUniform("ks"), materials[m_index].ks.x,materials[m_index].ks.y,materials[m_index].ks.z);
-            glUniform1f(program->getUniform("s"),  materials[m_index].s);
-            glUniform3f(program->getUniform("light0Pos"), lights[0].lightPos.x,lights[0].lightPos.y,lights[0].lightPos.z);
-            glUniform3f(program->getUniform("light1Pos"), lights[1].lightPos.x,lights[1].lightPos.y,lights[1].lightPos.z);
-            glUniform3f(program->getUniform("light0Color"), lights[0].lightColor.x,lights[0].lightColor.y,lights[0].lightColor.z);
-            glUniform3f(program->getUniform("light1Color"), lights[1].lightColor.x,lights[1].lightColor.y,lights[1].lightColor.z);
-        }
-        if(type == SILHOUETTE){
-            glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
-            glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
-        }
+        // make the MVit
+        glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
+        glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
+        glUniform3f(program->getUniform("lightPos"), 1.0f, 1.0f, 1.0f);
+        glUniform3f(program->getUniform("ka"), M.ka.x,M.ka.y,M.ka.z);
+        glUniform3f(program->getUniform("kd"), M.kd.x,M.kd.y,M.kd.z);
+        glUniform3f(program->getUniform("ks"), M.ks.x,M.ks.y,M.ks.z);
+        glUniform1f(program->getUniform("s"),  M.s);
+        
     }
 void Shader::program_unbind(){
     program->unbind();
-}
-    void Shader::next_material(){
-        if(materials.size() == 0) return;
-        m_index = ++m_index % materials.size();
-    }
-    
-    void Shader::prev_material(){
-        if(materials.size() == 0) return;
-        if(m_index == 0) m_index = materials.size()-1;
-        --m_index;
-    }
-    void Shader::next_ligth(){
-        if(lights.size() == 0)return;
-        l_index = ++l_index % lights.size();
-    }
-void Shader::prev_light(){
-    if(lights.size() == 0)return;
-    if(l_index == 0) l_index = lights.size()-1;
-    --l_index;
-}
-Light * Shader::current_light(){
-    if(lights.size() == 0) return nullptr;
-    return &lights[l_index];
-}
-void Shader_Collection::push_back(string vert_file, string frag_file, SHADER_TYPE _type){
-    shared_ptr<Shader> newShader = make_shared<Shader>(vert_file,frag_file, _type);
-    if(!header){ // make the first shader
-        header = newShader;
-        tail = newShader;
-        current = newShader;
-        return;
-    }
-    tail->next = newShader;
-    newShader->prev = tail;
-    tail = tail->next;
-}
-void Shader_Collection::move_forward(){
-    if(!current->next)return;
-    current = current->next;
-}
-void Shader_Collection::move_backward(){
-    if(!current->prev)return;
-    current = current->prev;
-}
-
-static void define_materials(vector<Material> &materials){
-    // in here i will define the materials for the objects
-    glm::vec3 _ka, _kd, _ks;
-    float s;
-
-    // first material
-    _ka = glm::vec3(0.2,0.2,0.2);
-    _kd = glm::vec3(0.8,0.7,0.7);
-    _ks = glm::vec3(1.0,0.9,0.8);
-    s = 200;
-    materials.push_back(Material(_ka,_kd,_ks,s));
-
-    // second material blue
-    _ka = glm::vec3(0.1,0.1,0.1);
-    _kd = glm::vec3(0.1,0.1,1.0);
-    _ks = glm::vec3(0.1,1.0,0.1);
-    s = 100;
-    materials.push_back(Material(_ka,_kd,_ks,s));
-
-    // third material grey
-    _ka = glm::vec3(0.1,0.1,0.1);
-    _kd = glm::vec3(0.5,0.5,0.7);
-    _ks = glm::vec3(0.1,0.1,0.1);
-    s = 200;
-    materials.push_back(Material(_ka,_kd,_ks,s));
-}
-
-void define_lights(vector<Light> &lights){
-    // here i will define the lights to be passed into the vecotr of the shader
-    glm::vec3 _lp, _lc;
-    
-    // light 1
-    _lp = glm::vec3(1.0,1.0,1.0);
-    _lc = glm::vec3(0.8, 0.8, 0.8);
-    lights.push_back(Light(_lp,_lc));
-    
-    // light 2
-    _lp = glm::vec3(-1.0, 1.0, 1.0);
-    _lc = glm::vec3(0.2, 0.2, 0.0);
-    lights.push_back(Light(_lp,_lc));
 }
 
 /**
@@ -192,27 +85,40 @@ public:
     glm::mat4 Shear;
     double angle;
     OBJECT_TYPE type;
-    shared_ptr<Shape> _shape;
+    shared_ptr<Shape> shape;
+    Material material;
     
     Object() : Translate(glm::vec3(0)), Rotate(glm::vec3(0)), Scale(glm::vec3(0)), Shear(glm::mat4(1.0f)), angle(1.0) {}
     ~Object(){}
     Object(OBJECT_TYPE _type): Translate(glm::vec3(0)), Rotate(glm::vec3(0)), Scale(glm::vec3(0)), Shear(glm::mat4(1.0f)), angle(1.0) { // load the object into the shape
-        _shape = make_shared<Shape>();
+        shape = make_shared<Shape>();
         if(_type == BUNNY){
-            _shape->loadMesh(RESOURCE_DIR + "bunny.obj");
+            shape->loadMesh(RESOURCE_DIR + "bunny.obj");
         }else{
-            _shape->loadMesh(RESOURCE_DIR + "teapot.obj");
+            shape->loadMesh(RESOURCE_DIR + "teapot.obj");
         }
-        _shape->init();
+        // make the material with a random color
+        glm::vec3 _ka, _kd, _ks;
+        float s;
+        // use the first material as a reference for the ambient light and the shine wanted for assigment 4
+        _ka = glm::vec3(0.2,0.2,0.2);
+        _kd = glm::vec3(0.8,0.7,0.7);
+//        r = (float) (rand()) / (float) RAND_MAX;
+//        g = (float) (rand()) / (float) RAND_MAX;
+//        b = (float) (rand()) / (float) RAND_MAX;
+        _ks = glm::vec3(1.0,0.9,0.8);
+        s = 200;
+        material = Material(_ka,_kd,_ks,s);
+        shape->init();
     }
-    void draw_shape(shared_ptr<Shader> shader, shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
+    void draw_shape(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
         MV->pushMatrix();
         MV->translate(Translate);
         MV->scale(Scale);
         MV->rotate(angle, Rotate);
         MV->multMatrix(Shear);
-        shader->bind(P, MV);
-        _shape->draw(shader->program);
+        shader->bind(P, MV, material);
+        shape->draw(shader->program);
         shader->program_unbind();
         MV->popMatrix();
     }
@@ -263,20 +169,6 @@ static void cursor_position_callback(GLFWwindow* window, double xmouse, double y
 // This function is called keyboard letter is pressed
 static void char_callback(GLFWwindow *window, unsigned int key)
 {
-    if(keyToggles[(unsigned) 's']){ // move the shader
-        shader_collection->move_forward();
-    }
-    if(keyToggles[(unsigned) 'S']){ // move the shader
-        shader_collection->move_backward();
-    }
-    if(keyToggles[(unsigned) 'm']){ // move materials
-        // forward material
-        shader_collection->current->next_material();
-    }
-    if(keyToggles[(unsigned) 'M']){ // move the materials
-        // backwards material
-        shader_collection->current->prev_material();
-    }
     keyToggles[key] = !keyToggles[key];
 }
 
@@ -308,7 +200,7 @@ static void saveImage(const char *filepath, GLFWwindow *w)
 	}
 }
 
-shared_ptr<Object> shape1,shape2;
+shared_ptr<Object> bunny,teapot;
 
 // This function is called once to initialize the scene and OpenGL
 static void init()
@@ -320,31 +212,14 @@ static void init()
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	// Enable z-buffer test.
 	glEnable(GL_DEPTH_TEST);
-
-    shader_collection = make_shared<Shader_Collection>();
-    shader_collection->push_back("normal_vert.glsl", "normal_frag.glsl",NORMAL);
-    shader_collection->push_back("phong_vert.glsl", "phong_frag.glsl", PHONG);
-    // set the materials for the phong shader
-    define_materials(shader_collection->tail->materials);
-    // set the lights for the phong shaders
-    define_lights(shader_collection->tail->lights);
-    
-    // add the silhouette shader
-    shader_collection->push_back("silh_vert.glsl", "silh_frag.glsl", SILHOUETTE);
-	
-    // add the cell shader
-    shader_collection->push_back("cell_vert.glsl", "cell_frag.glsl", CELL);
-    //set the materials for this shader
-    define_materials(shader_collection->tail->materials);
-    //set the lights
-    define_lights(shader_collection->tail->lights);
     
 	camera = make_shared<Camera>();
 	camera->setInitDistance(2.0f); // Camera's initial Z translation
 	
-    shape1 = make_shared<Object>(BUNNY);
-    
-    shape2 = make_shared<Object>(TEAPOT);
+    shader = make_shared<Shader>("phong_vert.glsl", "phong_frag.glsl");
+    // load the object only once
+    bunny = make_shared<Object>(BUNNY);
+    teapot = make_shared<Object>(TEAPOT);
 	
 	GLSL::checkError(GET_FILE_LINE);
 }
@@ -364,24 +239,6 @@ static void render()
 	} else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
-    if(keyToggles[(unsigned) 'l']){
-        shader_collection->current->next_ligth();
-    }
-    if(keyToggles[(unsigned) 'L']){
-        shader_collection->current->prev_light();
-    }
-    if(keyToggles[(unsigned) 'x']){// toggle the light in x dir
-        shader_collection->current->current_light()->lightPos.x += 0.2;
-    }
-    if(keyToggles[(unsigned) 'X']){// toggle the light in x dir
-        shader_collection->current->current_light()->lightPos.x -= 0.2;
-    }
-    if(keyToggles[(unsigned) 'y']){// toggle the light in x dir
-        shader_collection->current->current_light()->lightPos.y += 0.2;
-    }
-    if(keyToggles[(unsigned) 'Y']){// toggle the light in x dir
-        shader_collection->current->current_light()->lightPos.y += 0.2;
-    }
 	
 	// Get current frame buffer size.
 	int width, height;
@@ -404,25 +261,25 @@ static void render()
 	MV->pushMatrix();
 	camera->applyViewMatrix(MV);
     
-    shape1->Scale = glm::vec3(0.5);
-    shape1->Translate = glm::vec3(-0.5f,-0.5f,0.0f);
-    shape1->Rotate = glm::vec3(0.0,1.0f,0.0);
-    shape1->angle = t;
+    bunny->Scale = glm::vec3(0.5);
+    bunny->Translate = glm::vec3(-0.5f,-0.5f,0.0f);
+    bunny->Rotate = glm::vec3(0.0,1.0f,0.0);
+    bunny->angle = t;
     
-    shape2->Scale = glm::vec3(0.5);
-    shape2->Translate = glm::vec3(0.5,0.0,0.0);
-    shape2->Rotate = glm::vec3(0.0,1.0,0.0);
-    shape2->angle = M_PI;
-    shape2->Shear = glm::mat4(1.0f);
-    shape2->Shear[0][1] = -0.5f * cos(t);
+    teapot->Scale = glm::vec3(0.5);
+    teapot->Translate = glm::vec3(0.5,0.0,0.0);
+    teapot->Rotate = glm::vec3(0.0,1.0,0.0);
+    teapot->angle = M_PI;
+    teapot->Shear = glm::mat4(1.0f);
+    teapot->Shear[0][1] = -0.5f * cos(t);
     
     // draw the the bunny and teapot
-    shape1->draw_shape(shader_collection->current, P, MV);
-    shape2->draw_shape(shader_collection->current, P, MV);
+    bunny->draw_shape(P, MV);
+    teapot->draw_shape(P, MV);
     
     MV->popMatrix();
 	P->popMatrix();
-    shader_collection->current->program_unbind();
+    shader->program_unbind();
 	
 	GLSL::checkError(GET_FILE_LINE);
 	
