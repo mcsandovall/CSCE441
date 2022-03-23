@@ -15,7 +15,7 @@ void main()
 {
     // variable definitions
     vec3 n, l, ca, cd, cs, c, h, e;
-    
+    float r,g,b;
     // compute the normals
     n = normalize(cNor);
     l = normalize(lightPos - cPos);

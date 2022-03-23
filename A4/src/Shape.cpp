@@ -51,6 +51,9 @@ void Shape::loadMesh(const string &meshName)
 					tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
 					posBuf.push_back(attrib.vertices[3*idx.vertex_index+0]);
 					posBuf.push_back(attrib.vertices[3*idx.vertex_index+1]);
+                    // get the min y of the mesh
+                    min_y = min(attrib.vertices[3*idx.vertex_index+1], min_y);
+                    
 					posBuf.push_back(attrib.vertices[3*idx.vertex_index+2]);
 					if(!attrib.normals.empty()) {
 						norBuf.push_back(attrib.normals[3*idx.normal_index+0]);

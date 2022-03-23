@@ -74,9 +74,14 @@ void Shader::program_unbind(){
  Assigment 4 start code. Implement in different file once it works
  */
 
+vector<int> object_t;
+vector<glm::vec3> colors;
+
 enum OBJECT_TYPE{
     BUNNY,
-    TEAPOT
+    TEAPOT,
+    FLOOR,
+    SUN
 };
 
 class Object{
@@ -87,25 +92,28 @@ public:
     OBJECT_TYPE type;
     shared_ptr<Shape> shape;
     Material material;
+    float y_min, x_min;
     
-    Object() : Translate(glm::vec3(0)), Rotate(glm::vec3(0)), Scale(glm::vec3(0)), Shear(glm::mat4(1.0f)), angle(1.0) {}
+    Object() : Translate(glm::vec3(0)), Rotate(glm::vec3(1.0)), Scale(glm::vec3(1.0)), Shear(glm::mat4(1.0f)), angle(1.0){}
     ~Object(){}
-    Object(OBJECT_TYPE _type): Translate(glm::vec3(0)), Rotate(glm::vec3(0)), Scale(glm::vec3(0)), Shear(glm::mat4(1.0f)), angle(1.0) { // load the object into the shape
+    Object(OBJECT_TYPE _type): Translate(glm::vec3(0)), Rotate(glm::vec3(1.0)), Scale(glm::vec3(1.0)), Shear(glm::mat4(1.0f)), angle(0) { // load the object into the shape
         shape = make_shared<Shape>();
         if(_type == BUNNY){
             shape->loadMesh(RESOURCE_DIR + "bunny.obj");
-        }else{
+        }else if(_type == TEAPOT){
             shape->loadMesh(RESOURCE_DIR + "teapot.obj");
+        }else if(_type == FLOOR){
+            shape->loadMesh(RESOURCE_DIR + "cube.obj");
+        }else{
+            shape->loadMesh(RESOURCE_DIR + "sphere.obj");
         }
+        y_min = shape->min_y;
         // make the material with a random color
         glm::vec3 _ka, _kd, _ks;
         float s;
         // use the first material as a reference for the ambient light and the shine wanted for assigment 4
         _ka = glm::vec3(0.2,0.2,0.2);
         _kd = glm::vec3(0.8,0.7,0.7);
-//        r = (float) (rand()) / (float) RAND_MAX;
-//        g = (float) (rand()) / (float) RAND_MAX;
-//        b = (float) (rand()) / (float) RAND_MAX;
         _ks = glm::vec3(1.0,0.9,0.8);
         s = 200;
         material = Material(_ka,_kd,_ks,s);
@@ -122,7 +130,27 @@ public:
         shader->program_unbind();
         MV->popMatrix();
     }
+    void scale_obj(float x){
+        Scale = glm::vec3(x);
+        y_min = shape->min_y * x;
+    }
 };
+
+void random_color(vector<glm::vec3> & colors){
+    float r,g,b;
+    for(int i = 0; i < 100; ++i){
+        r = (float) rand() / (float) RAND_MAX;
+        g = (float) rand() / (float) RAND_MAX;
+        b = (float) rand() / (float) RAND_MAX;
+        colors.push_back(glm::vec3(r,g,b));
+    }
+}
+
+void random_obj(vector<int> & obj_t){
+    for(int i = 0; i < 100; ++i){
+        obj_t.push_back(rand() % 2);
+    }
+}
 
 bool keyToggles[256] = {false}; // only for English keyboards!
 
@@ -200,7 +228,7 @@ static void saveImage(const char *filepath, GLFWwindow *w)
 	}
 }
 
-shared_ptr<Object> bunny,teapot;
+shared_ptr<Object> bunny,teapot, Floor, sun;
 
 // This function is called once to initialize the scene and OpenGL
 static void init()
@@ -220,6 +248,8 @@ static void init()
     // load the object only once
     bunny = make_shared<Object>(BUNNY);
     teapot = make_shared<Object>(TEAPOT);
+    Floor = make_shared<Object>(FLOOR);
+    sun = make_shared<Object>(SUN);
 	
 	GLSL::checkError(GET_FILE_LINE);
 }
@@ -261,26 +291,52 @@ static void render()
 	MV->pushMatrix();
 	camera->applyViewMatrix(MV);
     
-    bunny->Scale = glm::vec3(0.5);
-    bunny->Translate = glm::vec3(-0.5f,-0.5f,0.0f);
-    bunny->Rotate = glm::vec3(0.0,1.0f,0.0);
-    bunny->angle = t;
+    // draw the floor and the sun
+    sun->scale_obj(0.5);
+    sun->Translate = glm::vec3(1.0f);
+    sun->material.kd = glm::vec3(1.0,1.0,0.0);
+    sun->draw_shape(P, MV);
     
-    teapot->Scale = glm::vec3(0.5);
-    teapot->Translate = glm::vec3(0.5,0.0,0.0);
-    teapot->Rotate = glm::vec3(0.0,1.0,0.0);
-    teapot->angle = M_PI;
-    teapot->Shear = glm::mat4(1.0f);
-    teapot->Shear[0][1] = -0.5f * cos(t);
+//    Floor->scale_obj(100);
+//    Floor->Translate = glm::vec3(0.0,-Floor->y_min,0.0);
+//    Floor->material.kd = glm::vec3(0.0,0.3,0.0);
+//    Floor->draw_shape(P, MV);
+    bunny->scale_obj(0.5f); teapot->scale_obj(0.5);
+    for(int i = -5; i < 5; ++i){
+        for(int x = -5; x < 5; ++x){
+            if(object_t[10 * (i+5) + (x+5)] == 1){//draw the bunny
+                bunny->Translate = glm::vec3(x,-bunny->y_min,i);
+                bunny->Rotate = glm::vec3(0.0f,1.0f,0.0f);
+                bunny->angle = t;
+                bunny->material.kd = colors[10 * (i+5) + (x+5)];
+                bunny->draw_shape(P, MV);
+            }else{
+                teapot->Translate = glm::vec3(x,-teapot->y_min,i);
+                teapot->Rotate = glm::vec3(0.0f,1.0f,0.0f);
+                teapot->angle = t;
+                teapot->material.kd = colors[10 * (i+5) + (x+5)];
+                teapot->draw_shape(P, MV);
+            }
+        }
+    }
+    Floor->scale_obj(12);
+    Floor->Translate = (glm::vec3(0,-Floor->y_min,0));
+    Floor->material.kd = glm::vec3(0.0,0.3,0.0);
+    Floor->draw_shape(P, MV);
     
-    // draw the the bunny and teapot
-    bunny->draw_shape(P, MV);
-    teapot->draw_shape(P, MV);
+//    // A3 bunny coordinates for testing
+//    bunny->Scale = glm::vec3(0.5);
+//    bunny->Translate = glm::vec3(-0.5f,-0.5f,-5.0f);
+//    // make the bunny rotate
+//    bunny->Rotate = glm::vec3(0.0f,1.0f,0.0f);
+//    bunny->angle = t;
+//
+//    bunny->draw_shape(P, MV);
     
+    P->popMatrix();
     MV->popMatrix();
-	P->popMatrix();
     shader->program_unbind();
-	
+    
 	GLSL::checkError(GET_FILE_LINE);
 	
 	if(OFFLINE) {
@@ -339,6 +395,8 @@ int main(int argc, char **argv)
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	// Set the window resize call back.
 	glfwSetFramebufferSizeCallback(window, resize_callback);
+    random_color(colors);
+    random_obj(object_t);
 	// Initialize scene.
 	init();
 	// Loop until the user closes the window.

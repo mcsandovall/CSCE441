@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <limits.h>
 #include <memory>
 
 class Program;
@@ -24,7 +25,7 @@ public:
 	void fitToUnitBox();
 	void init();
 	void draw(const std::shared_ptr<Program> prog) const;
-	
+    float min_y = INT_MAX;
 private:
 	std::vector<float> posBuf;
 	std::vector<float> norBuf;
