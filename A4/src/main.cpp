@@ -155,6 +155,38 @@ void random_obj(vector<int> & obj_t){
     }
 }
 
+// class for the free look camera
+class FreeLook{
+public:
+    glm::vec3 position, orientation = glm::vec3(0.0,0.0,-1.0f);
+    const glm::vec3 up;
+    float aspect,fovy,znear,zfar, speed;
+    
+    FreeLook(glm::vec3 _pos) :
+    position(_pos),
+    up(0.0,1.0f,0.0),
+    aspect(1.0),
+    fovy((float)(45.0*M_PI/180.0)),
+    znear(0.1f),
+    zfar(1000.0f),
+    speed(0.2)
+    {}
+    
+    void setAspect(float a){
+        aspect = a;
+    }
+    
+    void applyProjectionMatrix(std::shared_ptr<MatrixStack> P) const{
+        P->multMatrix(glm::perspective(fovy, aspect, znear, zfar));
+    }
+    
+    void applyViewMatrix(std::shared_ptr<MatrixStack> MV) const{
+        MV->multMatrix(glm::lookAt(position, position + orientation, up));
+    }
+};
+
+shared_ptr<FreeLook> FLCamera;
+
 bool keyToggles[256] = {false}; // only for English keyboards!
 
 // This function is called when a GLFW error occurs
@@ -200,6 +232,18 @@ static void cursor_position_callback(GLFWwindow* window, double xmouse, double y
 // This function is called keyboard letter is pressed
 static void char_callback(GLFWwindow *window, unsigned int key)
 {
+    if(keyToggles[(unsigned)'w']){
+        FLCamera->position += FLCamera->speed * FLCamera->orientation;
+    }
+    if(keyToggles[(unsigned)'s']){
+        FLCamera->position += FLCamera->speed * -FLCamera->orientation;
+    }
+    if(keyToggles[(unsigned)'a']){
+        FLCamera->position += FLCamera->speed * -glm::normalize(glm::cross(FLCamera->orientation, FLCamera->up));
+    }
+    if(keyToggles[(unsigned)'d']){
+        FLCamera->position += FLCamera->speed * glm::normalize(glm::cross(FLCamera->orientation, FLCamera->up));
+    }
     keyToggles[key] = !keyToggles[key];
 }
 
@@ -244,8 +288,11 @@ static void init()
 	// Enable z-buffer test.
 	glEnable(GL_DEPTH_TEST);
     
-	camera = make_shared<Camera>();
-	camera->setInitDistance(2.0f); // Camera's initial Z translation
+	//camera = make_shared<Camera>();
+	//camera->setInitDistance(2.0f); // Camera's initial Z translation
+    
+    // initialize the free look camera
+    FLCamera = make_shared<FreeLook>(glm::vec3(1.0f,0.5f,2.0f));
 	
     shader = make_shared<Shader>("phong_vert.glsl", "phong_frag.glsl");
     // load the object only once
@@ -276,7 +323,8 @@ static void render()
 	// Get current frame buffer size.
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
-	camera->setAspect((float)width/(float)height);
+	//camera->setAspect((float)width/(float)height);
+    FLCamera->setAspect((float)width / (float)height);
 	
 	double t = glfwGetTime();
 	if(!keyToggles[(unsigned)' ']) {
@@ -290,9 +338,10 @@ static void render()
     
 	// Apply camera transforms
 	P->pushMatrix();
-	camera->applyProjectionMatrix(P);
+//	camera->applyProjectionMatrix(P);
+    FLCamera->applyProjectionMatrix(P);
 	MV->pushMatrix();
-	camera->applyViewMatrix(MV);
+	FLCamera->applyViewMatrix(MV);
     
     sun->scale_obj(0.5);
     sun->Translate = glm::vec3(8.0,10.0,1.0);
