@@ -46,9 +46,9 @@ public:
     vector<Material> materials;
     vector<Light> lights;
     int m_index = 0, l_index = 0;
-    Shader(string vertex_file, string frag_file, SHADER_TYPE _type);
+    Shader(string vertex_file, string frag_file);
         
-    void bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV);
+    void bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M);
     void program_unbind();
     void next_material();
     

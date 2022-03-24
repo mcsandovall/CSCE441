@@ -58,8 +58,11 @@ void Shader::bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Materia
         glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
         // make the MVit
         glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
+        // make the light position
+        glm::vec3 lightPos(8.0,10.0,1.0);
+        lightPos = glm::vec3(MV->topMatrix() * glm::vec4(lightPos,1.0));
         glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
-        glUniform3f(program->getUniform("lightPos"), 1.0f, 1.0f, 1.0f);
+        glUniform3f(program->getUniform("lightPos"), lightPos.x, lightPos.y, lightPos.z);
         glUniform3f(program->getUniform("ka"), M.ka.x,M.ka.y,M.ka.z);
         glUniform3f(program->getUniform("kd"), M.kd.x,M.kd.y,M.kd.z);
         glUniform3f(program->getUniform("ks"), M.ks.x,M.ks.y,M.ks.z);
@@ -291,17 +294,25 @@ static void render()
 	MV->pushMatrix();
 	camera->applyViewMatrix(MV);
     
-    // draw the floor and the sun
     sun->scale_obj(0.5);
-    sun->Translate = glm::vec3(1.0f);
-    sun->material.kd = glm::vec3(1.0,1.0,0.0);
+    sun->Translate = glm::vec3(8.0,10.0,1.0);
+    sun->material.kd = glm::vec3(0);
+    sun->material.ka = glm::vec3(1.0,1.0,0.0);
+    sun->material.ks = glm::vec3(0);
     sun->draw_shape(P, MV);
+
+    Floor->scale_obj(12);
+    Floor->Translate = glm::vec3(0.0,-Floor->y_min,0.0);
+    Floor->material.kd = glm::vec3(0.0,0.3,0.0);
+    Floor->draw_shape(P, MV);
     
-//    Floor->scale_obj(100);
-//    Floor->Translate = glm::vec3(0.0,-Floor->y_min,0.0);
-//    Floor->material.kd = glm::vec3(0.0,0.3,0.0);
-//    Floor->draw_shape(P, MV);
-    bunny->scale_obj(0.5f); teapot->scale_obj(0.5);
+    float scalar = abs(sin(t)/cos(t));
+    if(scalar > 1){
+        scalar = 1;
+    }else if (scalar < 0.5){
+        scalar = 0.5;
+    }
+    bunny->scale_obj(scalar); teapot->scale_obj(scalar);
     for(int i = -5; i < 5; ++i){
         for(int x = -5; x < 5; ++x){
             if(object_t[10 * (i+5) + (x+5)] == 1){//draw the bunny
