@@ -158,22 +158,81 @@ void random_obj(vector<int> & obj_t){
 // class for the free look camera
 class FreeLook{
 public:
-    glm::vec3 position, orientation = glm::vec3(0.0,0.0,-1.0f);
-    const glm::vec3 up;
+    glm::vec3 position, orientation = glm::vec3(0.0,0.0,-1.0f), up, right;
+    const glm::vec3 worldup;
     float aspect,fovy,znear,zfar, speed;
+    float yaw = 0, pitch = 0;
+    glm::vec2 prevMouse;
     
     FreeLook(glm::vec3 _pos) :
     position(_pos),
     up(0.0,1.0f,0.0),
+    worldup(0.0,1.0f,0.0),
     aspect(1.0),
     fovy((float)(45.0*M_PI/180.0)),
     znear(0.1f),
     zfar(1000.0f),
     speed(0.2)
-    {}
+    {
+        right = glm::normalize(glm::cross(orientation, worldup));
+    }
     
     void setAspect(float a){
         aspect = a;
+    }
+    
+    void updateVectors(){
+        glm::vec3 front;
+        front.x = -glm::sin(glm::radians(yaw)) * glm::cos(glm::radians(pitch));
+        front.y = glm::sin(glm::radians(pitch));
+        front.z = -glm::cos(glm::radians(yaw)) * glm::cos(glm::radians(pitch));
+        orientation = glm::normalize(front);
+        right = glm::normalize(glm::cross(orientation, worldup));
+        up = glm::normalize(glm::cross(right, orientation));
+    }
+    
+    void processKeyboard(char key){
+        // the speed a player can go is restricted by 0.5
+        switch (key) {
+            case 'w':
+                position += 0.5f * orientation;
+                break;
+            case 's':
+                position -= 0.5f * orientation;
+                break;
+            case 'd':
+                position += 0.5f * right;
+                break;
+            case 'a':
+                position -= 0.5f * right;
+                break;
+            default:
+                break;
+        }
+    }
+    
+    void mouseClicked(float x, float y){
+        prevMouse.x = x;
+        prevMouse.y = y;
+    }
+    
+    void mouseMoved(float x, float y){
+        glm::vec2 currMouse(x,y);
+        glm::vec2 dv = currMouse - prevMouse;
+        
+        // the mouse clicked latency is 0.01f
+        yaw += 0.01f * dv.x;
+        pitch += 0.01f * dv.y;
+        
+        // restrictions on the pitch
+        if(pitch > 60.0f){
+            pitch = 60.0f;
+        }else if (pitch < -60.0f){
+            pitch = -60.0f;
+        }
+        
+        updateVectors();
+        
     }
     
     void applyProjectionMatrix(std::shared_ptr<MatrixStack> P) const{
@@ -213,10 +272,8 @@ static void mouse_button_callback(GLFWwindow *window, int button, int action, in
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
 	if(action == GLFW_PRESS) {
-		bool shift = (mods & GLFW_MOD_SHIFT) != 0;
-		bool ctrl  = (mods & GLFW_MOD_CONTROL) != 0;
-		bool alt   = (mods & GLFW_MOD_ALT) != 0;
-		camera->mouseClicked((float)xmouse, (float)ymouse, shift, ctrl, alt);
+		//camera->mouseClicked((float)xmouse, (float)ymouse, shift, ctrl, alt);
+        FLCamera->mouseClicked(xmouse, ymouse);
 	}
 }
 
@@ -225,25 +282,15 @@ static void cursor_position_callback(GLFWwindow* window, double xmouse, double y
 {
 	int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 	if(state == GLFW_PRESS) {
-		camera->mouseMoved((float)xmouse, (float)ymouse);
+		//camera->mouseMoved((float)xmouse, (float)ymouse);
+        FLCamera->mouseMoved((float)xmouse, (float)ymouse);
 	}
 }
 
 // This function is called keyboard letter is pressed
 static void char_callback(GLFWwindow *window, unsigned int key)
 {
-    if(keyToggles[(unsigned)'w']){
-        FLCamera->position += FLCamera->speed * FLCamera->orientation;
-    }
-    if(keyToggles[(unsigned)'s']){
-        FLCamera->position += FLCamera->speed * -FLCamera->orientation;
-    }
-    if(keyToggles[(unsigned)'a']){
-        FLCamera->position += FLCamera->speed * -glm::normalize(glm::cross(FLCamera->orientation, FLCamera->up));
-    }
-    if(keyToggles[(unsigned)'d']){
-        FLCamera->position += FLCamera->speed * glm::normalize(glm::cross(FLCamera->orientation, FLCamera->up));
-    }
+    FLCamera->processKeyboard((char) key);
     keyToggles[key] = !keyToggles[key];
 }
 
