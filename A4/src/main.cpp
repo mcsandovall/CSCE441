@@ -163,18 +163,19 @@ public:
     float aspect,fovy,znear,zfar, speed;
     float yaw = 0, pitch = 0;
     glm::vec2 prevMouse;
+    float angle = 45.0f;
     
     FreeLook(glm::vec3 _pos) :
     position(_pos),
     up(0.0,1.0f,0.0),
     worldup(0.0,1.0f,0.0),
     aspect(1.0),
-    fovy((float)(45.0*M_PI/180.0)),
     znear(0.1f),
     zfar(1000.0f),
     speed(0.2)
     {
         right = glm::normalize(glm::cross(orientation, worldup));
+        fovy = ((float)(angle*M_PI/180.0));
     }
     
     void setAspect(float a){
@@ -195,16 +196,32 @@ public:
         // the speed a player can go is restricted by 0.5
         switch (key) {
             case 'w':
-                position += 0.5f * orientation;
+                position += 0.5f * glm::vec3(orientation.x, 0.0, orientation.z);
                 break;
-            case 's':
-                position -= 0.5f * orientation;
+            case 's': // x and z values since we want to remain in same position regardles of camera view
+                position -= 0.5f * glm::vec3(orientation.x, 0.0, orientation.z);
                 break;
             case 'd':
                 position += 0.5f * right;
                 break;
             case 'a':
                 position -= 0.5f * right;
+                break;
+            // zoom functionality
+            case 'z':
+                // zoom in
+                angle -= 8.0f;
+                if(angle < 4){
+                    angle = 4;
+                }
+                fovy = ((float)(angle*M_PI/180.0));
+                break;
+            case 'Z':
+                angle += 8.0f;
+                if(angle > 114){
+                    angle = 114;
+                }
+                fovy = ((float)(angle*M_PI/180.0));
                 break;
             default:
                 break;
@@ -360,11 +377,6 @@ static void render()
 		glEnable(GL_CULL_FACE);
 	} else {
 		glDisable(GL_CULL_FACE);
-	}
-	if(keyToggles[(unsigned)'z']) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	} else {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 	
 	// Get current frame buffer size.
