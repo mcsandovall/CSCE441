@@ -52,12 +52,13 @@ Shader::Shader(string vertex_file, string frag_file){
     program->addUniform("s");
     program->setVerbose(false);
 }
-void Shader::bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M){
-        program->bind();
+void Shader::bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M, bool twoD = false){
+    program->bind();
+    // make the MVit
+    glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
+    if(!twoD){
         glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
         glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-        // make the MVit
-        glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
         // make the light position
         glm::vec3 lightPos(8.0,10.0,1.0);
         lightPos = glm::vec3(MV->topMatrix() * glm::vec4(lightPos,1.0));
@@ -67,8 +68,21 @@ void Shader::bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Materia
         glUniform3f(program->getUniform("kd"), M.kd.x,M.kd.y,M.kd.z);
         glUniform3f(program->getUniform("ks"), M.ks.x,M.ks.y,M.ks.z);
         glUniform1f(program->getUniform("s"),  M.s);
-        
+    }else{ // draw the HUD with orthographic projectio
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        float aspect = width/ height;
+        glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, glm::value_ptr(glm::ortho(-aspect, aspect, -1.0f, 1.0f, 0.1f, 1000.0f)));
+        glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
+        // make the light position
+        glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
+        glUniform3f(program->getUniform("lightPos"), 0.0f, 0.0f, 100.0f);
+        glUniform3f(program->getUniform("ka"), M.ka.x,M.ka.y,M.ka.z);
+        glUniform3f(program->getUniform("kd"), M.kd.x,M.kd.y,M.kd.z);
+        glUniform3f(program->getUniform("ks"), M.ks.x,M.ks.y,M.ks.z);
+        glUniform1f(program->getUniform("s"),  M.s);
     }
+}
 void Shader::program_unbind(){
     program->unbind();
 }
@@ -122,13 +136,17 @@ public:
         material = Material(_ka,_kd,_ks,s);
         shape->init();
     }
-    void draw_shape(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
+    void draw_shape(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, bool HUD = false){
         MV->pushMatrix();
         MV->translate(Translate);
         MV->scale(Scale);
         MV->rotate(angle, Rotate);
         MV->multMatrix(Shear);
-        shader->bind(P, MV, material);
+        if(!HUD){
+            shader->bind(P, MV, material);
+        }else{
+            shader->bind(P, MV, material, true);
+        }
         shape->draw(shader->program);
         shader->program_unbind();
         MV->popMatrix();
@@ -238,8 +256,8 @@ public:
         glm::vec2 dv = currMouse - prevMouse;
         
         // the mouse clicked latency is 0.01f
-        yaw += 0.01f * dv.x;
-        pitch += 0.01f * dv.y;
+        yaw -= 0.01f * dv.x;
+        pitch -= 0.01f * dv.y;
         
         // restrictions on the pitch
         if(pitch > 60.0f){
@@ -368,6 +386,32 @@ static void init()
 	GLSL::checkError(GET_FILE_LINE);
 }
 
+void drawHUD(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
+    // draw the HUD
+    float y = 0.6;
+    float x = 0.8;
+    glm::vec3 ka(0.0,0.0,0.0);
+    glm::vec3 kd(0.7f,0.7f,0.7f);
+    glm::vec3 ks(1.0f,1.0f,1.0f);
+    Material m(ka,kd,ks,200.f);
+    
+    bunny->Translate = glm::vec3(x,y,-0.3f);
+    bunny->Rotate = glm::vec3(0.0,1.0f,0.0);
+    bunny->angle = t;
+    bunny->material = m;
+    bunny->Scale = glm::vec3(0.2);
+    bunny->draw_shape(P, MV, true);
+    
+    x = -x;
+    y += 0.1;
+    teapot->Translate = glm::vec3(x,y,-0.3f);
+    teapot->Rotate = glm::vec3(0.0,1.0f,0.0);
+    teapot->angle = t;
+    teapot->material = m;
+    teapot->Scale = glm::vec3(0.2);
+    teapot->draw_shape(P, MV, true);
+}
+
 // This function is called every frame to draw the scene.
 static void render()
 {
@@ -399,7 +443,11 @@ static void render()
 	P->pushMatrix();
 //	camera->applyProjectionMatrix(P);
     FLCamera->applyProjectionMatrix(P);
-	MV->pushMatrix();
+    MV->pushMatrix();
+    
+    // draw the HUD
+    drawHUD(P, MV, t);
+    
 	FLCamera->applyViewMatrix(MV);
     
     sun->scale_obj(0.5);
@@ -426,13 +474,13 @@ static void render()
             if(object_t[10 * (i+5) + (x+5)] == 1){//draw the bunny
                 bunny->Translate = glm::vec3(x,-bunny->y_min,i);
                 bunny->Rotate = glm::vec3(0.0f,1.0f,0.0f);
-                bunny->angle = t;
+                bunny->angle = 0.0;
                 bunny->material.kd = colors[10 * (i+5) + (x+5)];
                 bunny->draw_shape(P, MV);
             }else{
                 teapot->Translate = glm::vec3(x,-teapot->y_min,i);
                 teapot->Rotate = glm::vec3(0.0f,1.0f,0.0f);
-                teapot->angle = t;
+                teapot->angle = 0.0;
                 teapot->material.kd = colors[10 * (i+5) + (x+5)];
                 teapot->draw_shape(P, MV);
             }
@@ -443,18 +491,9 @@ static void render()
     Floor->material.kd = glm::vec3(0.0,0.3,0.0);
     Floor->draw_shape(P, MV);
     
-//    // A3 bunny coordinates for testing
-//    bunny->Scale = glm::vec3(0.5);
-//    bunny->Translate = glm::vec3(-0.5f,-0.5f,-5.0f);
-//    // make the bunny rotate
-//    bunny->Rotate = glm::vec3(0.0f,1.0f,0.0f);
-//    bunny->angle = t;
-//
-//    bunny->draw_shape(P, MV);
-    
+    shader->program_unbind();
     P->popMatrix();
     MV->popMatrix();
-    shader->program_unbind();
     
 	GLSL::checkError(GET_FILE_LINE);
 	

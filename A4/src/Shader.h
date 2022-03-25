@@ -48,7 +48,7 @@ public:
     int m_index = 0, l_index = 0;
     Shader(string vertex_file, string frag_file);
         
-    void bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M);
+    void bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M, bool twoD);
     void program_unbind();
     void next_material();
     
