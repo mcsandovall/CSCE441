@@ -412,55 +412,18 @@ void drawHUD(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
     teapot->draw_shape(P, MV, true);
 }
 
-// This function is called every frame to draw the scene.
-static void render()
-{
-	// Clear framebuffer.
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	if(keyToggles[(unsigned)'c']) {
-		glEnable(GL_CULL_FACE);
-	} else {
-		glDisable(GL_CULL_FACE);
-	}
-	
-	// Get current frame buffer size.
-	int width, height;
-	glfwGetFramebufferSize(window, &width, &height);
-	//camera->setAspect((float)width/(float)height);
-    FLCamera->setAspect((float)width / (float)height);
-	
-	double t = glfwGetTime();
-	if(!keyToggles[(unsigned)' ']) {
-		// Spacebar turns animation on/off
-		t = 0.0f;
-	}
-	
-	// Matrix stacks
-	auto P = make_shared<MatrixStack>();
-	auto MV = make_shared<MatrixStack>();
-    
-	// Apply camera transforms
-	P->pushMatrix();
-//	camera->applyProjectionMatrix(P);
-    FLCamera->applyProjectionMatrix(P);
-    MV->pushMatrix();
-    
-    // draw the HUD
-    drawHUD(P, MV, t);
-    
-	FLCamera->applyViewMatrix(MV);
-    
+void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t, bool orthographic = false){
     sun->scale_obj(0.5);
     sun->Translate = glm::vec3(8.0,10.0,1.0);
     sun->material.kd = glm::vec3(0);
     sun->material.ka = glm::vec3(1.0,1.0,0.0);
     sun->material.ks = glm::vec3(0);
-    sun->draw_shape(P, MV);
+    sun->draw_shape(P, MV, orthographic);
 
     Floor->scale_obj(12);
     Floor->Translate = glm::vec3(0.0,-Floor->y_min,0.0);
     Floor->material.kd = glm::vec3(0.0,0.3,0.0);
-    Floor->draw_shape(P, MV);
+    Floor->draw_shape(P, MV, orthographic);
     
     float scalar = abs(sin(t)/cos(t));
     if(scalar > 1){
@@ -476,25 +439,81 @@ static void render()
                 bunny->Rotate = glm::vec3(0.0f,1.0f,0.0f);
                 bunny->angle = 0.0;
                 bunny->material.kd = colors[10 * (i+5) + (x+5)];
-                bunny->draw_shape(P, MV);
+                bunny->draw_shape(P, MV, orthographic);
             }else{
                 teapot->Translate = glm::vec3(x,-teapot->y_min,i);
                 teapot->Rotate = glm::vec3(0.0f,1.0f,0.0f);
                 teapot->angle = 0.0;
                 teapot->material.kd = colors[10 * (i+5) + (x+5)];
-                teapot->draw_shape(P, MV);
+                teapot->draw_shape(P, MV, orthographic);
             }
         }
     }
     Floor->scale_obj(12);
     Floor->Translate = (glm::vec3(0,-Floor->y_min,0));
     Floor->material.kd = glm::vec3(0.0,0.3,0.0);
-    Floor->draw_shape(P, MV);
+    Floor->draw_shape(P, MV, orthographic);
+}
+
+// This function is called every frame to draw the scene.
+static void render()
+{
+	// Clear framebuffer.
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if(keyToggles[(unsigned)'c']) {
+		glEnable(GL_CULL_FACE);
+	} else {
+		glDisable(GL_CULL_FACE);
+	}
+	
+	// Get current frame buffer size.
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+    FLCamera->setAspect((float)width / (float)height);
+	
+	double t = glfwGetTime();
+	
+	// Matrix stacks
+	auto P = make_shared<MatrixStack>();
+	auto MV = make_shared<MatrixStack>();
+    glViewport(0, 0, width, height);
+	// Apply camera transforms
+	P->pushMatrix();
+    FLCamera->applyProjectionMatrix(P);
+    MV->pushMatrix();
+    
+    // draw the HUD
+    drawHUD(P, MV, t);
+    
+	FLCamera->applyViewMatrix(MV);
+    
+    drawScene(P, MV, t);
+    
+    MV->popMatrix();
+    P->popMatrix();
+    
+    if(keyToggles[(unsigned)'t']){
+        double s = 0.5;
+        glViewport(0, 0, s*width, s*height);
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(0, 0, s*width, s*height);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glDisable(GL_SCISSOR_TEST);
+        P->pushMatrix();
+        MV->pushMatrix();
+        // apply the matricies
+        float aspect = width / height;
+        P->multMatrix(glm::ortho(-aspect, aspect, -1.0f, 1.0f, 0.01f, 100.0f));
+        MV->rotate(90, glm::vec3(1.0f,0.0,0.0));
+        MV->translate(0.1,-0.6f,0.35);
+        MV->scale(0.2);
+        // draw scene
+        drawScene(P, MV, t);
+        P->popMatrix();
+        MV->popMatrix();
+    }
     
     shader->program_unbind();
-    P->popMatrix();
-    MV->popMatrix();
-    
 	GLSL::checkError(GET_FILE_LINE);
 	
 	if(OFFLINE) {
