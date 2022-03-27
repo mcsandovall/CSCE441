@@ -98,7 +98,8 @@ enum OBJECT_TYPE{
     BUNNY,
     TEAPOT,
     FLOOR,
-    SUN
+    SUN,
+    FRUSTUM
 };
 
 class Object{
@@ -121,8 +122,10 @@ public:
             shape->loadMesh(RESOURCE_DIR + "teapot.obj");
         }else if(_type == FLOOR){
             shape->loadMesh(RESOURCE_DIR + "cube.obj");
-        }else{
+        }else if(_type == SUN){
             shape->loadMesh(RESOURCE_DIR + "sphere.obj");
+        }else{
+            shape->loadMesh(RESOURCE_DIR + "frustum.obj");
         }
         y_min = shape->min_y;
         // make the material with a random color
@@ -357,7 +360,7 @@ static void saveImage(const char *filepath, GLFWwindow *w)
 	}
 }
 
-shared_ptr<Object> bunny,teapot, Floor, sun;
+shared_ptr<Object> bunny,teapot, Floor, sun, Frustum;
 
 // This function is called once to initialize the scene and OpenGL
 static void init()
@@ -382,6 +385,7 @@ static void init()
     teapot = make_shared<Object>(TEAPOT);
     Floor = make_shared<Object>(FLOOR);
     sun = make_shared<Object>(SUN);
+    Frustum = make_shared<Object>(FRUSTUM);
 	
 	GLSL::checkError(GET_FILE_LINE);
 }
@@ -455,6 +459,26 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t, b
     Floor->draw_shape(P, MV, orthographic);
 }
 
+void draw_frustrum(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
+    MV->pushMatrix();
+    shared_ptr<MatrixStack> camera = make_shared<MatrixStack>();
+    camera->pushMatrix();
+    FLCamera->applyViewMatrix(camera);
+    MV->multMatrix(glm::inverse(camera->topMatrix()));
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    float a = (float) width / (float) height;
+    float sy = tan(glm::radians(90.0f/2));
+    float sx = a * sy;
+    MV->scale(glm::vec3(sx,sy,1.0f));
+    // make the frustum black
+    Frustum->material.ka = glm::vec3(0);
+    Frustum->material.kd = glm::vec3(0);
+    Frustum->material.ks = glm::vec3(0);
+    Frustum->draw_shape(P, MV);
+    MV->popMatrix();
+}
+
 // This function is called every frame to draw the scene.
 static void render()
 {
@@ -509,6 +533,8 @@ static void render()
         MV->scale(0.2);
         // draw scene
         drawScene(P, MV, t);
+        draw_frustrum(P, MV);
+        
         P->popMatrix();
         MV->popMatrix();
     }
