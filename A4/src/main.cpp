@@ -46,6 +46,7 @@ int indCount;
 
 // Shader class function implementation
 Shader::Shader(string vertex_file, string frag_file){
+    // move this to another func for the uniforms
     program = make_shared<Program>();
     program->setShaderNames(RESOURCE_DIR + vertex_file, RESOURCE_DIR + frag_file);
     program->setVerbose(true);
@@ -506,11 +507,6 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t, b
     floorProgram->unbind();
     MV->popMatrix();
     
-//    Floor->scale_obj(12);
-//    Floor->Translate = glm::vec3(0.0,-Floor->y_min,0.0);
-//    Floor->material.kd = glm::vec3(0.0,0.3,0.0);
-//    Floor->draw_shape(P, MV, orthographic);
-    
     float scalar = abs(sin(t)/cos(t));
     if(scalar > 1){
         scalar = 1;
@@ -546,7 +542,7 @@ void draw_frustrum(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
     int width, height;
     glfwGetWindowSize(window, &width, &height);
     float a = (float) width / (float) height;
-    float sy = tan(glm::radians(90.0f/2));
+    float sy = tan(glm::radians(FLCamera->angle/2));
     float sx = a * sy;
     MV->scale(glm::vec3(sx,sy,1.0f));
     // make the frustum black
