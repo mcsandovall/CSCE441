@@ -44,8 +44,6 @@ vector<unsigned int> indBuf;
 map<string,GLuint> bufIDs;
 int indCount;
 
-glm::mat3 T1(1.0f);
-
 // Shader class function implementation
 Shader::Shader(string vertex_file, string frag_file){
     program = make_shared<Program>();
@@ -396,11 +394,6 @@ static void init()
     floorTexture->setWrapModes(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
     
     //
-    // Texture matrix
-    //
-    T1[0][0] = 1.0f;
-    
-    //
     // Initialize geometry
     //
     // We need to fill in the position buffer, normal buffer, the texcoord
@@ -501,7 +494,6 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t, b
     floorTexture->bind(floorProgram->getUniform("texture0"));
     glUniformMatrix4fv(floorProgram->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
     glUniformMatrix4fv(floorProgram->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-    glUniformMatrix3fv(floorProgram->getUniform("T1"), 1, GL_FALSE, glm::value_ptr(T1));
     glEnableVertexAttribArray(floorProgram->getAttribute("aPos"));
     glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bPos"]);
     glVertexAttribPointer(floorProgram->getAttribute("aPos"), 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
