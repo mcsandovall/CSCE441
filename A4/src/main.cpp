@@ -55,33 +55,26 @@ Shader::Shader(string vertex_file, string frag_file){
 void Shader::bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M, bool twoD = false){
     program->bind();
     // make the MVit
-    glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
-    if(!twoD){
-        glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
-        glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-        // make the light position
-        glm::vec3 lightPos(8.0,10.0,1.0);
-        lightPos = glm::vec3(MV->topMatrix() * glm::vec4(lightPos,1.0));
-        glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
-        glUniform3f(program->getUniform("lightPos"), lightPos.x, lightPos.y, lightPos.z);
-        glUniform3f(program->getUniform("ka"), M.ka.x,M.ka.y,M.ka.z);
-        glUniform3f(program->getUniform("kd"), M.kd.x,M.kd.y,M.kd.z);
-        glUniform3f(program->getUniform("ks"), M.ks.x,M.ks.y,M.ks.z);
-        glUniform1f(program->getUniform("s"),  M.s);
-    }else{ // draw the HUD with orthographic projectio
+    if(twoD){
         int width, height;
         glfwGetWindowSize(window, &width, &height);
         float aspect = width/ height;
         glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, glm::value_ptr(glm::ortho(-aspect, aspect, -1.0f, 1.0f, 0.1f, 1000.0f)));
-        glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
-        // make the light position
-        glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
         glUniform3f(program->getUniform("lightPos"), 0.0f, 0.0f, 100.0f);
-        glUniform3f(program->getUniform("ka"), M.ka.x,M.ka.y,M.ka.z);
-        glUniform3f(program->getUniform("kd"), M.kd.x,M.kd.y,M.kd.z);
-        glUniform3f(program->getUniform("ks"), M.ks.x,M.ks.y,M.ks.z);
-        glUniform1f(program->getUniform("s"),  M.s);
+    }else{
+        glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
+        // make the light position
+        glm::vec3 lightPos(8.0,10.0,1.0);
+        lightPos = glm::vec3(MV->topMatrix() * glm::vec4(lightPos,1.0));
+        glUniform3f(program->getUniform("lightPos"), lightPos.x, lightPos.y, lightPos.z);
     }
+    glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
+    glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
+    glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
+    glUniform3f(program->getUniform("ka"), M.ka.x,M.ka.y,M.ka.z);
+    glUniform3f(program->getUniform("kd"), M.kd.x,M.kd.y,M.kd.z);
+    glUniform3f(program->getUniform("ks"), M.ks.x,M.ks.y,M.ks.z);
+    glUniform1f(program->getUniform("s"),  M.s);
 }
 void Shader::program_unbind(){
     program->unbind();
@@ -94,39 +87,20 @@ void Shader::program_unbind(){
 vector<int> object_t;
 vector<glm::vec3> colors;
 
-enum OBJECT_TYPE{
-    BUNNY,
-    TEAPOT,
-    FLOOR,
-    SUN,
-    FRUSTUM
-};
-
 class Object{
 public:
     glm::vec3 Translate, Rotate, Scale;
     glm::mat4 Shear;
     double angle;
-    OBJECT_TYPE type;
     shared_ptr<Shape> shape;
     Material material;
     float y_min, x_min;
     
     Object() : Translate(glm::vec3(0)), Rotate(glm::vec3(1.0)), Scale(glm::vec3(1.0)), Shear(glm::mat4(1.0f)), angle(1.0){}
     ~Object(){}
-    Object(OBJECT_TYPE _type): Translate(glm::vec3(0)), Rotate(glm::vec3(1.0)), Scale(glm::vec3(1.0)), Shear(glm::mat4(1.0f)), angle(0) { // load the object into the shape
+    Object(string object_name): Translate(glm::vec3(0)), Rotate(glm::vec3(1.0)), Scale(glm::vec3(1.0)), Shear(glm::mat4(1.0f)), angle(0) { // load the object into the shape
         shape = make_shared<Shape>();
-        if(_type == BUNNY){
-            shape->loadMesh(RESOURCE_DIR + "bunny.obj");
-        }else if(_type == TEAPOT){
-            shape->loadMesh(RESOURCE_DIR + "teapot.obj");
-        }else if(_type == FLOOR){
-            shape->loadMesh(RESOURCE_DIR + "cube.obj");
-        }else if(_type == SUN){
-            shape->loadMesh(RESOURCE_DIR + "sphere.obj");
-        }else{
-            shape->loadMesh(RESOURCE_DIR + "frustum.obj");
-        }
+        shape->loadMesh(RESOURCE_DIR + object_name);
         y_min = shape->min_y;
         // make the material with a random color
         glm::vec3 _ka, _kd, _ks;
@@ -381,11 +355,11 @@ static void init()
 	
     shader = make_shared<Shader>("phong_vert.glsl", "phong_frag.glsl");
     // load the object only once
-    bunny = make_shared<Object>(BUNNY);
-    teapot = make_shared<Object>(TEAPOT);
-    Floor = make_shared<Object>(FLOOR);
-    sun = make_shared<Object>(SUN);
-    Frustum = make_shared<Object>(FRUSTUM);
+    bunny = make_shared<Object>("bunny.obj");
+    teapot = make_shared<Object>("teapot.obj");
+    Floor = make_shared<Object>("cube.obj");
+    sun = make_shared<Object>("sphere.obj");
+    Frustum = make_shared<Object>("frustum.obj");
 	
 	GLSL::checkError(GET_FILE_LINE);
 }
