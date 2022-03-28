@@ -317,7 +317,7 @@ static void init()
     // initialize the free look camera
     FLCamera = make_shared<FreeLook>(glm::vec3(1.0f,0.5f,2.0f));
 	
-    shader = make_shared<Shader>("phong_vert.glsl", "phong_frag.glsl");
+    shader = make_shared<Shader>(RESOURCE_DIR + "phong_vert.glsl",RESOURCE_DIR + "phong_frag.glsl");
     // load the object only once
     bunny = make_shared<Object>("bunny.obj");
     teapot = make_shared<Object>("teapot.obj");

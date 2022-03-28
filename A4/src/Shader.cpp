@@ -5,13 +5,11 @@
 
 using namespace std;
 
-#define RESOURCE_DIR "../../resources/"
-
 // Shader class function implementation
 Shader::Shader(string vertex_file, string frag_file){
     // move this to another func for the uniforms
     program = make_shared<Program>();
-    program->setShaderNames(RESOURCE_DIR + vertex_file, RESOURCE_DIR + frag_file);
+    program->setShaderNames(vertex_file,frag_file);
     program->setVerbose(true);
     program->init();
     program->addAttribute("aPos");
