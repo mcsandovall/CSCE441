@@ -13,10 +13,8 @@
 using namespace std;
 
 enum SHADER_TYPE{
-    NORMAL,
     PHONG,
-    SILHOUETTE,
-    CELL
+    TEXTURE
 };
 
 class Program;
@@ -41,21 +39,10 @@ public:
 class Shader{
 public:
     shared_ptr<Program> program;
-    shared_ptr<Shader> next, prev;
     SHADER_TYPE type;
-    vector<Material> materials;
-    vector<Light> lights;
-    int m_index = 0, l_index = 0;
     Shader(string vertex_file, string frag_file);
-        
     void bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M, bool twoD);
     void program_unbind();
-    void next_material();
-    
-    void prev_material();
-    void next_ligth();
-    void prev_light();
-    Light * current_light();
 };
 // class that has the collection of shaders
 class Shader_Collection{

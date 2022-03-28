@@ -22,6 +22,7 @@
 #include "Shape.h"
 #include <vector>
 #include "Shader.h"
+#include "Texture.h"
 
 using namespace std;
 
@@ -32,7 +33,18 @@ bool OFFLINE = false;
 
 shared_ptr<Camera> camera;
 shared_ptr<Shader> shader;
-// make a pointer to a shared collection
+
+shared_ptr<Texture> floorTexture;
+shared_ptr<Shape> floorShape;
+shared_ptr<Program> floorProgram;
+
+vector<float> posBuf;
+vector<float> texBuf;
+vector<unsigned int> indBuf;
+map<string,GLuint> bufIDs;
+int indCount;
+
+glm::mat3 T1(1.0f);
 
 // Shader class function implementation
 Shader::Shader(string vertex_file, string frag_file){
@@ -360,8 +372,92 @@ static void init()
     Floor = make_shared<Object>("cube.obj");
     sun = make_shared<Object>("sphere.obj");
     Frustum = make_shared<Object>("frustum.obj");
+    
+    floorProgram = make_shared<Program>();
+    floorShape = make_shared<Shape>();
+    floorShape->loadMesh(RESOURCE_DIR + "cube.obj");
+    floorShape->init();
+    
+    floorProgram->setShaderNames(RESOURCE_DIR + "vert.glsl", RESOURCE_DIR + "frag.glsl");
+    floorProgram->setVerbose(true);
+    floorProgram->init();
+    floorProgram->addAttribute("aPos");
+    floorProgram->addAttribute("aTex");
+    floorProgram->addUniform("MV");
+    floorProgram->addUniform("P");
+    floorProgram->addUniform("T1");
+    floorProgram->addUniform("texture0");
+    floorProgram->setVerbose(false);
 	
-	GLSL::checkError(GET_FILE_LINE);
+    floorTexture = make_shared<Texture>();
+    floorTexture->setFilename(RESOURCE_DIR + "minecraft.jpg");
+    floorTexture->init();
+    floorTexture->setUnit(0);
+    floorTexture->setWrapModes(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+    
+    //
+    // Texture matrix
+    //
+    T1[0][0] = 1.0f;
+    
+    //
+    // Initialize geometry
+    //
+    // We need to fill in the position buffer, normal buffer, the texcoord
+    // buffer, and the index buffer.
+    // 0
+    posBuf.push_back(-1.0f);
+    posBuf.push_back(-1.0f);
+    posBuf.push_back(0.0f);
+    texBuf.push_back(0.0f);
+    texBuf.push_back(0.0f);
+    // 1
+    posBuf.push_back(1.0f);
+    posBuf.push_back(-1.0f);
+    posBuf.push_back(0.0f);
+    texBuf.push_back(1.0f);
+    texBuf.push_back(0.0f);
+    // 2
+    posBuf.push_back(-1.0f);
+    posBuf.push_back(1.0f);
+    posBuf.push_back(0.0f);
+    texBuf.push_back(0.0f);
+    texBuf.push_back(1.0f);
+    // 3
+    posBuf.push_back(1.0f);
+    posBuf.push_back(1.0f);
+    posBuf.push_back(0.0f);
+    texBuf.push_back(1.0f);
+    texBuf.push_back(1.0f);
+    // Index
+    indBuf.push_back(0);
+    indBuf.push_back(1);
+    indBuf.push_back(2);
+    indBuf.push_back(3);
+    indBuf.push_back(2);
+    indBuf.push_back(1);
+    indCount = (int)indBuf.size();
+    
+    // Generate 3 buffer IDs and put them in the bufIDs map.
+    GLuint tmp[3];
+    glGenBuffers(3, tmp);
+    bufIDs["bPos"] = tmp[0];
+    bufIDs["bTex"] = tmp[1];
+    bufIDs["bInd"] = tmp[2];
+    
+    glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bPos"]);
+    glBufferData(GL_ARRAY_BUFFER, posBuf.size()*sizeof(float), &posBuf[0], GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bTex"]);
+    glBufferData(GL_ARRAY_BUFFER, texBuf.size()*sizeof(float), &texBuf[0], GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIDs["bInd"]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indBuf.size()*sizeof(unsigned int), &indBuf[0], GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    
+    GLSL::checkError(GET_FILE_LINE);
 }
 
 void drawHUD(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
@@ -397,11 +493,31 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t, b
     sun->material.ka = glm::vec3(1.0,1.0,0.0);
     sun->material.ks = glm::vec3(0);
     sun->draw_shape(P, MV, orthographic);
-
-    Floor->scale_obj(12);
-    Floor->Translate = glm::vec3(0.0,-Floor->y_min,0.0);
-    Floor->material.kd = glm::vec3(0.0,0.3,0.0);
-    Floor->draw_shape(P, MV, orthographic);
+    
+    MV->pushMatrix();
+    MV->scale(glm::vec3(12));
+    MV->translate(glm::vec3(0.0,-Floor->y_min,0.0));
+    floorProgram->bind();
+    floorTexture->bind(floorProgram->getUniform("texture0"));
+    glUniformMatrix4fv(floorProgram->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
+    glUniformMatrix4fv(floorProgram->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
+    glUniformMatrix3fv(floorProgram->getUniform("T1"), 1, GL_FALSE, glm::value_ptr(T1));
+    glEnableVertexAttribArray(floorProgram->getAttribute("aPos"));
+    glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bPos"]);
+    glVertexAttribPointer(floorProgram->getAttribute("aPos"), 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+    glEnableVertexAttribArray(floorProgram->getAttribute("aTex"));
+    glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bTex"]);
+    glVertexAttribPointer(floorProgram->getAttribute("aTex"), 2, GL_FLOAT, GL_FALSE, 0, (void *)0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIDs["bInd"]);
+    floorShape->draw(floorProgram);
+    floorTexture->unbind();
+    floorProgram->unbind();
+    MV->popMatrix();
+    
+//    Floor->scale_obj(12);
+//    Floor->Translate = glm::vec3(0.0,-Floor->y_min,0.0);
+//    Floor->material.kd = glm::vec3(0.0,0.3,0.0);
+//    Floor->draw_shape(P, MV, orthographic);
     
     float scalar = abs(sin(t)/cos(t));
     if(scalar > 1){
@@ -427,10 +543,6 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t, b
             }
         }
     }
-    Floor->scale_obj(12);
-    Floor->Translate = (glm::vec3(0,-Floor->y_min,0));
-    Floor->material.kd = glm::vec3(0.0,0.3,0.0);
-    Floor->draw_shape(P, MV, orthographic);
 }
 
 void draw_frustrum(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
