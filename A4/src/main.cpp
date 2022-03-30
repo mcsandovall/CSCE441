@@ -353,29 +353,36 @@ static void init()
     // We need to fill in the position buffer, normal buffer, the texcoord
     // buffer, and the index buffer.
     // 0
-    posBuf.push_back(-1.0f);
-    posBuf.push_back(-1.0f);
-    posBuf.push_back(0.0f);
-    texBuf.push_back(0.0f);
-    texBuf.push_back(0.0f);
+    posBuf.push_back(1.0f);
+    posBuf.push_back(1.0f);
+    posBuf.push_back(1.0f);
+    texBuf.push_back(1.0f);
+    texBuf.push_back(1.0f);
     // 1
     posBuf.push_back(1.0f);
     posBuf.push_back(-1.0f);
-    posBuf.push_back(0.0f);
+    posBuf.push_back(-1.0f);
     texBuf.push_back(1.0f);
     texBuf.push_back(0.0f);
     // 2
     posBuf.push_back(-1.0f);
+    posBuf.push_back(-1.0f);
     posBuf.push_back(1.0f);
-    posBuf.push_back(0.0f);
     texBuf.push_back(0.0f);
-    texBuf.push_back(1.0f);
+    texBuf.push_back(0.0f);
     // 3
     posBuf.push_back(1.0f);
+    posBuf.push_back(-1.0f);
+    posBuf.push_back(-1.0f);
+    texBuf.push_back(1.0f);
+    texBuf.push_back(0.0f);
+    // 4
     posBuf.push_back(1.0f);
-    posBuf.push_back(0.0f);
+    posBuf.push_back(1.0f);
+    posBuf.push_back(1.0f);
     texBuf.push_back(1.0f);
     texBuf.push_back(1.0f);
+    
     // Index
     indBuf.push_back(0);
     indBuf.push_back(1);
