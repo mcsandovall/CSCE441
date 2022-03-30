@@ -355,7 +355,7 @@ static void init()
     // 0
     posBuf.push_back(1.0f);
     posBuf.push_back(1.0f);
-    posBuf.push_back(1.0f);
+    posBuf.push_back(-1.0f);
     texBuf.push_back(1.0f);
     texBuf.push_back(1.0f);
     // 1
