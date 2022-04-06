@@ -392,6 +392,7 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
 // This function is called every frame to draw the scene.
 static void render()
 {
+    // test the changes 
 	// Clear framebuffer.
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if(keyToggles[(unsigned)'c']) {
