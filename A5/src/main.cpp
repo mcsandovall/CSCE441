@@ -52,7 +52,6 @@ int indCount;
 vector<int> object_t;
 vector<float> scales;
 vector<glm::vec3> colors;
-vector<Light> lights;
 vector<glm::vec3> lightsPos;
 vector<glm::vec3> lightsColors;
 
@@ -321,16 +320,6 @@ static void saveImage(const char *filepath, GLFWwindow *w)
 	}
 }
 
-void createLights(vector<Light> &lights){
-    for(int x  = -5; x < 5; ++x){
-        for(int z = -5; z < 5; ++z){
-            glm::vec3 pos(x,1.0f,z);
-            glm::vec3 color(colors[10 * (x+5) + (z+5)]);
-            lights.push_back(Light(pos,color));
-        }
-    }
-}
-
 shared_ptr<Object> bunny,teapot, Floor, sun, Frustum;
 
 // This function is called once to initialize the scene and OpenGL
@@ -356,7 +345,6 @@ static void init()
     teapot = make_shared<Object>("teapot.obj");
     Floor = make_shared<Object>("cube.obj");
     sun = make_shared<Object>("sphere.obj");
-    createLights(lights);
     GLSL::checkError(GET_FILE_LINE);
 }
 
