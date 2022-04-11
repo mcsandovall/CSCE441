@@ -11,22 +11,28 @@ uniform float s;
 varying vec3 cNor;
 varying vec3 cPos;
 
+// vectors to compute the colors
+uniform vec3 lightsPos[10];
+uniform vec3 lightsColors[10];
+
 void main()
 {
-    // variable definitions
-    vec3 n, l, ca, cd, cs, c, h, e;
-    float r,g,b;
-    // compute the normals
-    n = normalize(cNor);
-    l = normalize(lightPos - cPos);
-    e = normalize(-cPos); // e vector
-    h = normalize(l + e);
+    // change the fragment color
+    vec3 fragColor = ka;
     
-    //perform lighting computation
-    ca = ka; // final ambient color
-    cd = kd * max(0.0,dot(l,n));
-    cs = ks * pow(max(0,dot(h,n)), s);
-    c = ca + cd + cs;
+    float Az = 1.0f, Ao = 0.0429, At = 0.9857;
+    for(int i = 0; i < 10; ++i){
+        vec3 n = normalize(cNor);
+        vec3 e = normalize(-cPos); // e vector
+        vec3 l = normalize(lightsPos[i] - cPos);
+        vec3 h = normalize(l + e);
+        float diffuse = max(0.0,dot(l,n));
+        float specular = pow(max(0,dot(h,n)), s);
+        vec3 color = lightsColors[i] * (kd * diffuse + ks * specular);
+        float r = distance(lightsPos[i], cPos);
+        float attenuation = 1.0 / (Az + (Ao * r) + (At * pow(r,2)));
+        fragColor += color * attenuation;
+    }
     
-    gl_FragColor = vec4(c, 1.0);
+    gl_FragColor = vec4(fragColor, 1.0);
 }

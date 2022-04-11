@@ -21,6 +21,7 @@
 #include "Program.h"
 #include "Shape.h"
 #include <vector>
+#include <random>
 #include "Shader.h"
 #include "Texture.h"
 
@@ -52,6 +53,8 @@ vector<int> object_t;
 vector<float> scales;
 vector<glm::vec3> colors;
 vector<Light> lights;
+vector<glm::vec3> lightsPos;
+vector<glm::vec3> lightsColors;
 
 class Object{
 public:
@@ -79,14 +82,19 @@ public:
         material = Material(_ka,_kd,_ks,s);
         shape->init();
     }
-    void draw_shape(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV){
+    void draw_shape(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, vector<glm::vec3> lightsPost){
         MV->pushMatrix();
+        
+        for(int i = 0; i < lightsPost.size(); ++i){
+            lightsPost[i] = glm::vec3(MV->topMatrix() * glm::vec4(lightsPost[i],1.0f));
+        }
+        
         MV->multMatrix(Shear);
         MV->translate(Translate);
         MV->scale(Scale);
         MV->rotate(angle, Rotate);
         MV->multMatrix(Shear);
-        shader->bind(P, MV, material);
+        shader->bind(P, MV, material, lightsPost, lightsColors);
         shape->draw(shader->program);
         shader->program_unbind();
         MV->popMatrix();
@@ -116,6 +124,16 @@ void random_obj(vector<int> & obj_t){
 void random_scales(vector<float> &scales){
     for(int i = 0; i < 100; ++i){
         scales.push_back((float) rand() / (float) RAND_MAX);
+    }
+}
+
+void createLights(vector<glm::vec3> &lightspos, vector<glm::vec3> &lightscolors, const int n = 10){
+    default_random_engine gen;
+    uniform_int_distribution<float> dist(-5.0f,5.0f);
+    uniform_int_distribution<int> colr(0,99);
+    for(int i = 0; i < n; ++i){
+        lightspos.push_back(glm::vec3(dist(gen), dist(gen), dist(gen)));
+        lightscolors.push_back(glm::vec3(colors[colr(gen)]));
     }
 }
 
@@ -345,19 +363,20 @@ static void init()
 void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
     // render the multiple lights
     sun->scale_obj(0.2);
-    for(int i = 0; i < lights.size();++i){
-        lights[i].lightPos.y = -sun->y_min;
-        sun->Translate = lights[i].lightPos;
+    for(int i = 0; i < lightsPos.size();++i){
+        lightsPos[i].y = -sun->y_min;
+        sun->Translate = lightsPos[i];
         sun->material.kd = glm::vec3(0);
-        sun->material.ka = lights[i].lightColor;
+        sun->material.ka = lightsColors[i];
         sun->material.ks = glm::vec3(0);
-        sun->draw_shape(P, MV);
+        
+        sun->draw_shape(P, MV, lightsPos);
     }
 
     Floor->scale_obj(5);
     Floor->Translate = (glm::vec3(0,-Floor->y_min,0));
     Floor->material.kd = glm::vec3(0.0,0.3,0.0);
-    Floor->draw_shape(P, MV);
+    Floor->draw_shape(P, MV, lightsPos);
     
     // define the shear matrix
     glm::mat4 shear(1.0f);
@@ -374,7 +393,7 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
                 bunny->material.ka = emmisive_color;
                 bunny->material.kd = colors[10 * (i+5) + (x+5)];
                 bunny->material.ks = glm::vec3(1.0f,1.0f,1.0f);
-                bunny->draw_shape(P, MV);
+                bunny->draw_shape(P, MV, lightsPos);
             }else{
                 teapot->Shear = shear;
                 teapot->scale_obj(scales[10 * (i+5) + (x+5)]);
@@ -384,7 +403,7 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
                 teapot->material.ka = emmisive_color;
                 teapot->material.kd = colors[10 * (i+5) + (x+5)];
                 teapot->material.ks = glm::vec3(1.0f,1.0f,1.0f);
-                teapot->draw_shape(P, MV);
+                teapot->draw_shape(P, MV, lightsPos);
             }
         }
     }
@@ -486,6 +505,7 @@ int main(int argc, char **argv)
     random_color(colors);
     random_obj(object_t);
     random_scales(scales);
+    createLights(lightsPos, lightsColors); // initialize the color buffers
 	// Initialize scene.
 	init();
 	// Loop until the user closes the window.

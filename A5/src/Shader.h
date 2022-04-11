@@ -41,7 +41,7 @@ public:
     shared_ptr<Program> program;
     SHADER_TYPE type;
     Shader(string vertex_file, string frag_file);
-    void bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M);
+    void bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M, vector<glm::vec3> lightsPos, vector<glm::vec3> lightsColors);
     void program_unbind();
 };
 // class that has the collection of shaders
