@@ -1,7 +1,6 @@
 #version 120
 // phong fragment shader
 
-uniform vec3 lightPos;
 uniform vec3 ka;
 uniform vec3 kd;
 uniform vec3 ks;

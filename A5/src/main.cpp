@@ -244,19 +244,22 @@ public:
     
     SRevolution(){
         prog = make_shared<Program>();
-        prog->setShaderNames(RESOURCE_DIR + "vert.glsl", RESOURCE_DIR + "frag.glsl");
+        prog->setShaderNames(RESOURCE_DIR + "vert.glsl", RESOURCE_DIR + "phong_frag.glsl");
         prog->setVerbose(true);
         prog->init();
         prog->addAttribute("aPos");
         prog->addAttribute("aNor");
-        prog->addAttribute("aTex");
         prog->addUniform("MV");
         prog->addUniform("P");
         prog->addUniform("t");
+        prog->addUniform("MVit");
+        prog->addUniform("ka");
+        prog->addUniform("kd");
+        prog->addUniform("ks");
+        prog->addUniform("s");
         prog->setVerbose(false);
         
-        camera = make_shared<Camera>();
-        camera->setInitDistance(2.0f);
+        m = Material(glm::vec3(0.0f), glm::vec3(0.5f), glm::vec3(1.0f), 0.0f);
         
         //
         // Vertex buffer setup
@@ -336,7 +339,7 @@ public:
         GLSL::checkError(GET_FILE_LINE);
     }
     
-    void draw(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float &t){
+    void draw(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float &t, vector<glm::vec3> lightsPos, vector<glm::vec3> &lightsColors){
         MV->pushMatrix();
         scale_obj(0.1);
         MV->scale(Scale);
@@ -355,6 +358,16 @@ public:
         glVertexAttribPointer(prog->getAttribute("aNor"), 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIDs["bInd"]);
         glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, value_ptr(MV->topMatrix()));
+        // add all the other uniforms
+        glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
+        glUniformMatrix4fv(prog->getUniform("MVit"), 1, GL_FALSE, value_ptr(MVit));
+        glUniform3fv(prog->getUniform("ka"), 1, glm::value_ptr(m.ka));
+        glUniform3fv(prog->getUniform("kd"), 1, glm::value_ptr(m.kd));
+        glUniform3fv(prog->getUniform("ks"), 1 , glm::value_ptr(m.ks));
+        glUniform1f(prog->getUniform("s"),  m.s);
+        glUniform3fv(prog->getUniform("lightsPos"), 10, glm::value_ptr(lightsPos[0]));
+        glUniform3fv(prog->getUniform("lightsColors"), 10, glm::value_ptr(lightsColors[0]));
+        
         glDrawElements(GL_TRIANGLES, indCount, GL_UNSIGNED_INT, (void *)0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -369,6 +382,7 @@ public:
     }
 private:
     shared_ptr<Program> prog;
+    Material m;
 };
 
 void random_color(vector<glm::vec3> & colors){
@@ -640,7 +654,7 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
     
 //    sphere->Translate = glm::vec3(0.0,-sphere->y_min,0.0);
 //    sphere->draw(P, MV, t);
-    srev->draw(P, MV, t);
+    srev->draw(P, MV, t, lightsPos, lightsColors);
     // define the shear matrix
 //    glm::mat4 shear(1.0f);
 //    shear[1][0] = 0.3f * cos(t);

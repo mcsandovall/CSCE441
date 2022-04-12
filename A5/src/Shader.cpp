@@ -17,7 +17,6 @@ Shader::Shader(string vertex_file, string frag_file){
     program->addUniform("MV");
     program->addUniform("P");
     program->addUniform("MVit"); // add the uniform
-    program->addUniform("lightPos");
     program->addUniform("ka");
     program->addUniform("kd");
     program->addUniform("ks");
@@ -30,10 +29,6 @@ Shader::Shader(string vertex_file, string frag_file){
 void Shader::bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M, vector<glm::vec3> lightsPos, vector<glm::vec3> lightsColors){
     program->bind();
     glUniformMatrix4fv(program->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
-    // make the light position
-    glm::vec3 lightPos(8.0,10.0,1.0);
-    lightPos = glm::vec3(MV->topMatrix() * glm::vec4(lightPos,1.0));
-    glUniform3f(program->getUniform("lightPos"), lightPos.x, lightPos.y, lightPos.z);
     glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
     glUniformMatrix4fv(program->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
     glUniformMatrix4fv(program->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
