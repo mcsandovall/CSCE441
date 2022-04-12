@@ -158,10 +158,9 @@ public:
                 posBuf.push_back(r * glm::sin(x) * glm::sin(y));
                 posBuf.push_back(yt);
                 posBuf.push_back(r * glm::sin(x) *  glm::cos(y));
-                norBuf.push_back(0.0f);
-                // modify the normal for the sphere
-                norBuf.push_back(0.0f);
-                norBuf.push_back(1.0f);
+                norBuf.push_back(r * glm::sin(x) * glm::sin(y));
+                norBuf.push_back(yt);
+                norBuf.push_back(r * glm::sin(x) *  glm::cos(y));
                 texBuf.push_back(x+0.5);
                 texBuf.push_back(y+0.5);
             }
