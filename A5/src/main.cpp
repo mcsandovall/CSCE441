@@ -209,8 +209,11 @@ public:
     void draw(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float &t, vector<glm::vec3> lightsPos, vector<glm::vec3> lightsColors){
         MV->pushMatrix();
         
+        for(int i = 0; i < lightsPos.size(); ++i){
+            lightsPos[i] = glm::vec3(MV->topMatrix() * glm::vec4(lightsPos[i],1.0f));
+        }
+        
         MV->translate(Translate);
-//        MV->scale(0.3);
         // make the calculations for the sphere
         float Ay = 1.3, As = 0.5, p = 1.7, tz = 0.9, h = 0.5;
         
