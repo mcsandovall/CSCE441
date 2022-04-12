@@ -104,6 +104,262 @@ public:
     }
 };
 
+class Sphere{
+public:
+    glm::vec3 Translate, Scale;
+    float y_min;
+    
+    Sphere(float r = 1.0){
+        prog = make_shared<Program>();
+        prog->setShaderNames(RESOURCE_DIR + "s_vert.glsl", RESOURCE_DIR + "s_frag.glsl");
+        prog->setVerbose(true);
+        prog->init();
+        prog->addAttribute("aPos");
+        prog->addAttribute("aNor");
+        prog->addAttribute("aTex");
+        prog->addUniform("MV");
+        prog->addUniform("P");
+        prog->setVerbose(false);
+        
+        //
+        // Vertex buffer setup
+        //
+        
+        vector<float> posBuf;
+        vector<float> norBuf;
+        vector<float> texBuf;
+        vector<unsigned int> indBuf;
+
+        //
+        // IMPLEMENT ME
+        //
+        // Instead of the hard coded square below, you need to draw a sphere.
+        // You need to use one or more for-loops to fill in the position buffer,
+        // normal buffer, texture buffer, and the index buffer.
+        //
+        
+        y_min = INT_MAX;
+        float n = 50; // variable n for number of grid points
+        float t = M_PI / (n-1);
+        float p = (2 * M_PI) / (n-1);
+        for(int i = 0; i < n; ++i){
+            for(int j = 0; j < n; ++j){
+                float x = i * t;
+                float y = j * p;
+                float yt = r * glm::cos(x);
+                y_min = min(y_min, yt);
+                posBuf.push_back(r * glm::sin(x) * glm::sin(y));
+                posBuf.push_back(yt);
+                posBuf.push_back(r * glm::sin(x) *  glm::cos(y));
+                norBuf.push_back(0.0f);
+                // modify the normal for the sphere
+                norBuf.push_back(0.0f);
+                norBuf.push_back(1.0f);
+                texBuf.push_back(x+0.5);
+                texBuf.push_back(y+0.5);
+            }
+        }
+        
+        for(int i = 0; i < n - 1 ; ++i){
+            int x = i * n;
+            for(int j = 0; j < n - 1; ++j){
+                indBuf.push_back(x + j);
+                indBuf.push_back(x + 1 + j);
+                indBuf.push_back(x + j + n + 1);
+                indBuf.push_back(x + j);
+                indBuf.push_back(x + j + n + 1);
+                indBuf.push_back(x + n + j);
+            }
+        }
+        
+        //
+        // END IMPLEMENT ME
+        //
+        
+        // Total number of indices
+        indCount = (int)indBuf.size();
+            
+        // Generate buffer IDs and put them in the bufIDs map.
+        GLuint tmp[4];
+        glGenBuffers(4, tmp);
+        bufIDs["bPos"] = tmp[0];
+        bufIDs["bNor"] = tmp[1];
+        bufIDs["bTex"] = tmp[2];
+        bufIDs["bInd"] = tmp[3];
+        glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bPos"]);
+        glBufferData(GL_ARRAY_BUFFER, posBuf.size()*sizeof(float), &posBuf[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bNor"]);
+        glBufferData(GL_ARRAY_BUFFER, norBuf.size()*sizeof(float), &norBuf[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIDs["bInd"]);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indBuf.size()*sizeof(unsigned int), &indBuf[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        
+        assert(norBuf.size() == posBuf.size());
+        GLSL::checkError(GET_FILE_LINE);
+    }
+    
+    void draw(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float &t){
+        MV->pushMatrix();
+        
+        MV->translate(Translate);
+//        MV->scale(0.3);
+        // make the calculations for the sphere
+        float Ay = 1.3, As = 0.5, p = 1.7, tz = 0.9, h = 0.5;
+        
+        float y = Ay * (h * glm::sin((2*M_PI)/p * (tz + t)) + h);
+        float s = (-As * (((h)* cos(((4*M_PI)/p)*(tz + t))) + (h))) + 1;
+        
+        MV->translate(glm::vec3(0.0,y,0.0));
+        MV->scale(glm::vec3(s,1.0,s));
+        prog->bind();
+        glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, value_ptr(P->topMatrix()));
+        glEnableVertexAttribArray(prog->getAttribute("aPos"));
+        GLSL::checkError(GET_FILE_LINE);
+        glEnableVertexAttribArray(prog->getAttribute("aNor"));
+        GLSL::checkError(GET_FILE_LINE);
+        glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bPos"]);
+        glVertexAttribPointer(prog->getAttribute("aPos"), 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+        glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bNor"]);
+        glVertexAttribPointer(prog->getAttribute("aNor"), 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIDs["bInd"]);
+        glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, value_ptr(MV->topMatrix()));
+        glDrawElements(GL_TRIANGLES, indCount, GL_UNSIGNED_INT, (void *)0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glDisableVertexAttribArray(prog->getAttribute("aNor"));
+        glDisableVertexAttribArray(prog->getAttribute("aPos"));
+        prog->unbind();
+        MV->popMatrix();
+    }
+    
+private:
+    shared_ptr<Program> prog;
+};
+
+class SRevolution{
+public:
+    SRevolution(){
+        prog = make_shared<Program>();
+        prog->setShaderNames(RESOURCE_DIR + "vert.glsl", RESOURCE_DIR + "frag.glsl");
+        prog->setVerbose(true);
+        prog->init();
+        prog->addAttribute("aPos");
+        prog->addAttribute("aNor");
+        prog->addAttribute("aTex");
+        prog->addUniform("MV");
+        prog->addUniform("P");
+        prog->addUniform("t");
+        prog->setVerbose(false);
+        
+        camera = make_shared<Camera>();
+        camera->setInitDistance(2.0f);
+        
+        //
+        // Vertex buffer setup
+        //
+        
+        vector<float> posBuf;
+        vector<float> norBuf;
+        vector<float> texBuf;
+        vector<unsigned int> indBuf;
+
+        //
+        // IMPLEMENT ME
+        //
+        // Instead of the hard coded square below, you need to draw a sphere.
+        // You need to use one or more for-loops to fill in the position buffer,
+        // normal buffer, texture buffer, and the index buffer.
+        //
+        float n = 20; // variable n for number of grid points
+        for(int i = 0; i < n; ++i){
+            for(int j  = 0; j < n; ++j){
+                float x = i * (10.0/(n-1));
+                float theta = j * (2 * M_PI/(n-1));
+                posBuf.push_back(x);
+                posBuf.push_back(theta);
+                posBuf.push_back(0.0f);
+                norBuf.push_back(0.0f);
+                norBuf.push_back(0.0f);
+                norBuf.push_back(0.0f);
+                texBuf.push_back(x);
+                texBuf.push_back(theta);
+                
+            }
+        }
+        
+        for(int i = 0; i < n - 1 ; ++i){
+            int x = i * n;
+            for(int j = 0; j < n - 1; ++j){
+                indBuf.push_back(x + j);
+                indBuf.push_back(x + 1 + j);
+                indBuf.push_back(x + j + n + 1);
+                indBuf.push_back(x + j);
+                indBuf.push_back(x + j + n + 1);
+                indBuf.push_back(x + n + j);
+            }
+        }
+        
+        // print out the indbuf
+        
+        //
+        // END IMPLEMENT ME
+        //
+        
+        // Total number of indices
+        indCount = (int)indBuf.size();
+            
+        // Generate buffer IDs and put them in the bufIDs map.
+        GLuint tmp[4];
+        glGenBuffers(4, tmp);
+        bufIDs["bPos"] = tmp[0];
+        bufIDs["bNor"] = tmp[1];
+        bufIDs["bTex"] = tmp[2];
+        bufIDs["bInd"] = tmp[3];
+        glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bPos"]);
+        glBufferData(GL_ARRAY_BUFFER, posBuf.size()*sizeof(float), &posBuf[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bNor"]);
+        glBufferData(GL_ARRAY_BUFFER, norBuf.size()*sizeof(float), &norBuf[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIDs["bInd"]);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indBuf.size()*sizeof(unsigned int), &indBuf[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        
+        assert(norBuf.size() == posBuf.size());
+        
+        GLSL::checkError(GET_FILE_LINE);
+    }
+    
+    void draw(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float &t){
+        MV->pushMatrix();
+        MV->scale(0.1);
+        MV->rotate(glm::radians(90.0), glm::vec3(0.0,0.0,1.0));
+        MV->translate(glm::vec3(-5.0,0.0,0.0));
+        prog->bind();
+        glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, value_ptr(P->topMatrix()));
+        glUniform1f(prog->getUniform("t"), t);
+        glEnableVertexAttribArray(prog->getAttribute("aPos"));
+        GLSL::checkError(GET_FILE_LINE);
+        glEnableVertexAttribArray(prog->getAttribute("aNor"));
+        GLSL::checkError(GET_FILE_LINE);
+        glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bPos"]);
+        glVertexAttribPointer(prog->getAttribute("aPos"), 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+        glBindBuffer(GL_ARRAY_BUFFER, bufIDs["bNor"]);
+        glVertexAttribPointer(prog->getAttribute("aNor"), 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIDs["bInd"]);
+        glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, value_ptr(MV->topMatrix()));
+        glDrawElements(GL_TRIANGLES, indCount, GL_UNSIGNED_INT, (void *)0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glDisableVertexAttribArray(prog->getAttribute("aNor"));
+        glDisableVertexAttribArray(prog->getAttribute("aPos"));
+        prog->unbind();
+        MV->popMatrix();
+    }
+private:
+    shared_ptr<Program> prog;
+};
+
 void random_color(vector<glm::vec3> & colors){
     float r,g,b;
     for(int i = 0; i < 100; ++i){
@@ -321,6 +577,8 @@ static void saveImage(const char *filepath, GLFWwindow *w)
 }
 
 shared_ptr<Object> bunny,teapot, Floor, sun, Frustum;
+shared_ptr<Sphere> sphere;
+shared_ptr<SRevolution> srev;
 
 // This function is called once to initialize the scene and OpenGL
 static void init()
@@ -345,6 +603,9 @@ static void init()
     teapot = make_shared<Object>("teapot.obj");
     Floor = make_shared<Object>("cube.obj");
     sun = make_shared<Object>("sphere.obj");
+    //sphere = make_shared<Sphere>(0.3);
+    srev = make_shared<SRevolution>();
+    
     GLSL::checkError(GET_FILE_LINE);
 }
 
@@ -366,35 +627,38 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
     Floor->material.kd = glm::vec3(0.0,0.3,0.0);
     Floor->draw_shape(P, MV, lightsPos);
     
+//    sphere->Translate = glm::vec3(0.0,-sphere->y_min,0.0);
+//    sphere->draw(P, MV, t);
+    srev->draw(P, MV, t);
     // define the shear matrix
-    glm::mat4 shear(1.0f);
-    shear[1][0] = 0.3f * cos(t);
-    
-    glm::vec3 emmisive_color(0);
-    for(int i = -5; i < 5; ++i){
-        for(int x = -5; x < 5; ++x){
-            if(object_t[10 * (i+5) + (x+5)] == 1){//draw the bunny
-                bunny->scale_obj(scales[10 * (i+5) + (x+5)]);
-                bunny->Translate = glm::vec3(x,-bunny->y_min,i);
-                bunny->Rotate = glm::vec3(0.0f,1.0f,0.0f);
-                bunny->angle = t;
-                bunny->material.ka = emmisive_color;
-                bunny->material.kd = colors[10 * (i+5) + (x+5)];
-                bunny->material.ks = glm::vec3(1.0f,1.0f,1.0f);
-                bunny->draw_shape(P, MV, lightsPos);
-            }else{
-                teapot->Shear = shear;
-                teapot->scale_obj(scales[10 * (i+5) + (x+5)]);
-                teapot->Translate = glm::vec3(x,-teapot->y_min,i);
-                teapot->Rotate = glm::vec3(0.0f,1.0f,0.0f);
-                teapot->angle = 0.0;
-                teapot->material.ka = emmisive_color;
-                teapot->material.kd = colors[10 * (i+5) + (x+5)];
-                teapot->material.ks = glm::vec3(1.0f,1.0f,1.0f);
-                teapot->draw_shape(P, MV, lightsPos);
-            }
-        }
-    }
+//    glm::mat4 shear(1.0f);
+//    shear[1][0] = 0.3f * cos(t);
+//
+//    glm::vec3 emmisive_color(0);
+//    for(int i = -5; i < 5; ++i){
+//        for(int x = -5; x < 5; ++x){
+//            if(object_t[10 * (i+5) + (x+5)] == 1){//draw the bunny
+//                bunny->scale_obj(scales[10 * (i+5) + (x+5)]);
+//                bunny->Translate = glm::vec3(x,-bunny->y_min,i);
+//                bunny->Rotate = glm::vec3(0.0f,1.0f,0.0f);
+//                bunny->angle = t;
+//                bunny->material.ka = emmisive_color;
+//                bunny->material.kd = colors[10 * (i+5) + (x+5)];
+//                bunny->material.ks = glm::vec3(1.0f,1.0f,1.0f);
+//                bunny->draw_shape(P, MV, lightsPos);
+//            }else{
+//                teapot->Shear = shear;
+//                teapot->scale_obj(scales[10 * (i+5) + (x+5)]);
+//                teapot->Translate = glm::vec3(x,-teapot->y_min,i);
+//                teapot->Rotate = glm::vec3(0.0f,1.0f,0.0f);
+//                teapot->angle = 0.0;
+//                teapot->material.ka = emmisive_color;
+//                teapot->material.kd = colors[10 * (i+5) + (x+5)];
+//                teapot->material.ks = glm::vec3(1.0f,1.0f,1.0f);
+//                teapot->draw_shape(P, MV, lightsPos);
+//            }
+//        }
+//    }
 }
 // This function is called every frame to draw the scene.
 static void render()
