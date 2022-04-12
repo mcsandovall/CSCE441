@@ -107,9 +107,9 @@ public:
 class Sphere{
 public:
     glm::vec3 Translate, Scale;
-    float y_min;
+    float y_min, min_y;
     
-    Sphere(float r = 1.0){
+    Sphere(float r = 1.0) : Scale(1.0f){
         prog = make_shared<Program>();
         prog->setShaderNames(RESOURCE_DIR + "phong_vert.glsl", RESOURCE_DIR + "phong_frag.glsl");
         prog->setVerbose(true);
@@ -131,7 +131,6 @@ public:
         //
         // Vertex buffer setup
         //
-        
         vector<float> posBuf;
         vector<float> norBuf;
         vector<float> texBuf;
@@ -166,6 +165,8 @@ public:
             }
         }
         
+        min_y = y_min;
+        
         for(int i = 0; i < n - 1 ; ++i){
             int x = i * n;
             for(int j = 0; j < n - 1; ++j){
@@ -177,10 +178,6 @@ public:
                 indBuf.push_back(x + n + j);
             }
         }
-        
-        //
-        // END IMPLEMENT ME
-        //
         
         // Total number of indices
         indCount = (int)indBuf.size();
@@ -213,6 +210,7 @@ public:
         }
         
         MV->translate(Translate);
+        MV->scale(Scale);
         // make the calculations for the sphere
         float Ay = 1.3, As = 0.5, p = 1.7, tz = 0.9, h = 0.5;
         
@@ -252,7 +250,10 @@ public:
         prog->unbind();
         MV->popMatrix();
     }
-    
+    void scale_obj(float &s){
+        Scale = glm::vec3(s);
+        y_min = s * min_y;
+    }
 private:
     shared_ptr<Program> prog;
     Material m;
@@ -653,7 +654,7 @@ static void init()
     Floor = make_shared<Object>("cube.obj");
     sun = make_shared<Object>("sphere.obj");
     sphere = make_shared<Sphere>(0.3);
-    srev = make_shared<SRevolution>();
+    //srev = make_shared<SRevolution>();
     
     GLSL::checkError(GET_FILE_LINE);
 }
@@ -676,39 +677,44 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
     Floor->material.kd = glm::vec3(0.0,0.3,0.0);
     Floor->draw_shape(P, MV, lightsPos);
     
+    sphere->Translate = glm::vec3(0.0,-sphere->y_min,0.0);
+    sphere->draw(P, MV, t, lightsPos, lightsColors);
+    
     glm::mat4 shear(1.0f);
     shear[1][0] = 0.3f * cos(t);
     
     for(int i = -5; i < 5; ++i){
         for(int j = -5; j < 5; ++j){
-            int index = 10 * (i+5) + (j+5);
+            int index = (10 * (i+5) + (j+5));
             int obj = object_t[index];
             switch (obj) {
-                case 0: // bunny
+                case 0:
                     bunny->scale_obj(scales[index]);
-                    bunny->Translate = glm::vec3(j, -bunny->y_min, i);
-                    bunny->Rotate = glm::vec3(0.0,1.0f,0.0);
+                    bunny->Translate = glm::vec3(j,-bunny->y_min,i);
+                    bunny->Rotate = glm::vec3(0.0f,1.0f,0.0f);
                     bunny->angle = t;
                     bunny->material.ka = glm::vec3(0.0f);
                     bunny->material.kd = colors[index];
-                    bunny->material.ks = glm::vec3(1.0f);
+                    bunny->material.ks = glm::vec3(1.0f,1.0f,1.0f);
                     bunny->draw_shape(P, MV, lightsPos);
                     break;
-                case 1: // teapot
+                case 1:
                     teapot->Shear = shear;
                     teapot->scale_obj(scales[index]);
-                    teapot->Translate = glm::vec3(j, -bunny->y_min, i);
-                    teapot->Rotate = glm::vec3(0.0,1.0f,0.0);
-                    teapot->angle = 0.0f;
+                    teapot->Translate = glm::vec3(j,-teapot->y_min,i);
+                    teapot->Rotate = glm::vec3(0.0f,1.0f,0.0f);
+                    teapot->angle = 0.0;
                     teapot->material.ka = glm::vec3(0.0f);
                     teapot->material.kd = colors[index];
-                    teapot->material.ks = glm::vec3(1.0f);
+                    teapot->material.ks = glm::vec3(1.0f,1.0f,1.0f);
                     teapot->draw_shape(P, MV, lightsPos);
                     break;
-                case 2: // sphere
-                    
+                case 2:
+                    sphere->scale_obj(scales[index]);
+                    sphere->Translate = glm::vec3(j, -sphere->y_min,i);
+                    sphere->draw(P, MV, t, lightsPos, lightsColors);
                     break;
-                case 3: // Srevolution
+                case 3:
                     break;
                 default:
                     break;
