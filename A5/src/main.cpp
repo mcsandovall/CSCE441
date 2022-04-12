@@ -418,8 +418,10 @@ void random_color(vector<glm::vec3> & colors){
 }
 
 void random_obj(vector<int> & obj_t){
+    default_random_engine gen;
+    uniform_int_distribution<int> obj(0,3);
     for(int i = 0; i < 100; ++i){
-        obj_t.push_back(rand() % 2);
+        obj_t.push_back(obj(gen));
     }
 }
 
@@ -651,7 +653,7 @@ static void init()
     Floor = make_shared<Object>("cube.obj");
     sun = make_shared<Object>("sphere.obj");
     sphere = make_shared<Sphere>(0.3);
-    //srev = make_shared<SRevolution>();
+    srev = make_shared<SRevolution>();
     
     GLSL::checkError(GET_FILE_LINE);
 }
@@ -674,38 +676,47 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
     Floor->material.kd = glm::vec3(0.0,0.3,0.0);
     Floor->draw_shape(P, MV, lightsPos);
     
-    sphere->Translate = glm::vec3(0.0,-sphere->y_min,0.0);
-    sphere->draw(P, MV, t, lightsPos, lightsColors);
+    glm::mat4 shear(1.0f);
+    shear[1][0] = 0.3f * cos(t);
+    
+    for(int i = -5; i < 5; ++i){
+        for(int j = -5; j < 5; ++j){
+            int index = 10 * (i+5) + (j+5);
+            int obj = object_t[index];
+            switch (obj) {
+                case 0: // bunny
+                    bunny->scale_obj(scales[index]);
+                    bunny->Translate = glm::vec3(j, -bunny->y_min, i);
+                    bunny->Rotate = glm::vec3(0.0,1.0f,0.0);
+                    bunny->angle = t;
+                    bunny->material.ka = glm::vec3(0.0f);
+                    bunny->material.kd = colors[index];
+                    bunny->material.ks = glm::vec3(1.0f);
+                    bunny->draw_shape(P, MV, lightsPos);
+                    break;
+                case 1: // teapot
+                    teapot->Shear = shear;
+                    teapot->scale_obj(scales[index]);
+                    teapot->Translate = glm::vec3(j, -bunny->y_min, i);
+                    teapot->Rotate = glm::vec3(0.0,1.0f,0.0);
+                    teapot->angle = 0.0f;
+                    teapot->material.ka = glm::vec3(0.0f);
+                    teapot->material.kd = colors[index];
+                    teapot->material.ks = glm::vec3(1.0f);
+                    teapot->draw_shape(P, MV, lightsPos);
+                    break;
+                case 2: // sphere
+                    
+                    break;
+                case 3: // Srevolution
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
     //srev->draw(P, MV, t, lightsPos, lightsColors);
     // define the shear matrix
-//    glm::mat4 shear(1.0f);
-//    shear[1][0] = 0.3f * cos(t);
-//
-//    glm::vec3 emmisive_color(0);
-//    for(int i = -5; i < 5; ++i){
-//        for(int x = -5; x < 5; ++x){
-//            if(object_t[10 * (i+5) + (x+5)] == 1){//draw the bunny
-//                bunny->scale_obj(scales[10 * (i+5) + (x+5)]);
-//                bunny->Translate = glm::vec3(x,-bunny->y_min,i);
-//                bunny->Rotate = glm::vec3(0.0f,1.0f,0.0f);
-//                bunny->angle = t;
-//                bunny->material.ka = emmisive_color;
-//                bunny->material.kd = colors[10 * (i+5) + (x+5)];
-//                bunny->material.ks = glm::vec3(1.0f,1.0f,1.0f);
-//                bunny->draw_shape(P, MV, lightsPos);
-//            }else{
-//                teapot->Shear = shear;
-//                teapot->scale_obj(scales[10 * (i+5) + (x+5)]);
-//                teapot->Translate = glm::vec3(x,-teapot->y_min,i);
-//                teapot->Rotate = glm::vec3(0.0f,1.0f,0.0f);
-//                teapot->angle = 0.0;
-//                teapot->material.ka = emmisive_color;
-//                teapot->material.kd = colors[10 * (i+5) + (x+5)];
-//                teapot->material.ks = glm::vec3(1.0f,1.0f,1.0f);
-//                teapot->draw_shape(P, MV, lightsPos);
-//            }
-//        }
-//    }
 }
 // This function is called every frame to draw the scene.
 static void render()
