@@ -239,6 +239,9 @@ private:
 
 class SRevolution{
 public:
+    float y_min, min_y;
+    glm::vec3 Scale;
+    
     SRevolution(){
         prog = make_shared<Program>();
         prog->setShaderNames(RESOURCE_DIR + "vert.glsl", RESOURCE_DIR + "frag.glsl");
@@ -271,11 +274,14 @@ public:
         // You need to use one or more for-loops to fill in the position buffer,
         // normal buffer, texture buffer, and the index buffer.
         //
+        y_min = INT_MAX;
         float n = 20; // variable n for number of grid points
         for(int i = 0; i < n; ++i){
             for(int j  = 0; j < n; ++j){
                 float x = i * (10.0/(n-1));
                 float theta = j * (2 * M_PI/(n-1));
+                float y = (cos(x)+2) * cos(theta);
+                y_min = min(y_min, y);
                 posBuf.push_back(x);
                 posBuf.push_back(theta);
                 posBuf.push_back(0.0f);
@@ -287,7 +293,7 @@ public:
                 
             }
         }
-        
+        min_y = y_min;
         for(int i = 0; i < n - 1 ; ++i){
             int x = i * n;
             for(int j = 0; j < n - 1; ++j){
@@ -332,9 +338,10 @@ public:
     
     void draw(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float &t){
         MV->pushMatrix();
-        MV->scale(0.1);
+        scale_obj(0.1);
+        MV->scale(Scale);
+        MV->translate(glm::vec3(0.0,-y_min,0.0));
         MV->rotate(glm::radians(90.0), glm::vec3(0.0,0.0,1.0));
-        MV->translate(glm::vec3(-5.0,0.0,0.0));
         prog->bind();
         glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, value_ptr(P->topMatrix()));
         glUniform1f(prog->getUniform("t"), t);
@@ -355,6 +362,10 @@ public:
         glDisableVertexAttribArray(prog->getAttribute("aPos"));
         prog->unbind();
         MV->popMatrix();
+    }
+    void scale_obj(const float &s){
+        Scale = glm::vec3(s);
+        y_min = min_y * s;
     }
 private:
     shared_ptr<Program> prog;
