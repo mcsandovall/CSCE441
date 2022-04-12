@@ -111,7 +111,7 @@ public:
     
     Sphere(float r = 1.0){
         prog = make_shared<Program>();
-        prog->setShaderNames(RESOURCE_DIR + "s_vert.glsl", RESOURCE_DIR + "s_frag.glsl");
+        prog->setShaderNames(RESOURCE_DIR + "phong_vert.glsl", RESOURCE_DIR + "phong_frag.glsl");
         prog->setVerbose(true);
         prog->init();
         prog->addAttribute("aPos");
@@ -119,6 +119,13 @@ public:
         prog->addAttribute("aTex");
         prog->addUniform("MV");
         prog->addUniform("P");
+        prog->addUniform("MVit");
+        prog->addUniform("ka");
+        prog->addUniform("kd");
+        prog->addUniform("ks");
+        prog->addUniform("s");
+        prog->addUniform("lightsPos");
+        prog->addUniform("lightsColors");
         prog->setVerbose(false);
         
         //
@@ -135,8 +142,8 @@ public:
         //
         // Instead of the hard coded square below, you need to draw a sphere.
         // You need to use one or more for-loops to fill in the position buffer,
-        // normal buffer, texture buffer, and the index buffer.
-        //
+        // normal buffer, texture buffer, and the index buffer
+        m = Material(glm::vec3(0.0f), glm::vec3(0.5f), glm::vec3(1.0f), 200.0f);
         
         y_min = INT_MAX;
         float n = 50; // variable n for number of grid points
@@ -199,7 +206,7 @@ public:
         GLSL::checkError(GET_FILE_LINE);
     }
     
-    void draw(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float &t){
+    void draw(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float &t, vector<glm::vec3> lightsPos, vector<glm::vec3> lightsColors){
         MV->pushMatrix();
         
         MV->translate(Translate);
@@ -224,6 +231,17 @@ public:
         glVertexAttribPointer(prog->getAttribute("aNor"), 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIDs["bInd"]);
         glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, value_ptr(MV->topMatrix()));
+        // add the other uniforms
+        // add all the other uniforms
+        glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
+        glUniformMatrix4fv(prog->getUniform("MVit"), 1, GL_FALSE, value_ptr(MVit));
+        glUniform3fv(prog->getUniform("ka"), 1, glm::value_ptr(m.ka));
+        glUniform3fv(prog->getUniform("kd"), 1, glm::value_ptr(m.kd));
+        glUniform3fv(prog->getUniform("ks"), 1 , glm::value_ptr(m.ks));
+        glUniform1f(prog->getUniform("s"),  m.s);
+        glUniform3fv(prog->getUniform("lightsPos"), 10, glm::value_ptr(lightsPos[0]));
+        glUniform3fv(prog->getUniform("lightsColors"), 10, glm::value_ptr(lightsColors[0]));
+        
         glDrawElements(GL_TRIANGLES, indCount, GL_UNSIGNED_INT, (void *)0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -235,6 +253,7 @@ public:
     
 private:
     shared_ptr<Program> prog;
+    Material m;
 };
 
 class SRevolution{
@@ -257,9 +276,11 @@ public:
         prog->addUniform("kd");
         prog->addUniform("ks");
         prog->addUniform("s");
+        prog->addUniform("lightsPos");
+        prog->addUniform("lightsColors");
         prog->setVerbose(false);
         
-        m = Material(glm::vec3(0.0f), glm::vec3(0.5f), glm::vec3(1.0f), 0.0f);
+        m = Material(glm::vec3(0.0f), glm::vec3(0.5f), glm::vec3(1.0f), 200.0f);
         
         //
         // Vertex buffer setup
@@ -309,12 +330,6 @@ public:
             }
         }
         
-        // print out the indbuf
-        
-        //
-        // END IMPLEMENT ME
-        //
-        
         // Total number of indices
         indCount = (int)indBuf.size();
             
@@ -341,6 +356,11 @@ public:
     
     void draw(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float &t, vector<glm::vec3> lightsPos, vector<glm::vec3> &lightsColors){
         MV->pushMatrix();
+        
+        for(int i = 0; i < lightsPos.size(); ++i){
+            lightsPos[i] = glm::vec3(MV->topMatrix() * glm::vec4(lightsPos[i],1.0f));
+        }
+        
         scale_obj(0.1);
         MV->scale(Scale);
         MV->translate(glm::vec3(0.0,-y_min,0.0));
@@ -628,8 +648,8 @@ static void init()
     teapot = make_shared<Object>("teapot.obj");
     Floor = make_shared<Object>("cube.obj");
     sun = make_shared<Object>("sphere.obj");
-    //sphere = make_shared<Sphere>(0.3);
-    srev = make_shared<SRevolution>();
+    sphere = make_shared<Sphere>(0.3);
+    //srev = make_shared<SRevolution>();
     
     GLSL::checkError(GET_FILE_LINE);
 }
@@ -652,9 +672,9 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
     Floor->material.kd = glm::vec3(0.0,0.3,0.0);
     Floor->draw_shape(P, MV, lightsPos);
     
-//    sphere->Translate = glm::vec3(0.0,-sphere->y_min,0.0);
-//    sphere->draw(P, MV, t);
-    srev->draw(P, MV, t, lightsPos, lightsColors);
+    sphere->Translate = glm::vec3(0.0,-sphere->y_min,0.0);
+    sphere->draw(P, MV, t, lightsPos, lightsColors);
+    //srev->draw(P, MV, t, lightsPos, lightsColors);
     // define the shear matrix
 //    glm::mat4 shear(1.0f);
 //    shear[1][0] = 0.3f * cos(t);
