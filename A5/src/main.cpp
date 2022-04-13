@@ -257,14 +257,16 @@ public:
 private:
     shared_ptr<Program> prog;
     Material m;
+    map<string,GLuint> bufIDs;
+    int indCount;
 };
 
 class SRevolution{
 public:
     float y_min, min_y;
-    glm::vec3 Scale;
+    glm::vec3 Scale, Translate;
     
-    SRevolution(){
+    SRevolution() : Scale(1.0f), Translate(0.0f){
         prog = make_shared<Program>();
         prog->setShaderNames(RESOURCE_DIR + "vert.glsl", RESOURCE_DIR + "phong_frag.glsl");
         prog->setVerbose(true);
@@ -285,39 +287,23 @@ public:
         
         m = Material(glm::vec3(0.0f), glm::vec3(0.5f), glm::vec3(1.0f), 200.0f);
         
-        //
-        // Vertex buffer setup
-        //
-        
         vector<float> posBuf;
         vector<float> norBuf;
-        vector<float> texBuf;
         vector<unsigned int> indBuf;
 
-        //
-        // IMPLEMENT ME
-        //
-        // Instead of the hard coded square below, you need to draw a sphere.
-        // You need to use one or more for-loops to fill in the position buffer,
-        // normal buffer, texture buffer, and the index buffer.
-        //
         y_min = INT_MAX;
         float n = 20; // variable n for number of grid points
         for(int i = 0; i < n; ++i){
             for(int j  = 0; j < n; ++j){
                 float x = i * (10.0/(n-1));
                 float theta = j * (2 * M_PI/(n-1));
-                float y = (cos(x)+2) * cos(theta);
-                y_min = min(y_min, y);
+                y_min = min(y_min, x);
                 posBuf.push_back(x);
                 posBuf.push_back(theta);
                 posBuf.push_back(0.0f);
                 norBuf.push_back(0.0f);
                 norBuf.push_back(0.0f);
                 norBuf.push_back(0.0f);
-                texBuf.push_back(x);
-                texBuf.push_back(theta);
-                
             }
         }
         min_y = y_min;
@@ -363,10 +349,9 @@ public:
         for(int i = 0; i < lightsPos.size(); ++i){
             lightsPos[i] = glm::vec3(MV->topMatrix() * glm::vec4(lightsPos[i],1.0f));
         }
-        
-        scale_obj(0.1);
+
+        MV->translate(Translate);
         MV->scale(Scale);
-        MV->translate(glm::vec3(0.0,-y_min,0.0));
         MV->rotate(glm::radians(90.0), glm::vec3(0.0,0.0,1.0));
         prog->bind();
         glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, value_ptr(P->topMatrix()));
@@ -399,13 +384,15 @@ public:
         prog->unbind();
         MV->popMatrix();
     }
-    void scale_obj(const float &s){
+    void scale_obj(const float s){
         Scale = glm::vec3(s);
         y_min = min_y * s;
     }
 private:
     shared_ptr<Program> prog;
     Material m;
+    map<string,GLuint> bufIDs;
+    int indCount;
 };
 
 void random_color(vector<glm::vec3> & colors){
@@ -654,7 +641,7 @@ static void init()
     Floor = make_shared<Object>("cube.obj");
     sun = make_shared<Object>("sphere.obj");
     sphere = make_shared<Sphere>(0.3);
-    //srev = make_shared<SRevolution>();
+    srev = make_shared<SRevolution>();
     
     GLSL::checkError(GET_FILE_LINE);
 }
@@ -676,10 +663,7 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
     Floor->Translate = (glm::vec3(0,-Floor->y_min,0));
     Floor->material.kd = glm::vec3(0.0,0.3,0.0);
     Floor->draw_shape(P, MV, lightsPos);
-    
-    sphere->Translate = glm::vec3(0.0,-sphere->y_min,0.0);
-    sphere->draw(P, MV, t, lightsPos, lightsColors);
-    
+        
     glm::mat4 shear(1.0f);
     shear[1][0] = 0.3f * cos(t);
     
@@ -715,6 +699,9 @@ void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
                     sphere->draw(P, MV, t, lightsPos, lightsColors);
                     break;
                 case 3:
+                    srev->scale_obj(0.1);
+                    srev->Translate = glm::vec3(j,-srev->y_min,i);
+                    srev->draw(P, MV, t, lightsPos, lightsColors);
                     break;
                 default:
                     break;
