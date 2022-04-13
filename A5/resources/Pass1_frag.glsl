@@ -1,15 +1,16 @@
 #version 120
-uniform vec3 lightPos;
 
-varying vec3 cNor;
-varying vec3 cPos;
+varying vec3 vPos;
+varying vec3 vNor;
+
+uniform vec3 ke;
+uniform vec3 kd;
 
 void main()
 {
-    // instead write values that depend on the light and on the normal
-    vec3 n = normalize(cNor);
-    vec3 l = normalize(lightPos - cPos);
-    
-	gl_FragData[0] = vec4(n, 1.0);
-	gl_FragData[1] = vec4(l, 1.0);
+    // now there are going to be 4 fragments pos, nor, ke, kd
+    gl_FragData[0].xyz = vPos;
+    gl_FragData[1].xyz = vNor;
+    gl_FragData[2].xyz = ke;
+    gl_FragData[3].xyz = kd;
 }
