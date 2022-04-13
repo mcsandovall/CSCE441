@@ -643,6 +643,9 @@ static void init()
     sphere = make_shared<Sphere>(0.3);
     srev = make_shared<SRevolution>();
     
+    // implement the assigment 6 defferred rendering
+    
+    
     GLSL::checkError(GET_FILE_LINE);
 }
 
