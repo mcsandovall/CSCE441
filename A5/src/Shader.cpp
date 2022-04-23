@@ -43,3 +43,32 @@ void Shader::bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Materia
 void Shader::program_unbind(){
     program->unbind();
 }
+
+DShader::DShader(const string &vert, const string &frag){
+    prog = make_shared<Program>();
+    prog->setShaderNames(vert,frag);
+    prog->setVerbose(true);
+    prog->init();
+    prog->addAttribute("aPos");
+    prog->addAttribute("aNor");
+    prog->addUniform("MV");
+    prog->addUniform("P");
+    prog->addUniform("MVit"); // add the uniform
+    prog->addUniform("ke");
+    prog->addUniform("kd");
+    prog->setVerbose(false);
+}
+
+void DShader::bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M){
+    prog->bind();
+    glUniformMatrix4fv(prog->getUniform("P"), 1, GL_FALSE, glm::value_ptr(P->topMatrix()));
+    glm::mat4 MVit = glm::inverse(glm::transpose(MV->topMatrix()));
+    glUniformMatrix4fv(prog->getUniform("MV"), 1, GL_FALSE, glm::value_ptr(MV->topMatrix()));
+    glUniformMatrix4fv(prog->getUniform("MVit"), 1, GL_FALSE, glm::value_ptr(MVit));
+    glUniform3fv(prog->getUniform("ke"), 1, glm::value_ptr(M.ka));
+    glUniform3fv(prog->getUniform("kd"), 1, glm::value_ptr(M.kd));
+}
+
+void DShader::unbind(){
+    prog->unbind();
+}

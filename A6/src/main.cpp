@@ -16,6 +16,7 @@
 // functions. You can also say `using std::cout` to be more selective.
 // You should never do this in a header file.
 using namespace std;
+using namespace glm;
 
 double RANDOM_COLORS[7][3] = {
 	{0.0000,    0.4470,    0.7410},
@@ -25,6 +26,100 @@ double RANDOM_COLORS[7][3] = {
 	{0.4660,    0.6740,    0.1880},
 	{0.3010,    0.7450,    0.9330},
 	{0.6350,    0.0780,    0.1840},
+};
+
+// testing function
+void printVec(const vec3 &v){
+    cout << v.x << " " << v.y << " " << v.z << endl;
+}
+
+// needed classes for the assignment
+
+class Hit
+{
+public:
+    Hit() : x(0), n(0), t(0) {}
+    Hit(const vec3 &x, const vec3 &n, float t) { this->x = x; this->n = n; this->t = t; }
+    vec3 x; // position
+    vec3 n; // normal
+    float t; // distance
+};
+
+class Ray
+{
+public:
+    Ray(){}
+    Ray(const vec3 & o, const vec3 &d) :
+    origin(o),
+    direction(d)
+    {}
+    vec3 origin;
+    vec3 direction;
+};
+
+class Light
+{
+public:
+    Light() :
+    lightPos(0),
+    lightColor(0)
+    {}
+    
+    Light(const vec3 &lp, const vec3 &lc) :
+    lightPos(lp),
+    lightColor(lc)
+    {}
+    
+    vec3 lightPos;
+    vec3 lightColor;
+};
+
+class Object
+{
+public:
+    
+};
+
+class Scene
+{
+public:
+    Scene(){}
+    vector<shared_ptr<Object>> object;
+    vector<Light> lights;
+};
+
+class Camera
+{
+public:
+    Camera(const int &w, const int &h) :
+    width(w),
+    height(h),
+    aspect(1.0f),
+    fov((float)(45.0*M_PI/180.0)),
+    Postion(0.0,0.0,5.0f),
+    Rotation(0.0,0.0)
+    {}
+    
+    void generateRays(){
+        for(int col = 0; col < height; ++col){
+            for(int row = 0; row < width; ++row){
+                float x = (-width + ((row * 2) + 1)) / (float) width;
+                float y = (-height + ((col * 2) + 1)) / (float) height;
+                vec3 v(tan(-fov/2.0) * x, tan(-fov/2.0) * y, -1.0f);
+                v = normalize(v);
+                rays.push_back(Ray(Postion, v));
+            }
+        }
+    }
+    
+    int width, height;
+    float aspect;
+    float fov;
+    vec3 Postion;
+    vec3 LookAt;
+    vec3 Up;
+    vec2 Rotation;
+    vector<Ray> rays;
 };
 
 // make normal
@@ -240,7 +335,7 @@ double scalar_factor(int width, int height,const BoundedBox_t * bb){
     // assume the image always begins at (0,0) -> (w,h)
     double s_x = width / (bb->xmax - bb->xmin);
     double s_y = height / (bb->ymax - bb->ymin);
-    return min(s_x,s_y);
+    return std::min(s_x,s_y);
 }
 
 double * translation_factor(int width, int height, double scalar, const BoundedBox_t * bb){
@@ -413,7 +508,7 @@ void SimpleLight(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, B
                     z = calculateDepth(T);
                     if(zbuff.TestAndSet(x, y, z)){
                         n =  getNormalColor(T);
-                        double c = max((light * n),0.0);
+                        double c = std::max((light * n),0.0);
                         image->setPixel(x, y, c*255, c*255, c*255);
                     }
                 }
@@ -423,21 +518,29 @@ void SimpleLight(vector<Triangle_t *> triangles, std::shared_ptr<Image> image, B
 }
 int main(int argc, char **argv)
 {
-	if(argc < 2) {
-		cout << "Usage: A1 meshfile" << endl;
+	if(argc < 3) {
+		cout << "Error: A6 Not Enough Arguments" << endl;
 		return 0;
 	}
-	string meshName(argv[1]);
+    
+    int sceneNumber = atoi(argv[1]);
+    
+	string meshName = "../../resources/bunny.obj";
     // Output filename
-    string filename(argv[2]);
+    string filename(argv[3]);
     // Image width
-    int width = atoi(argv[3]);
+    int width = atoi(argv[2]);
     // image height
-    int height = atoi(argv[4]);
+    int height = atoi(argv[2]);
     // task to be executed
     //int task = atoi(argv[5]);
     // Create the image like in the labs
     auto image = make_shared<Image>(width, height);
+    
+    // testing for the camera class
+    Camera c(3, 3);
+    c.generateRays();
+    
 
 	// Load geometry
 	vector<float> posBuf; // list of vertex positions
@@ -519,33 +622,6 @@ int main(int argc, char **argv)
     // resize the bounded box
     bb.xmin = (scalar * bb.xmin) + translation[0], bb.xmax = (scalar * bb.xmax) + translation[0];
     bb.ymin = (scalar * bb.ymin) + translation[1], bb.ymax = (scalar * bb.ymax) + translation[1];
-    
-    // make a switch for each test case to be tested
-    switch (atoi(argv[5])) {
-        case 1:
-            draw_BoundingBoxes(triangles, image);
-            break;
-        case 2:
-            draw_triangles(triangles, image);
-            break;
-        case 3:
-            per_vertex_color(triangles, image);
-            break;
-        case 4:
-            vertical_color(triangles, image, &bb);
-            break;
-        case 5:
-            Z_buffer(triangles, image, bb);
-            break;
-        case 6:
-            normalColoring(triangles, image, bb);
-            break;
-        case 7:
-            SimpleLight(triangles, image, bb);
-            break;
-        default:
-            break;
-    }
     
     image->writeToFile(filename);
     

@@ -44,14 +44,14 @@ public:
     void bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M, vector<glm::vec3> lightsPos, vector<glm::vec3> lightsColors);
     void program_unbind();
 };
-// class that has the collection of shaders
-class Shader_Collection{
+
+class DShader{
 public:
-    shared_ptr<Shader> header, tail, current;
-    Shader_Collection() : header(nullptr),tail(nullptr), current(nullptr){}
-    void push_back(string vert_file, string frag_file, SHADER_TYPE _type);
-    void move_forward();
-    void move_backward();
+    shared_ptr<Program> prog;
+    DShader(const string &vert, const string &frag);
+    void bind(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, Material M);
+    void unbind();
 };
+
 
 #endif
