@@ -141,7 +141,7 @@ public:
         int index = -1;
         for(int i = 0; i < shapes.size(); ++i){
             float it = shapes[i]->Intersect(r, t0, t1);
-            if(it < t){
+            if(it < t && it > t0 && it < t1){
                 t = it;
                 index = i;
             }
@@ -159,9 +159,16 @@ public:
     // compute bling phong for all the lights using ith object as reference
     vec3 computeBlingPhong(const class Hit &h, const int index) const{
         vec3 pixelColor(0); // set it to the normal
-        
-        for(int i = 0; i < lights.size(); ++i){
-            vec3 color = shapes[index]->getColor(h, lights[i], vec3(0,0,5.0));
+        vec3 color = shapes[index]->Ambient;
+        class Hit srec;
+        for(Light l : lights){
+            vec3 lightDir =  normalize(l.lightPos - h.x);
+            float lightDist = distance(l.lightPos, h.x);
+            Ray sray(h.x,lightDir);
+            if(this->Hit(sray, 0.001, lightDist, srec) == -1){ // no hits
+                color = shapes[index]->getColor(h, l, vec3(0,0,5.0));
+            }
+            //color = shapes[index]->getColor(h, l, vec3(0,0,5.0));
             pixelColor += color;
         }
         // clamp the values of the colors
@@ -206,7 +213,6 @@ public:
         Hit h;
         int hit = s.Hit(r, t0, t1, h);
         if(hit > -1){ // ray hit the scene
-            Ray shadownRay(h.x,h.n);
             color = s.computeBlingPhong(h, hit);
         } // else return the background color
         return color;
