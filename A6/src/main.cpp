@@ -71,7 +71,7 @@ class Shape
 {
 public:
     Shape(){}
-    ~Shape(){}
+    virtual ~Shape(){}
     // functions for each object
     virtual float Intersect(const Ray &r,const float &t0,const float &t1) const { return 0;};
     virtual vec3 getColor(const Hit &h, const Light &l, vec3 cPos) const { return vec3(0); };
@@ -135,7 +135,7 @@ class Scene
 {
 public:
     Scene(){}
-    
+    ~Scene(){ for(int i =0; i < shapes.size(); ++i){ delete shapes[i]; }}
     int Hit(const Ray &r, const float &t0, const float &t1, Hit &h) const{
         float t = INT_MAX;
         int index = -1;
