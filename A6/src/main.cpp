@@ -75,6 +75,7 @@ public:
     // functions for each object
     virtual float Intersect(const Ray &r,const float &t0,const float &t1) const { return 0;};
     virtual vec3 getColor(const Hit &h, const Light &l, vec3 cPos) const { return vec3(0); };
+    virtual vec3 computeNormal(const vec3 &x) const { return x; }
     
     vec3 Position;
     vec3 Scale;
@@ -111,7 +112,7 @@ public:
         // compute bling phong
         vec3 Pos = hi.x; // hit position (point position)
         // compute the normal for the translated sphere
-        vec3 n = normalize(Pos - Position / Scale);
+        vec3 n = normalize(hi.n);
         vec3 l = normalize(li.lightPos -  Pos);
         vec3 e = normalize(cPos - Pos); // camera - point
         vec3 h = normalize(l + e);
@@ -122,6 +123,10 @@ public:
         vec3 spec = Specular * pow(std::max(0.0f,dot(h,n)), Exponent);
         color += diff + spec;
         return color;
+    }
+    
+    vec3 computeNormal(const vec3 &x) const override{
+        return normalize((x - Position) / Scale);
     }
 };
 
@@ -145,7 +150,7 @@ public:
         // compute the point and the normal of the hit with respect to the shape
         // position of the hit
         vec3 x = r.origin + (t * r.direction);
-        vec3 n = r.direction; // compute the normal with respect to the given object
+        vec3 n = shapes[index]->computeNormal(x); // compute the normal with respect to the given object
         // change the hit
         h.x = x; h.n = n; h.t = t;
         return index;
@@ -201,6 +206,7 @@ public:
         Hit h;
         int hit = s.Hit(r, t0, t1, h);
         if(hit > -1){ // ray hit the scene
+            Ray shadownRay(h.x,h.n);
             color = s.computeBlingPhong(h, hit);
         } // else return the background color
         return color;
