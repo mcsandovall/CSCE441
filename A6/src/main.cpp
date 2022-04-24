@@ -74,8 +74,23 @@ public:
     virtual ~Shape(){}
     // functions for each object
     virtual float Intersect(const Ray &r,const float &t0,const float &t1) const { return 0;};
-    virtual vec3 getColor(const Hit &h, const Light &l, vec3 cPos) const { return vec3(0); };
-    virtual vec3 computeNormal(const vec3 &x) const { return x; }
+    vec3 getColor(const Hit &hi, const Light &li, vec3 cPos) const {
+        // compute bling phong
+        vec3 Pos = hi.x; // hit position (point position)
+        // compute the normal for the translated sphere
+        vec3 n = normalize(hi.n);
+        vec3 l = normalize(li.lightPos -  Pos);
+        vec3 e = normalize(cPos - Pos); // camera - point
+        vec3 h = normalize(l + e);
+
+        // compute the colors
+        vec3 color =  Ambient;
+        vec3 diff = Diffuse * std::max(0.0f,dot(l,n));
+        vec3 spec = Specular * pow(std::max(0.0f,dot(h,n)), Exponent);
+        color += diff + spec;
+        return color;
+    };
+    virtual void computeHit(const Ray &r, const float &t, Hit &h) const{}
     
     vec3 Position;
     vec3 Scale;
@@ -83,13 +98,14 @@ public:
     vec3 Diffuse;
     vec3 Specular;
     vec3 Ambient;
+    float angle;
     float Exponent;
 };
 
 class Sphere : public Shape{
 public:
-    Sphere(const vec3 &p, const vec3 &s, const vec3 &r, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e){
-        Position = p; Scale = s; rotation =  r; Diffuse = d; Specular = sp; Ambient = a; Exponent = e;
+    Sphere(const vec3 &p, const vec3 &s, const vec3 &r,const float &ang, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e){
+        Position = p; Scale = s; rotation =  r; Diffuse = d; Specular = sp; Ambient = a; Exponent = e, angle = ang;
     }
     
     float Intersect(const Ray &r,const float &t0,const float &t1) const override{
@@ -107,26 +123,75 @@ public:
         }
         return INT_MAX;
     }
+    
+    void computeHit(const Ray &r, const float &t, Hit &h) const override{
+        h.x = r.origin + (t * r.direction);
+        h.n = normalize((h.x - Position) / Scale);
+        h.t = t;
+    }
+};
 
-    vec3 getColor(const Hit &hi, const Light &li, vec3 cPos) const override{
-        // compute bling phong
-        vec3 Pos = hi.x; // hit position (point position)
-        // compute the normal for the translated sphere
-        vec3 n = normalize(hi.n);
-        vec3 l = normalize(li.lightPos -  Pos);
-        vec3 e = normalize(cPos - Pos); // camera - point
-        vec3 h = normalize(l + e);
-
-        // compute the colors
-        vec3 color =  Ambient;
-        vec3 diff = Diffuse * std::max(0.0f,dot(l,n));
-        vec3 spec = Specular * pow(std::max(0.0f,dot(h,n)), Exponent);
-        color += diff + spec;
-        return color;
+class Ellipsoid : public Shape{
+public:
+    Ellipsoid(const vec3 &p, const vec3 &s, const vec3 &r,const float &angle, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e){
+        Position = p; Scale = s; rotation =  r; Diffuse = d; Specular = sp; Ambient = a; Exponent = e;
+        // load the matrix E = T * R * S
+        ellipsoid_E = mat4(1.0); // load identity
+        ellipsoid_E *= glm::translate(mat4(1.0), p);
+        ellipsoid_E *= glm::rotate(mat4(1.0), angle, r);
+        ellipsoid_E *= glm::scale(mat4(1.0), s);
     }
     
-    vec3 computeNormal(const vec3 &x) const override{
-        return normalize((x - Position) / Scale);
+    float Intersect(const Ray &r,const float &t0,const float &t1) const override{
+        vec3 p = inverse(ellipsoid_E) * vec4(r.origin,1.0);
+        vec3 v = inverse(ellipsoid_E) * vec4(r.direction,0.0);
+        v = normalize(v);
+        float a = dot(v,v);
+        float b = 2 * dot(v,p);
+        float c = dot(p,p) - 1;
+        float d = (b * b) - (4 * a * c);
+        if(d > 0){
+            // solve for the distances
+            float _t0,_t1;
+            _t0 = (-b + sqrt(d)) / (2*a);
+            _t1 = (-b - sqrt(d)) / (2*a);
+            return std::min(_t0,_t1);
+        }
+        return INT_MAX;
+    }
+    
+    void computeHit(const Ray &r, const float &t, Hit &h) const override{
+        vec3 p = inverse(ellipsoid_E) * vec4(r.origin,1.0);
+        vec3 v = inverse(ellipsoid_E) * vec4(r.direction,0.0);
+        v = normalize(v);
+        vec3 x = p + (t * v);
+        h.x = ellipsoid_E * vec4(x,1.0f);
+        h.n = normalize(inverse(transpose(ellipsoid_E)) * vec4(x,0.0f));
+        h.t = abs(distance(x, r.origin));
+        if(dot(r.direction, x - r.origin) < 0){
+            h.t = -h.t;
+        }
+    }
+    
+    mat4 ellipsoid_E;
+};
+
+class Plane : public Shape{
+public:
+    Plane(const vec3 &p, const vec3 &s, const vec3 &r,const float &ang, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e){
+        Position = p; Scale = s; rotation =  r; Diffuse = d; Specular = sp; Ambient = a; Exponent = e, angle =  ang;
+    }
+    
+    float Intersect(const Ray &r,const float &t0,const float &t1) const override{
+        vec3 c(0,0,-1);
+        vec3 n(0,0,1);
+        return  dot(n, (c - r.origin))/dot(n,r.direction);
+    }
+    
+    void computeHit(const Ray &r, const float &t, Hit &h) const override{
+        h.x =  r.origin +  (t * r.direction);
+        h.n = vec3(0,0,1);
+        h.t = 0;
     }
 };
 
@@ -148,11 +213,7 @@ public:
         }
         if(index == -1) return index;
         // compute the point and the normal of the hit with respect to the shape
-        // position of the hit
-        vec3 x = r.origin + (t * r.direction);
-        vec3 n = shapes[index]->computeNormal(x); // compute the normal with respect to the given object
-        // change the hit
-        h.x = x; h.n = n; h.t = t;
+        shapes[index]->computeHit(r, t, h);
         return index;
     }
     
@@ -256,35 +317,95 @@ void task1(){
     
     // create the scene with the specifictations
     vec3 position, rotation, diffuse, specular, ambient, scale;
-    float exp;
+    float exp, angle;
     
     position = vec3(-0.5, -1.0, 1.0);
     scale = vec3(1.0f);
-    rotation = vec3(0);
+    rotation = vec3(1.0);
+    angle = 0;
     diffuse = vec3(1.0,0,0);
     specular =  vec3(1.0,1.0,0.5);
     ambient = vec3(0.1);
     exp = 100.0f;
-    Sphere * redS = new Sphere(position,scale,rotation,diffuse,specular,ambient,exp);
+    Sphere * redS = new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp);
     position = vec3(0.5, -1.0, -1.0);
     scale = vec3(1.0f);
-    rotation = vec3(0);
+    rotation = vec3(1.0);
+    angle = 0;
     diffuse = vec3(0.0, 1.0, 0.0);
     specular =  vec3(1.0, 1.0, 0.5);
     ambient = vec3(0.1, 0.1, 0.1);
     exp = 100.0f;
-    Sphere * greenS = new Sphere(position,scale,rotation,diffuse,specular,ambient,exp);
+    Sphere * greenS = new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp);
     position = vec3(0.0, 1.0, 0.0);
     scale = vec3(1.0f);
-    rotation = vec3(0);
+    rotation = vec3(1.0);
+    angle = 0;
     diffuse = vec3(0.0, 0.0, 1.0);
     specular =  vec3(1.0, 1.0, 0.5);
     ambient = vec3(0.1, 0.1, 0.1);
     exp = 100.0f;
-    Sphere * blueS = new Sphere(position,scale,rotation,diffuse,specular,ambient,exp);
+    Sphere * blueS = new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp);
     scene.addShape(redS);
     scene.addShape(greenS);
     scene.addShape(blueS);
+    
+    camera->rayTrace(scene);
+}
+
+void task3(){
+    // make a scene
+    Scene scene;
+    
+    // make the light
+    Light l1(vec3(1.0, 2.0, 2.0), 0.5);
+    Light l2(vec3(-1.0, 2.0, -1.0), 0.5);
+    scene.addLight(l1);
+    scene.addLight(l2);
+    
+    // create the scene with the specifictations
+    vec3 position, rotation, diffuse, specular, ambient, scale;
+    float exp, angle;
+    
+    // red ellipsoid
+    position = vec3(0.5, 0.0, 0.5);
+    scale = vec3(0.5, 0.6, 0.2);
+    rotation = vec3(1.0);
+    angle = 0;
+    diffuse = vec3(1.0, 0.0, 0.0);
+    specular =  vec3(1.0, 1.0, 0.5);
+    ambient = vec3(0.1);
+    exp = 100.0f;
+    
+    Ellipsoid * redE = new Ellipsoid(position,scale,rotation,angle,diffuse,specular,ambient,exp);
+    scene.addShape(redE);
+    
+    // green sphere
+    position = vec3(-0.5, 0.0, -0.5);
+    scale = vec3(1.0, 1.0, 1.0);
+    rotation = vec3(1.0);
+    angle = 0;
+    diffuse = vec3(0.0, 1.0, 0.0);
+    specular =  vec3(1.0, 1.0, 0.5);
+    ambient = vec3(0.1);
+    exp = 100.0f;
+    
+    Sphere * greenS = new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp);
+    scene.addShape(greenS);
+    
+    // plane
+    position = vec3(0.0, -1.0, 0.0);
+    scale = vec3(1.0, 1.0, 1.0);
+    rotation = vec3(1.0);
+    angle = 90;
+    diffuse = vec3(1.0, 1.0, 1.0);
+    specular =  vec3(0.0, 0.0, 0.0);
+    ambient = vec3(0.1, 0.1, 0.1);
+    exp = 0.0f;
+    
+    Plane * plane = new Plane(position,scale,rotation,angle, diffuse,specular,ambient,exp);
+    
+    scene.addShape(plane);
     
     camera->rayTrace(scene);
 }
@@ -312,7 +433,7 @@ int main(int argc, char **argv)
     
     camera = make_shared<Camera>(width,height);
     
-    task1();
+    task3();
     
     image->writeToFile(filename);
     
