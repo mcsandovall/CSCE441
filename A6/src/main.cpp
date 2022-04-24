@@ -181,7 +181,7 @@ public:
     width(w),
     height(h),
     aspect(1.0f),
-    fov((float)(45.0*M_PI/180.0)),
+    fov((float)(-45.0*M_PI/180.0)),
     Postion(0.0,0.0,5.0),
     Rotation(0.0,0.0)
     {}
