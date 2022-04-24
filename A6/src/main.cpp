@@ -58,7 +58,7 @@ public:
     intensity(0)
     {}
     
-    Light(const vec3 &lp, float &i) :
+    Light(const vec3 &lp,const float &i) :
     lightPos(lp),
     intensity(i)
     {}
@@ -73,7 +73,6 @@ public:
     Shape(){}
     ~Shape(){}
     // functions for each object
-    virtual void print(){ cout << "shape" << endl;}
     virtual float Intersect(const Ray &r,const float &t0,const float &t1) const { return 0;};
     virtual vec3 getColor(const Hit &h, const Light &l, vec3 cPos) const { return vec3(0); };
     
@@ -91,9 +90,7 @@ public:
     Sphere(const vec3 &p, const float &s, const vec3 &r, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e){
         Position = p; Scale = s; rotation =  r; Diffuse = d; Specular = sp; Ambient = a; Exponent = e;
     }
-    void print() override{
-        cout << "sphere" << endl;
-    }
+    
     float Intersect(const Ray &r,const float &t0,const float &t1) const override{
         vec3 pc =  r.origin - Position; // ray center - sphere position
         float a = dot(r.direction, r.direction);
@@ -134,14 +131,13 @@ public:
         float t = INT_MAX;
         int index = -1;
         for(int i = 0; i < shapes.size(); ++i){
-            int it = shapes[i]->Intersect(r, t0, t1);
-            if(t < it){
+            float it = shapes[i]->Intersect(r, t0, t1);
+            if(it < t){
                 t = it;
                 index = i;
             }
         }
-        if(index == -1) return false;
-        cout << "there is an intersection" << endl;
+        if(index == -1) return index;
         // compute the point and the normal of the hit with respect to the shape
         // position of the hit
         vec3 x = r.origin * (t * r.direction);
@@ -159,7 +155,7 @@ public:
         vec3 pixelColor = shapes[index]->Ambient;
         for(int i = 0; i < lights.size(); ++i){
             vec3 n = normalize(cNor);
-            vec3 e = normalize(-cPos); // e vector
+            vec3 e = normalize(vec3(0,0,5.0) - cPos); // e vector
             vec3 l = normalize(lights[i].lightPos - cPos);
             vec3 h = normalize(l + e);
             float diffuse = glm::max(0.0f, dot(l,n));
@@ -167,13 +163,7 @@ public:
             vec3 color = (shapes[index]->Diffuse * diffuse + shapes[index]->Specular * specular);
             pixelColor += color;
         }
-        return (pixelColor * 255.0f);
-    }
-    
-    void test() const{
-        if(shapes[0]){
-            shapes[0]->print();
-        }
+        return pixelColor * 255.0f;
     }
     
     // setters
@@ -212,8 +202,7 @@ public:
         vec3 color(0); // background color
         Hit h;
         int hit = s.Hit(r, t0, t1, h);
-        cout << hit << endl;
-        if(hit != -1){ // ray didnt hit an object in scene
+        if(hit > -1){ // ray didnt hit an object in scene
             color = s.computeBlingPhong(h, hit);
         }
         return color;
@@ -233,10 +222,6 @@ public:
         }
     }
     
-    void test(const Scene &s){
-        s.test();
-    }
-    
     int width, height;
     float aspect;
     float fov;
@@ -253,11 +238,17 @@ shared_ptr<Camera> camera;
 void task1(){
     // make a scene
     Scene scene;
+    
+    // make the light
+    Light l(vec3(1.0), 1.0f);
+    
+    scene.addLight(l);
+    
     // create the scene with the specifictations
     vec3 position, rotation, diffuse, specular, ambient;
     float exp,scale;
     
-    position = vec3(-0.5, -1.0, 1.0);
+    position = vec3(0.5, 1.0, -1.0);
     scale = 1.0f;
     rotation = vec3(0);
     diffuse = vec3(1.0,0,0);
@@ -293,7 +284,7 @@ int main(int argc, char **argv)
     // Create the image like in the labs
     image = make_shared<Image>(width, height);
     
-    camera = make_shared<Camera>(80,80);
+    camera = make_shared<Camera>(width,height);
     
     task1();
     
