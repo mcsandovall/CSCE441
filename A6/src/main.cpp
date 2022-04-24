@@ -111,17 +111,16 @@ public:
         // compute bling phong
         vec3 Pos = hi.x; // hit position (point position)
         // compute the normal for the translated sphere
-        vec3 n = (Pos - Position / Scale);
-        vec3 color = n;
-//        vec3 l = normalize(li.lightPos -  Pos);
-//        vec3 e = normalize(cPos - Pos); // camera - point
-//        vec3 h = normalize(l + e);
-//
-//        // compute the colors
-//        vec3 color =  Ambient;
-//        vec3 diff = Diffuse * std::max(0.0f,dot(l,n));
-//        vec3 spec = Specular * pow(std::max(0.0f,dot(h,n)), Exponent);
-//        color += diff + spec;
+        vec3 n = normalize(Pos - Position / Scale);
+        vec3 l = normalize(li.lightPos -  Pos);
+        vec3 e = normalize(cPos - Pos); // camera - point
+        vec3 h = normalize(l + e);
+
+        // compute the colors
+        vec3 color =  Ambient;
+        vec3 diff = Diffuse * std::max(0.0f,dot(l,n));
+        vec3 spec = Specular * pow(std::max(0.0f,dot(h,n)), Exponent);
+        color += diff + spec;
         return color;
     }
 };
@@ -157,7 +156,7 @@ public:
         vec3 pixelColor(0); // set it to the normal
         
         for(int i = 0; i < lights.size(); ++i){
-            vec3 color = shapes[index]->getColor(h, lights[i], vec3(0,0,-5.0));
+            vec3 color = shapes[index]->getColor(h, lights[i], vec3(0,0,5.0));
             pixelColor += color;
         }
         // clamp the values of the colors
@@ -183,7 +182,7 @@ public:
     height(h),
     aspect(1.0f),
     fov((float)(45.0*M_PI/180.0)),
-    Postion(0.0,0.0,-5.0),
+    Postion(0.0,0.0,5.0),
     Rotation(0.0,0.0)
     {}
     
@@ -239,7 +238,7 @@ void task1(){
     Scene scene;
     
     // make the light
-    Light l(vec3(-2.0,-1.0,-1.0), 1.0f);
+    Light l(vec3(-2.0,1.0,1.0), 1.0f);
     
     scene.addLight(l);
     
@@ -254,10 +253,26 @@ void task1(){
     specular =  vec3(1.0,1.0,0.5);
     ambient = vec3(0.1);
     exp = 100.0f;
-    
     Sphere * redS = new Sphere(position,scale,rotation,diffuse,specular,ambient,exp);
-    
+    position = vec3(0.5, -1.0, -1.0);
+    scale = vec3(1.0f);
+    rotation = vec3(0);
+    diffuse = vec3(0.0, 1.0, 0.0);
+    specular =  vec3(1.0, 1.0, 0.5);
+    ambient = vec3(0.1, 0.1, 0.1);
+    exp = 100.0f;
+    Sphere * greenS = new Sphere(position,scale,rotation,diffuse,specular,ambient,exp);
+    position = vec3(0.0, 1.0, 0.0);
+    scale = vec3(1.0f);
+    rotation = vec3(0);
+    diffuse = vec3(0.0, 0.0, 1.0);
+    specular =  vec3(1.0, 1.0, 0.5);
+    ambient = vec3(0.1, 0.1, 0.1);
+    exp = 100.0f;
+    Sphere * blueS = new Sphere(position,scale,rotation,diffuse,specular,ambient,exp);
     scene.addShape(redS);
+    scene.addShape(greenS);
+    scene.addShape(blueS);
     
     camera->rayTrace(scene);
 }
