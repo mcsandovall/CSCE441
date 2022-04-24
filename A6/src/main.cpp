@@ -92,7 +92,7 @@ public:
     }
     
     float Intersect(const Ray &r,const float &t0,const float &t1) const override{
-        vec3 pc =  r.origin - Position; // ray center - sphere position
+        vec3 pc =  r.origin - Position; // ray center - sphere position vec(0,0,4)
         float a = dot(r.direction, r.direction);
         float b = 2*(dot(r.direction,pc)); // 2 * dot(v^, pc)
         float c = dot(pc,pc) - (Scale * Scale); // dot(pc,pc) - r^2
@@ -142,7 +142,7 @@ public:
         // position of the hit
         vec3 x = r.origin * (t * r.direction);
         // calculate the normal w/ radius and center of the sphere
-        vec3 n = normalize( (x - shapes[index]->Position) / shapes[index]->Scale);
+        vec3 n = (x - shapes[index]->Position) / shapes[index]->Scale;
         // change the hit
         h.x = x; h.n = n; h.t = t;
         return index;
@@ -150,12 +150,12 @@ public:
     
     // compute bling phong for all the lights using ith object as reference
     vec3 computeBlingPhong(const class Hit &h, const int index) const{
-        vec3 cPos = h.x; // hit point position
+        vec3 cPos = h.x; // hit point position // postion Hit
         vec3 cNor = h.n; // hit point normal
-        vec3 pixelColor = shapes[index]->Ambient;
+        vec3 pixelColor = cNor;
         for(int i = 0; i < lights.size(); ++i){
             vec3 n = normalize(cNor);
-            vec3 e = normalize(vec3(0,0,5.0) - cPos); // e vector
+            vec3 e = normalize(cPos - vec3(0,0,5.0f)); // eye vector
             vec3 l = normalize(lights[i].lightPos - cPos);
             vec3 h = normalize(l + e);
             float diffuse = glm::max(0.0f, dot(l,n));
@@ -163,6 +163,10 @@ public:
             vec3 color = (shapes[index]->Diffuse * diffuse + shapes[index]->Specular * specular);
             pixelColor += color;
         }
+        // clamp the values of the colors
+        pixelColor.r = std::clamp(pixelColor.r, 0.0f, 1.0f);
+        pixelColor.g = std::clamp(pixelColor.g, 0.0f, 1.0f);
+        pixelColor.b = std::clamp(pixelColor.b, 0.0f, 1.0f);
         return pixelColor * 255.0f;
     }
     
@@ -182,7 +186,7 @@ public:
     height(h),
     aspect(1.0f),
     fov((float)(45.0*M_PI/180.0)),
-    Postion(0.0,0.0,5.0f),
+    Postion(0.0,0.0,-5.0),
     Rotation(0.0,0.0)
     {}
     
@@ -192,9 +196,7 @@ public:
         float y = (-height + ((col * 2) + 1)) / (float) height;
         vec3 v(tan(-fov/2.0) * x, tan(-fov/2.0) * y, -1.0f);
         v = normalize(v);
-        vec3 p = Postion;
-        p.z = 4.0;
-        return Ray(p, v);
+        return Ray(Postion, v);
     }
     
     // compute the ray color function
@@ -202,7 +204,7 @@ public:
         vec3 color(0); // background color
         Hit h;
         int hit = s.Hit(r, t0, t1, h);
-        if(hit > -1){ // ray didnt hit an object in scene
+        if(hit > -1){ // ray hit the scene
             color = s.computeBlingPhong(h, hit);
         }
         return color;
@@ -240,7 +242,7 @@ void task1(){
     Scene scene;
     
     // make the light
-    Light l(vec3(1.0), 1.0f);
+    Light l(vec3(-2.0,-1.0,-1.0), 1.0f);
     
     scene.addLight(l);
     
@@ -248,7 +250,7 @@ void task1(){
     vec3 position, rotation, diffuse, specular, ambient;
     float exp,scale;
     
-    position = vec3(0.5, 1.0, -1.0);
+    position = vec3(-0.5, -1.0, 1.0);
     scale = 1.0f;
     rotation = vec3(0);
     diffuse = vec3(1.0,0,0);
