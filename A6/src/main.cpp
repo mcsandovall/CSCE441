@@ -77,7 +77,7 @@ public:
     virtual vec3 getColor(const Hit &h, const Light &l, vec3 cPos) const { return vec3(0); };
     
     vec3 Position;
-    float Scale;
+    vec3 Scale;
     vec3 rotation;
     vec3 Diffuse;
     vec3 Specular;
@@ -87,7 +87,7 @@ public:
 
 class Sphere : public Shape{
 public:
-    Sphere(const vec3 &p, const float &s, const vec3 &r, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e){
+    Sphere(const vec3 &p, const vec3 &s, const vec3 &r, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e){
         Position = p; Scale = s; rotation =  r; Diffuse = d; Specular = sp; Ambient = a; Exponent = e;
     }
     
@@ -95,7 +95,7 @@ public:
         vec3 pc =  r.origin - Position; // ray center - sphere position vec(0,0,4)
         float a = dot(r.direction, r.direction);
         float b = 2*(dot(r.direction,pc)); // 2 * dot(v^, pc)
-        float c = dot(pc,pc) - (Scale * Scale); // dot(pc,pc) - r^2
+        float c = dot(pc,pc) - (Scale.x * Scale.x); // dot(pc,pc) - r^2
         float d = (b*b) - (4 * a * c);
         if(d > 0){
             // solve for the distances
@@ -107,16 +107,21 @@ public:
         return INT_MAX;
     }
 
-    vec3 getColor(const Hit &h, const Light &li, vec3 cPos) const override{
-        // compute bling phong at that hit with given light
-        vec3 l = normalize(li.lightPos -  h.x);
-        // difuse
-        float diffuse = std::max(0.0f, (float)dot(l,h.n));
-        //specular color
-        vec3 e = normalize(cPos -  h.x);
-        vec3 hn = normalize(l + e);
-        float specular = pow(std::max(0.0f, (float)dot(h.n,hn)), Exponent);
-        vec3 color = Ambient + (Diffuse * diffuse + Specular * specular);
+    vec3 getColor(const Hit &hi, const Light &li, vec3 cPos) const override{
+        // compute bling phong
+        vec3 Pos = hi.x; // hit position (point position)
+        // compute the normal for the translated sphere
+        vec3 n = (Pos - Position / Scale);
+        vec3 color = n;
+//        vec3 l = normalize(li.lightPos -  Pos);
+//        vec3 e = normalize(cPos - Pos); // camera - point
+//        vec3 h = normalize(l + e);
+//
+//        // compute the colors
+//        vec3 color =  Ambient;
+//        vec3 diff = Diffuse * std::max(0.0f,dot(l,n));
+//        vec3 spec = Specular * pow(std::max(0.0f,dot(h,n)), Exponent);
+//        color += diff + spec;
         return color;
     }
 };
@@ -140,9 +145,8 @@ public:
         if(index == -1) return index;
         // compute the point and the normal of the hit with respect to the shape
         // position of the hit
-        vec3 x = r.origin * (t * r.direction);
-        // calculate the normal w/ radius and center of the sphere
-        vec3 n = (x - shapes[index]->Position) / shapes[index]->Scale;
+        vec3 x = r.origin + (t * r.direction);
+        vec3 n = r.direction; // compute the normal with respect to the given object
         // change the hit
         h.x = x; h.n = n; h.t = t;
         return index;
@@ -150,17 +154,10 @@ public:
     
     // compute bling phong for all the lights using ith object as reference
     vec3 computeBlingPhong(const class Hit &h, const int index) const{
-        vec3 cPos = h.x; // hit point position // postion Hit
-        vec3 cNor = h.n; // hit point normal
-        vec3 pixelColor = cNor;
+        vec3 pixelColor(0); // set it to the normal
+        
         for(int i = 0; i < lights.size(); ++i){
-            vec3 n = normalize(cNor);
-            vec3 e = normalize(cPos - vec3(0,0,5.0f)); // eye vector
-            vec3 l = normalize(lights[i].lightPos - cPos);
-            vec3 h = normalize(l + e);
-            float diffuse = glm::max(0.0f, dot(l,n));
-            float specular = glm::pow(glm::max(0.0f,dot(h,n)), shapes[index]->Exponent);
-            vec3 color = (shapes[index]->Diffuse * diffuse + shapes[index]->Specular * specular);
+            vec3 color = shapes[index]->getColor(h, lights[i], vec3(0,0,-5.0));
             pixelColor += color;
         }
         // clamp the values of the colors
@@ -206,7 +203,7 @@ public:
         int hit = s.Hit(r, t0, t1, h);
         if(hit > -1){ // ray hit the scene
             color = s.computeBlingPhong(h, hit);
-        }
+        } // else return the background color
         return color;
     }
     
@@ -247,11 +244,11 @@ void task1(){
     scene.addLight(l);
     
     // create the scene with the specifictations
-    vec3 position, rotation, diffuse, specular, ambient;
-    float exp,scale;
+    vec3 position, rotation, diffuse, specular, ambient, scale;
+    float exp;
     
     position = vec3(-0.5, -1.0, 1.0);
-    scale = 1.0f;
+    scale = vec3(1.0f);
     rotation = vec3(0);
     diffuse = vec3(1.0,0,0);
     specular =  vec3(1.0,1.0,0.5);
