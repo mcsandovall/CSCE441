@@ -84,11 +84,9 @@ public:
         vec3 h = normalize(l + e);
 
         // compute the colors
-        vec3 color =  Ambient;
         vec3 diff = Diffuse * std::max(0.0f,dot(l,n));
         vec3 spec = Specular * pow(std::max(0.0f,dot(h,n)), Exponent);
-        color += diff + spec;
-        return color;
+        return diff + spec;
     };
     virtual void computeHit(const Ray &r, const float &t, Hit &h) const{}
     
@@ -255,18 +253,15 @@ public:
     
     // compute bling phong for all the lights using ith object as reference
     vec3 computeBlingPhong(const class Hit &h, const int index) const{
-        vec3 pixelColor(0); // set it to the normal
-        vec3 color = shapes[index]->Ambient;
+        vec3 pixelColor = shapes[index]->Ambient;
         class Hit srec;
         for(Light l : lights){
             vec3 lightDir =  normalize(l.lightPos - h.x);
             float lightDist = distance(l.lightPos, h.x);
             Ray sray(h.x,lightDir);
             if(this->Hit(sray, 0.001, lightDist, srec) == -1){ // no hits
-                color = shapes[index]->getColor(h, l, vec3(0,0,5.0));
+                pixelColor += l.intensity * shapes[index]->getColor(h, l, vec3(0,0,5.0));
             }
-            //color = shapes[index]->getColor(h, l, vec3(0,0,5.0));
-            pixelColor += color;
         }
         // clamp the values of the colors
         pixelColor.r = std::clamp(pixelColor.r, 0.0f, 1.0f);
