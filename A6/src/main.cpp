@@ -153,8 +153,21 @@ public:
         if(d > 0){
             // solve for the distances
             float _t0,_t1;
+            vec3 x;
             _t0 = (-b + sqrt(d)) / (2*a);
+            x = p + (_t0 * v);
+            x = ellipsoid_E * vec4(x,1.0);
+            _t0 = abs(distance(x, r.origin));
+            if(dot(r.direction, x - r.origin) < 0){
+                _t0 = -_t0;
+            }
             _t1 = (-b - sqrt(d)) / (2*a);
+            x = p + (_t1 * v);
+            x = ellipsoid_E * vec4(x,1.0);
+            _t1 = abs(distance(x, r.origin));
+            if(dot(r.direction, x - r.origin) < 0){
+                _t1 = -_t1;
+            }
             return std::min(_t0,_t1);
         }
         return INT_MAX;
@@ -164,12 +177,35 @@ public:
         vec3 p = inverse(ellipsoid_E) * vec4(r.origin,1.0);
         vec3 v = inverse(ellipsoid_E) * vec4(r.direction,0.0);
         v = normalize(v);
-        vec3 x = p + (t * v);
-        h.x = ellipsoid_E * vec4(x,1.0f);
-        h.n = normalize(inverse(transpose(ellipsoid_E)) * vec4(x,0.0f));
-        h.t = abs(distance(x, r.origin));
-        if(dot(r.direction, x - r.origin) < 0){
-            h.t = -h.t;
+        float a = dot(v,v);
+        float b = 2 * dot(v,p);
+        float c = dot(p,p) - 1;
+        float d = (b * b) - (4 * a * c);
+        if(d > 0){
+            // solve for the distances
+            float _t0,_t1;
+            vec3 x, n;
+            _t0 = (-b + sqrt(d)) / (2*a);
+            x = p + (_t0 * v);
+            n = normalize(inverse(transpose(ellipsoid_E)) * vec4(x,0.0));
+            x = ellipsoid_E * vec4(x,1.0);
+            _t0 = abs(distance(x, r.origin));
+            if(dot(r.direction, x - r.origin) < 0){
+                _t0 = -_t0;
+            }
+            if(t == _t0){
+                h.x = x;
+                h.n = n;
+            }
+            _t1 = (-b - sqrt(d)) / (2*a);
+            x = p + (_t1 * v);
+            n = normalize(inverse(transpose(ellipsoid_E)) * vec4(x,0.0));
+            x = ellipsoid_E * vec4(x,1.0);
+            _t1 = abs(distance(x, r.origin));
+            if(dot(r.direction, x - r.origin) < 0){
+                _t1 = -_t1;
+            }
+            h.x = x; h.n = n;
         }
     }
     
@@ -183,14 +219,14 @@ public:
     }
     
     float Intersect(const Ray &r,const float &t0,const float &t1) const override{
-        vec3 c(0,0,-1);
-        vec3 n(0,0,1);
+        vec3 c = Position;
+        vec3 n(0,1,0);
         return  dot(n, (c - r.origin))/dot(n,r.direction);
     }
     
     void computeHit(const Ray &r, const float &t, Hit &h) const override{
         h.x =  r.origin +  (t * r.direction);
-        h.n = vec3(0,0,1);
+        h.n = vec3(0,1,0);
         h.t = 0;
     }
 };
@@ -396,7 +432,7 @@ void task3(){
     // plane
     position = vec3(0.0, -1.0, 0.0);
     scale = vec3(1.0, 1.0, 1.0);
-    rotation = vec3(1.0);
+    rotation = vec3(0,1.0,0);
     angle = 90;
     diffuse = vec3(1.0, 1.0, 1.0);
     specular =  vec3(0.0, 0.0, 0.0);
@@ -433,6 +469,7 @@ int main(int argc, char **argv)
     
     camera = make_shared<Camera>(width,height);
     
+    //task1();
     task3();
     
     image->writeToFile(filename);
