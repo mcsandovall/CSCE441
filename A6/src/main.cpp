@@ -99,7 +99,7 @@ public:
     vec3 Specular;
     vec3 Ambient;
     float angle;
-    bool reflective;
+    bool reflective = false;
     float Exponent;
 };
 
@@ -254,7 +254,7 @@ public:
         // compute the point and the normal of the hit with respect to the shape
         shapes[index]->computeHit(r, t, h);
         
-        if(shapes[index]->reflective && depth < MAX_DEPTH){
+        if(shapes[index]->reflective == true && depth < MAX_DEPTH){
             vec3 refDir = reflect(r.direction, h.n);
             Ray refray(h.x,refDir);
             int rhit = this->Hit(refray, 0.001, INFINITY, h, depth+1);
