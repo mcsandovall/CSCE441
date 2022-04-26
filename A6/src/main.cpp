@@ -543,6 +543,90 @@ void task4(){
     
 }
 
+class Triangle{
+public:
+    Triangle(){}
+    void setVertices(const vec3 &v1, const vec3 &v2, const vec3 &v3){
+        vertices.push_back(v1), vertices.push_back(v2),vertices.push_back(v3);
+    }
+    void setNormals(const vec3 &n1, const vec3 &n2, const vec3 &n3){
+        normals.push_back(n1), normals.push_back(n2), normals.push_back(n3);
+    }
+    
+    void computeArea(){
+        // compute the area of the triangle if it has all the vertices
+        if(vertices.size() != 3) return;
+        area = 0.5 * cross((vertices[1] - vertices[0]), (vertices[2] - vertices[0])).length();
+        
+    }
+    vector<vec3> vertices;
+    vector<vec3> normals;
+    float area;
+};
+
+// load the obj file function
+vector<Triangle> loadTriangles(const string &meshName){
+    vector<Triangle> triangles;
+    vector<vec3> vertices;
+    vector<vec3> normals;
+    
+    // Load geometry
+    vector<float> posBuf; // list of vertex positions
+    vector<float> norBuf; // list of vertex normals
+    vector<float> texBuf; // list of vertex texture coords
+    tinyobj::attrib_t attrib;
+    std::vector<tinyobj::shape_t> shapes;
+    std::vector<tinyobj::material_t> materials;
+    string errStr;
+    bool rc = tinyobj::LoadObj(&attrib, &shapes, &materials, &errStr, meshName.c_str());
+    if(!rc) {
+        cerr << errStr << endl;
+    } else {
+        // Some OBJ files have different indices for vertex positions, normals,
+        // and texture coordinates. For example, a cube corner vertex may have
+        // three different normals. Here, we are going to duplicate all such
+        // vertices.
+        // Loop over shapes
+        for(size_t s = 0; s < shapes.size(); s++) {
+            // Loop over faces (polygons)
+            size_t index_offset = 0;
+            for(size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+                size_t fv = shapes[s].mesh.num_face_vertices[f];
+                // Loop over vertices in the face.
+                for(size_t v = 0; v < fv; v++) {
+                    // access to vertex
+                    tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+                    posBuf.push_back(attrib.vertices[3*idx.vertex_index+0]);
+                    posBuf.push_back(attrib.vertices[3*idx.vertex_index+1]);
+                    posBuf.push_back(attrib.vertices[3*idx.vertex_index+2]);
+                    if(!attrib.normals.empty()) {
+                        norBuf.push_back(attrib.normals[3*idx.normal_index+0]);
+                        norBuf.push_back(attrib.normals[3*idx.normal_index+1]);
+                        norBuf.push_back(attrib.normals[3*idx.normal_index+2]);
+                    }
+                    if(!attrib.texcoords.empty()) {
+                        texBuf.push_back(attrib.texcoords[2*idx.texcoord_index+0]);
+                        texBuf.push_back(attrib.texcoords[2*idx.texcoord_index+1]);
+                    }
+                }
+                index_offset += fv;
+                // per-face material (IGNORE)
+                shapes[s].mesh.material_ids[f];
+            }
+        }
+    }
+    cout << "Number of vertices: " << posBuf.size()/3 << endl;
+    
+    // add the points into a vector of vec3
+    for(int i = 0; i < posBuf.size(); ++i){
+        vertices.push_back(vec3(posBuf[i], posBuf[i+1], posBuf[i+2]));
+        normals.push_back(vec3(norBuf[i], norBuf[i+1], norBuf[i+2]));
+    }
+    
+    return triangles;
+}
+
+
 
 int main(int argc, char **argv)
 {
@@ -570,6 +654,7 @@ int main(int argc, char **argv)
     //task1();
     //task3();
     task4();
+    //loadTriangles(meshName);
     
     image->writeToFile(filename);
     
