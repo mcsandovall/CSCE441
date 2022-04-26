@@ -214,19 +214,21 @@ class Plane : public Shape{
 public:
     Plane(const vec3 &p, const vec3 &s, const vec3 &r,const float &ang, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e){
         Position = p; Scale = s; rotation =  r; Diffuse = d; Specular = sp; Ambient = a; Exponent = e, angle =  ang;
+        if(Position.x < 0.0){ normal = vec3(1.0,0.0,0.0); }
+        else if (Position.y < 0.0){normal = vec3(0.0,1.0,0.0); }
+        else if (Position.z < 0.0) {normal =  vec3(0.0,0.0,1.0); }
     }
     
     float Intersect(const Ray &r,const float &t0,const float &t1) const override{
-        vec3 c = Position;
-        vec3 n(0,1,0);
-        return  dot(n, (c - r.origin))/dot(n,r.direction);
+        return  dot(normal, (Position - r.origin))/dot(normal,r.direction);
     }
     
     void computeHit(const Ray &r, const float &t, Hit &h) const override{
         h.x =  r.origin +  (t * r.direction);
-        h.n = vec3(0,1,0);
+        h.n = normal;
         h.t = 0;
     }
+    vec3 normal;
 };
 
 
@@ -441,6 +443,97 @@ void task3(){
     camera->rayTrace(scene);
 }
 
+void task4(){
+    Scene scene;
+    
+    Light l1(vec3(-1.0, 2.0, 1.0), 0.5);
+    Light l2(vec3(0.5, -0.5, 0.0), 0.5);
+    
+    scene.addLight(l1);
+    scene.addLight(l2);
+    
+    vec3 position, rotation, diffuse, specular, ambient, scale;
+    float exp, angle;
+    
+    //red sphere
+    position = vec3(0.5, -0.7, 0.5);
+    scale = vec3(0.3, 0.3, 0.3);
+    rotation = vec3(1.0);
+    angle = 0;
+    diffuse = vec3(1.0, 0.0, 0.0);
+    specular =  vec3(1.0, 1.0, 0.5);
+    ambient = vec3(0.1);
+    exp = 100.0f;
+    
+    Sphere* redS =  new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp);
+    scene.addShape(redS);
+    
+    // blue sphere
+    position = vec3(1.0, -0.7, 0.0);
+    scale = vec3(0.3, 0.3, 0.3);
+    rotation = vec3(1.0);
+    angle = 0;
+    diffuse = vec3(0.0, 0.0, 1.0);
+    specular =  vec3(1.0, 1.0, 0.5);
+    ambient = vec3(0.1);
+    exp = 100.0f;
+    Sphere* blueS =  new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp);
+    scene.addShape(blueS);
+    
+    // floor
+    position = vec3(0.0, -1.0, 0.0);
+    scale = vec3(1.0);
+    rotation = vec3(1.0);
+    angle = 0;
+    diffuse = vec3(1.0, 1.0, 1.0);
+    specular =  vec3(0.0, 0.0, 0.0);
+    ambient = vec3(0.1);
+    exp = 0.0f;
+    Plane* floor =  new Plane(position,scale,rotation,angle, diffuse,specular,ambient,exp);
+    scene.addShape(floor);
+    
+    // wall
+    position = vec3(0.0, 0.0, -3.0);
+    scale = vec3(1.0);
+    rotation = vec3(1.0);
+    angle = 0;
+    diffuse = vec3(1.0, 1.0, 1.0);
+    specular =  vec3(0.0, 0.0, 0.0);
+    ambient = vec3(0.1);
+    exp = 0.0f;
+    Plane* wall =  new Plane(position,scale,rotation,angle, diffuse,specular,ambient,exp);
+    scene.addShape(wall);
+    
+    //reflective sphere1
+    position = vec3(-0.5, 0.0, -0.5);
+    scale = vec3(1.0);
+    rotation = vec3(1.0);
+    angle = 0;
+    diffuse = vec3(0);
+    specular =  vec3(0);
+    ambient = vec3(0);
+    exp = 0.0f;
+    Sphere* reS1 =  new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp);
+    scene.addShape(reS1);
+    
+    //reflective sphere2
+    position = vec3(1.5, 0.0, -1.5);
+    scale = vec3(1.0);
+    rotation = vec3(1.0);
+    angle = 0;
+    diffuse = vec3(0);
+    specular =  vec3(0);
+    ambient = vec3(0);
+    exp = 0.0f;
+    Sphere* reS2 =  new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp);
+    scene.addShape(reS2);
+    
+    
+    camera->rayTrace(scene);
+    
+}
+
+
 int main(int argc, char **argv)
 {
 	if(argc < 3) {
@@ -465,7 +558,8 @@ int main(int argc, char **argv)
     camera = make_shared<Camera>(width,height);
     
     //task1();
-    task3();
+    //task3();
+    task4();
     
     image->writeToFile(filename);
     
