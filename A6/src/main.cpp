@@ -19,6 +19,8 @@
 using namespace std;
 using namespace glm;
 
+#define MAX_DEPTH 6
+
 shared_ptr<Image> image;
 
 // testing function
@@ -97,13 +99,14 @@ public:
     vec3 Specular;
     vec3 Ambient;
     float angle;
+    bool reflective;
     float Exponent;
 };
 
 class Sphere : public Shape{
 public:
-    Sphere(const vec3 &p, const vec3 &s, const vec3 &r,const float &ang, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e){
-        Position = p; Scale = s; rotation =  r; Diffuse = d; Specular = sp; Ambient = a; Exponent = e, angle = ang;
+    Sphere(const vec3 &p, const vec3 &s, const vec3 &r,const float &ang, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e, const bool &ref = false){
+        Position = p; Scale = s; rotation =  r; Diffuse = d; Specular = sp; Ambient = a; Exponent = e, angle = ang; reflective = ref;
     }
     
     float Intersect(const Ray &r,const float &t0,const float &t1) const override{
@@ -237,7 +240,7 @@ class Scene
 public:
     Scene(){}
     ~Scene(){ for(int i =0; i < shapes.size(); ++i){ delete shapes[i]; }}
-    int Hit(const Ray &r, const float &t0, const float &t1, Hit &h) const{
+    int Hit(const Ray &r, const float &t0, const float &t1, Hit &h, const int &depth) const{
         float t = INT_MAX;
         int index = -1;
         for(int i = 0; i < shapes.size(); ++i){
@@ -250,6 +253,13 @@ public:
         if(index == -1) return index;
         // compute the point and the normal of the hit with respect to the shape
         shapes[index]->computeHit(r, t, h);
+        
+        if(shapes[index]->reflective && depth < MAX_DEPTH){
+            vec3 refDir = reflect(r.direction, h.n);
+            Ray refray(h.x,refDir);
+            int rhit = this->Hit(refray, 0.001, INFINITY, h, depth+1);
+            if(rhit != -1) return rhit;
+        }
         return index;
     }
     
@@ -261,7 +271,7 @@ public:
             vec3 lightDir =  normalize(l.lightPos - h.x);
             float lightDist = distance(l.lightPos, h.x);
             Ray sray(h.x,lightDir);
-            if(this->Hit(sray, 0.001, lightDist, srec) == -1){ // no hits
+            if(this->Hit(sray, 0.001, lightDist, srec,0) == -1){ // no hits
                 pixelColor += l.intensity * shapes[index]->getColor(h, l, vec3(0,0,5.0));
             }
         }
@@ -305,7 +315,7 @@ public:
     vec3 computeRayColor(const Scene &s, const Ray &r, const float &t0, const float &t1){
         vec3 color(0); // background color
         Hit h;
-        int hit = s.Hit(r, t0, t1, h);
+        int hit = s.Hit(r, t0, t1, h,0);
         if(hit > -1){ // ray hit the scene
             color = s.computeBlingPhong(h, hit);
         } // else return the background color
@@ -513,7 +523,7 @@ void task4(){
     specular =  vec3(0);
     ambient = vec3(0);
     exp = 0.0f;
-    Sphere* reS1 =  new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp);
+    Sphere* reS1 =  new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp, true);
     scene.addShape(reS1);
     
     //reflective sphere2
@@ -525,7 +535,7 @@ void task4(){
     specular =  vec3(0);
     ambient = vec3(0);
     exp = 0.0f;
-    Sphere* reS2 =  new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp);
+    Sphere* reS2 =  new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp, true);
     scene.addShape(reS2);
     
     
