@@ -12,6 +12,9 @@
 #include "tiny_obj_loader.h"
 
 #include "Image.h"
+#include "Shape.h"
+#include "Scene.h"
+#include "Camera.h"
 
 // This allows you to skip the `std::` in front of C++ standard library
 // functions. You can also say `using std::cout` to be more selective.
@@ -22,86 +25,12 @@ using namespace glm;
 #define MAX_DEPTH 6
 
 shared_ptr<Image> image;
+shared_ptr<Camera> camera;
 
 // testing function
 void printVec(const vec3 &v){
     cout << v.x << " " << v.y << " " << v.z << endl;
 }
-
-// needed classes for the assignment
-
-class Hit
-{
-public:
-    Hit() : x(0), n(0), t(0) {}
-    Hit(const vec3 &x, const vec3 &n, float t) { this->x = x; this->n = n; this->t = t; }
-    vec3 x; // position
-    vec3 n; // normal
-    float t; // distance
-};
-
-class Ray
-{
-public:
-    Ray(){}
-    Ray(const vec3 & o, const vec3 &d) :
-    origin(o),
-    direction(d)
-    {}
-    vec3 origin;
-    vec3 direction;
-};
-
-class Light
-{
-public:
-    Light() :
-    lightPos(0),
-    intensity(0)
-    {}
-    
-    Light(const vec3 &lp,const float &i) :
-    lightPos(lp),
-    intensity(i)
-    {}
-    
-    vec3 lightPos;
-    float intensity;
-};
-
-class Shape
-{
-public:
-    Shape(){}
-    virtual ~Shape(){}
-    // functions for each object
-    virtual float Intersect(const Ray &r,const float &t0,const float &t1) const { return 0;};
-    vec3 getColor(const Hit &hi, const Light &li, vec3 cPos) const {
-        // compute bling phong
-        vec3 Pos = hi.x; // hit position (point position)
-        // compute the normal for the translated sphere
-        vec3 n = normalize(hi.n);
-        vec3 l = normalize(li.lightPos -  Pos);
-        vec3 e = normalize(cPos - Pos); // camera - point
-        vec3 h = normalize(l + e);
-
-        // compute the colors
-        vec3 diff = Diffuse * std::max(0.0f,dot(l,n));
-        vec3 spec = Specular * pow(std::max(0.0f,dot(h,n)), Exponent);
-        return diff + spec;
-    };
-    virtual void computeHit(const Ray &r, const float &t, Hit &h) const{}
-    
-    vec3 Position;
-    vec3 Scale;
-    vec3 rotation;
-    vec3 Diffuse;
-    vec3 Specular;
-    vec3 Ambient;
-    float angle;
-    bool reflective = false;
-    float Exponent;
-};
 
 class Sphere : public Shape{
 public:
@@ -234,110 +163,6 @@ public:
     vec3 normal;
 };
 
-
-class Scene
-{
-public:
-    Scene(){}
-    ~Scene(){ for(int i =0; i < shapes.size(); ++i){ delete shapes[i]; }}
-    int Hit(const Ray &r, const float &t0, const float &t1, Hit &h, const int &depth) const{
-        float t = INT_MAX;
-        int index = -1;
-        for(int i = 0; i < shapes.size(); ++i){
-            float it = shapes[i]->Intersect(r, t0, t1);
-            if(it < t && it > t0 && it < t1){
-                t = it;
-                index = i;
-            }
-        }
-        if(index == -1) return index;
-        // compute the point and the normal of the hit with respect to the shape
-        shapes[index]->computeHit(r, t, h);
-        return index;
-    }
-    // setters
-    void addShape(Shape *s){ shapes.push_back(s); }
-    void addLight(const Light &l){ lights.push_back(l); }
-    
-    vector<Shape*> shapes;
-    vector<Light> lights;
-};
-
-class Camera
-{
-public:
-    Camera(const int &w, const int &h) :
-    width(w),
-    height(h),
-    aspect(1.0f),
-    fov((float)(-45.0*M_PI/180.0)),
-    Postion(0.0,0.0,5.0),
-    Rotation(0.0,0.0)
-    {}
-    
-    // compute the ray at a given pixel
-    Ray generateRay(int row, int col){
-        float x = (-width + ((row * 2) + 1)) / (float) width;
-        float y = (-height + ((col * 2) + 1)) / (float) height;
-        vec3 v(tan(-fov/2.0) * x, tan(-fov/2.0) * y, -1.0f);
-        v = normalize(v);
-        return Ray(Postion, v);
-    }
-    
-    // compute the ray color function
-    vec3 computeRayColor(const Scene &s, const Ray &r, const float &t0, const float &t1, const int &depth){
-        vec3 color(0); // background color
-        Hit h;
-        int hit = s.Hit(r, t0, t1, h,0);
-        if(hit > -1){ // ray hit the scene
-            color = s.shapes[hit]->Ambient;
-            if(s.shapes[hit]->reflective && depth < MAX_DEPTH){
-                vec3 refDir = reflect(r.direction, h.n);
-                Ray refray(h.x,refDir);
-                return color + computeRayColor(s, refray, 0.001, INFINITY, depth+1);
-            }
-            Hit srec;
-            for(Light l : s.lights){
-                vec3 lightDir =  normalize(l.lightPos - h.x);
-                float lightDist = distance(l.lightPos, h.x);
-                Ray sray(h.x,lightDir);
-                if(s.Hit(sray, 0.001, lightDist, srec,0) == -1){ // no hits
-                    color += l.intensity * s.shapes[hit]->getColor(h, l, r.origin);
-                }
-            }
-        } // else return the background color
-        color.r = std::clamp(color.r, 0.0f, 1.0f);
-        color.g = std::clamp(color.g, 0.0f, 1.0f);
-        color.b = std::clamp(color.b, 0.0f, 1.0f);
-        return color * 255.0f;
-    }
-    
-    // ray tracer function (Take Picture)
-    void rayTrace(const Scene &s){
-        for(int j = 0; j < height; ++j){
-            for(int i = 0; i < width; ++i){
-                // compute the primary array
-                Ray r = generateRay(i, j);
-                // compute the ray colors
-                vec3 c = computeRayColor(s, r, 0, INFINITY, 0);
-                // set the color pixel to the ray color
-                image->setPixel(i, j, c.r, c.g, c.b);
-            }
-        }
-    }
-    
-    int width, height;
-    float aspect;
-    float fov;
-    vec3 Postion;
-    vec3 LookAt;
-    vec3 Up;
-    vec2 Rotation;
-    vector<Ray> rays;
-};
-
-shared_ptr<Camera> camera;
-
 // make scene 1
 void task1(){
     // make a scene
@@ -383,7 +208,7 @@ void task1(){
     scene.addShape(greenS);
     scene.addShape(blueS);
     
-    camera->rayTrace(scene);
+    camera->rayTrace(scene, image);
 }
 
 void task3(){
@@ -440,7 +265,7 @@ void task3(){
     
     scene.addShape(plane);
     
-    camera->rayTrace(scene);
+    camera->rayTrace(scene,image);
 }
 
 void task4(){
@@ -529,13 +354,16 @@ void task4(){
     scene.addShape(reS2);
     
     
-    camera->rayTrace(scene);
+    camera->rayTrace(scene, image);
     
 }
 
 class Triangle{
 public:
     Triangle(){}
+    Triangle(const vec3 &v1, const vec3 &v2, const vec3 &v3){
+        vertices.push_back(v1), vertices.push_back(v2),vertices.push_back(v3);
+    }
     void setVertices(const vec3 &v1, const vec3 &v2, const vec3 &v3){
         vertices.push_back(v1), vertices.push_back(v2),vertices.push_back(v3);
     }
@@ -547,11 +375,37 @@ public:
         // compute the area of the triangle if it has all the vertices
         if(vertices.size() != 3) return;
         area = 0.5 * cross((vertices[1] - vertices[0]), (vertices[2] - vertices[0])).length();
-        
     }
+    
+    bool inTriangle(const vec3 &P){
+        Triangle PBC (P, vertices[1], vertices[2]);
+        Triangle PCA (P, vertices[2], vertices[0]);
+        Triangle PAB (P, vertices[0], vertices[1]);
+        
+        u = PBC.area / area;
+        v = PCA.area / area;
+        w = 1.0f - u - v;
+        
+        if(u < 0.0 || u > 1.0f){
+            return false;
+        }
+        
+        if(v < 0.0 || v > 1.0f){
+            return false;
+        }
+        
+        if(w < 0.0 || w > 1.0f)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
     vector<vec3> vertices;
     vector<vec3> normals;
     float area;
+    float u,v,w;
 };
 
 // load the obj file function
@@ -608,15 +462,21 @@ vector<Triangle> loadTriangles(const string &meshName){
     cout << "Number of vertices: " << posBuf.size()/3 << endl;
     
     // add the points into a vector of vec3
-    for(int i = 0; i < posBuf.size(); ++i){
+    for(int i = 0; i < posBuf.size(); i+=3){
         vertices.push_back(vec3(posBuf[i], posBuf[i+1], posBuf[i+2]));
         normals.push_back(vec3(norBuf[i], norBuf[i+1], norBuf[i+2]));
     }
     
+    // create triangles with the vertices and normals
+    for(int i = 0; i < vertices.size(); i+=3){
+        Triangle t;
+        t.setVertices(vertices[i], vertices[i+1], vertices[i+2]);
+        t.setNormals(normals[i], normals[i+1], normals[i+2]);
+        t.computeArea();
+        triangles.push_back(t);
+    }
     return triangles;
 }
-
-
 
 int main(int argc, char **argv)
 {
