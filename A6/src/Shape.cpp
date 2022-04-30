@@ -12,7 +12,7 @@
 #include "Camera.h"
 #include "Scene.h"
 
-glm::vec3 Shape::getColor(const Hit &hi, const Light &li, glm::vec3 cPos) const {
+glm::vec3 Shape::getColor(const Hit &hi, const Light &li, glm::vec3 cPos){
     // compute bling phong
     glm::vec3 Pos = hi.x; // hit position (point position)
     // compute the normal for the translated sphere

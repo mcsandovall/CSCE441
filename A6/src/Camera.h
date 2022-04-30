@@ -43,10 +43,10 @@ public:
     Ray generateRay(int row, int col);
     
     // compute the ray color function
-    glm::vec3 computeRayColor(const Scene &s, const Ray &r, const float &t0, const float &t1, const int &depth);
+    glm::vec3 computeRayColor(Scene &s, const Ray &r, const float &t0, const float &t1, const int &depth);
     
     // ray tracer function (Take Picture)
-    void rayTrace(const Scene &s, std::shared_ptr<Image> image);
+    void rayTrace(Scene &s, std::shared_ptr<Image> image);
     
     int width, height;
     float aspect;

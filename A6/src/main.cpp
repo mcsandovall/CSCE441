@@ -38,7 +38,7 @@ public:
         Position = p; Scale = s; rotation =  r; Diffuse = d; Specular = sp; Ambient = a; Exponent = e, angle = ang; reflective = ref;
     }
     
-    float Intersect(const Ray &r,const float &t0,const float &t1) const override{
+    float Intersect(const Ray &r, const float &t0, const float &t1) override{
         vec3 pc =  r.origin - Position; // ray center - sphere position vec(0,0,4)
         float a = dot(r.direction, r.direction);
         float b = 2*(dot(r.direction,pc)); // 2 * dot(v^, pc)
@@ -54,7 +54,7 @@ public:
         return INT_MAX;
     }
     
-    void computeHit(const Ray &r, const float &t, Hit &h) const override{
+    void computeHit(const Ray &r, const float &t, Hit &h) override{
         h.x = r.origin + (t * r.direction);
         h.n = normalize((h.x - Position) / Scale);
         h.t = t;
@@ -72,7 +72,7 @@ public:
         ellipsoid_E *= glm::scale(mat4(1.0), s);
     }
     
-    float Intersect(const Ray &r,const float &t0,const float &t1) const override{
+    float Intersect(const Ray &r,const float &t0,const float &t1) override{
         vec3 p = inverse(ellipsoid_E) * vec4(r.origin,1.0);
         vec3 v = inverse(ellipsoid_E) * vec4(r.direction,0.0);
         v = normalize(v);
@@ -103,7 +103,7 @@ public:
         return INT_MAX;
     }
     
-    void computeHit(const Ray &r, const float &t, Hit &h) const override{
+    void computeHit(const Ray &r, const float &t, Hit &h) override{
         vec3 p = inverse(ellipsoid_E) * vec4(r.origin,1.0);
         vec3 v = inverse(ellipsoid_E) * vec4(r.direction,0.0);
         v = normalize(v);
@@ -151,17 +151,19 @@ public:
         else if (Position.z < 0.0) {normal =  vec3(0.0,0.0,1.0); }
     }
     
-    float Intersect(const Ray &r,const float &t0,const float &t1) const override{
+    float Intersect(const Ray &r,const float &t0,const float &t1) override{
         return  dot(normal, (Position - r.origin))/dot(normal,r.direction);
     }
     
-    void computeHit(const Ray &r, const float &t, Hit &h) const override{
+    void computeHit(const Ray &r, const float &t, Hit &h) override{
         h.x =  r.origin +  (t * r.direction);
         h.n = normal;
         h.t = 0;
     }
     vec3 normal;
 };
+
+
 
 // make scene 1
 void task1(){
@@ -352,130 +354,321 @@ void task4(){
     exp = 0.0f;
     Sphere* reS2 =  new Sphere(position,scale,rotation,angle, diffuse,specular,ambient,exp, true);
     scene.addShape(reS2);
-    
-    
+
     camera->rayTrace(scene, image);
-    
 }
 
-class Triangle{
+// copy the code from assigment 1
+
+class Point{
 public:
-    Triangle(){}
-    Triangle(const vec3 &v1, const vec3 &v2, const vec3 &v3){
-        vertices.push_back(v1), vertices.push_back(v2),vertices.push_back(v3);
-    }
-    void setVertices(const vec3 &v1, const vec3 &v2, const vec3 &v3){
-        vertices.push_back(v1), vertices.push_back(v2),vertices.push_back(v3);
-    }
-    void setNormals(const vec3 &n1, const vec3 &n2, const vec3 &n3){
-        normals.push_back(n1), normals.push_back(n2), normals.push_back(n3);
-    }
+    vec3 position;
+    vec3 normal;
     
-    void computeArea(){
-        // compute the area of the triangle if it has all the vertices
-        if(vertices.size() != 3) return;
-        area = 0.5 * cross((vertices[1] - vertices[0]), (vertices[2] - vertices[0])).length();
-    }
+    // constructor
+    Point() : position(0) {}
+    Point(const vec3 &v, const vec3 &n) : position(v), normal(n) {}
     
-    bool inTriangle(const vec3 &P){
-        Triangle PBC (P, vertices[1], vertices[2]);
-        Triangle PCA (P, vertices[2], vertices[0]);
-        Triangle PAB (P, vertices[0], vertices[1]);
-        
-        u = PBC.area / area;
-        v = PCA.area / area;
-        w = 1.0f - u - v;
-        
-        if(u < 0.0 || u > 1.0f){
-            return false;
-        }
-        
-        if(v < 0.0 || v > 1.0f){
-            return false;
-        }
-        
-        if(w < 0.0 || w > 1.0f)
-        {
-            return false;
-        }
-        
-        return true;
-    }
+    void setNormal(const vec3 &n){ normal = n;}
     
-    vector<vec3> vertices;
-    vector<vec3> normals;
-    float area;
-    float u,v,w;
+    void set_positions(const vec3 &p){ position = p;}
+    
+    void set_toImage(const float &scalar, const vec2 &translate){
+        position.x = (scalar * position.x) + translate.x;
+        position.y = (scalar * position.y) + translate.y;
+    }
 };
 
-// load the obj file function
-vector<Triangle> loadTriangles(const string &meshName){
-    vector<Triangle> triangles;
-    vector<vec3> vertices;
-    vector<vec3> normals;
+class BoundedBox{
+public:
+    vec3 min, max;
+    vec3 center;
+    float radius;
     
-    // Load geometry
-    vector<float> posBuf; // list of vertex positions
-    vector<float> norBuf; // list of vertex normals
-    vector<float> texBuf; // list of vertex texture coords
-    tinyobj::attrib_t attrib;
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> materials;
-    string errStr;
-    bool rc = tinyobj::LoadObj(&attrib, &shapes, &materials, &errStr, meshName.c_str());
-    if(!rc) {
-        cerr << errStr << endl;
-    } else {
-        // Some OBJ files have different indices for vertex positions, normals,
-        // and texture coordinates. For example, a cube corner vertex may have
-        // three different normals. Here, we are going to duplicate all such
-        // vertices.
-        // Loop over shapes
-        for(size_t s = 0; s < shapes.size(); s++) {
-            // Loop over faces (polygons)
-            size_t index_offset = 0;
-            for(size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
-                size_t fv = shapes[s].mesh.num_face_vertices[f];
-                // Loop over vertices in the face.
-                for(size_t v = 0; v < fv; v++) {
-                    // access to vertex
-                    tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-                    posBuf.push_back(attrib.vertices[3*idx.vertex_index+0]);
-                    posBuf.push_back(attrib.vertices[3*idx.vertex_index+1]);
-                    posBuf.push_back(attrib.vertices[3*idx.vertex_index+2]);
-                    if(!attrib.normals.empty()) {
-                        norBuf.push_back(attrib.normals[3*idx.normal_index+0]);
-                        norBuf.push_back(attrib.normals[3*idx.normal_index+1]);
-                        norBuf.push_back(attrib.normals[3*idx.normal_index+2]);
-                    }
-                    if(!attrib.texcoords.empty()) {
-                        texBuf.push_back(attrib.texcoords[2*idx.texcoord_index+0]);
-                        texBuf.push_back(attrib.texcoords[2*idx.texcoord_index+1]);
-                    }
-                }
-                index_offset += fv;
-                // per-face material (IGNORE)
-                shapes[s].mesh.material_ids[f];
+    // constructor
+    BoundedBox() : min(INT_MAX), max(INT_MIN) {}
+    BoundedBox(const vector<Point> &vtx){
+        for(int i = 0; i < 3; ++i){
+            set_extremas(vtx[i].position);
+        }
+    }
+    
+    void set_extremas(const vec3 &v){
+        min.x = std::min(min.x,v.x), min.y = std::min(min.y,v.y), min.z = std::min(min.z,v.z);
+        max.x = std::max(max.x,v.x), max.y = std::max(max.y,v.y), max.z = std::max(max.z,v.z);
+        sphere();
+    }
+    
+    void sphere(){
+        center = (max + min) / 2.0f;
+        radius = distance(center, max);
+    }
+    
+    bool inside(const Ray &r){
+        vec3 pc =  r.origin - center; // ray center - sphere position vec(0,0,4)
+        float a = dot(r.direction, r.direction);
+        float b = 2*(dot(r.direction,pc)); // 2 * dot(v^, pc)
+        float c = dot(pc,pc) - (radius* radius); // dot(pc,pc) - r^2
+        float d = (b*b) - (4 * a * c);
+        return (d > 0);
+    }
+};
+
+class Triangle : public Shape{
+public:
+    vector<Point> vertex;
+    float u, v, w; // the bycentric coordinates at that point
+    BoundedBox * bb;
+    
+    // constructors
+    Triangle(){}
+    Triangle(const Point &_v1,const Point &_v2,const Point &_v3){
+        vertex.push_back(_v1), vertex.push_back(_v2), vertex.push_back(_v3);
+        bb = new BoundedBox(vertex);
+    }
+    
+    float Intersect(const Ray &r, const float &t0, const float &t1) override{
+       vec3 edge1, edge2, tvec, pvec, qvec;
+       float det,inv_det;
+
+       /* find vectors for two edges sharing vert0 */
+        edge1 = vertex[1].position - vertex[0].position;
+        edge2 = vertex[2].position - vertex[0].position;
+       /* begin calculating determinant - also used to calculate U parameter */
+        pvec = cross(r.direction, edge2);
+
+       /* if determinant is near zero, ray lies in plane of triangle */
+        det = dot(edge1, pvec);//DOT(edge1, pvec);
+
+       if (det > -0.001 && det < 0.001) return INT_MAX;
+       inv_det = 1.0 / det;
+
+       /* calculate distance from vert0 to ray origin */
+        tvec = r.origin - vertex[0].position;
+
+       /* calculate U parameter and test bounds */
+        u = dot(tvec, pvec); //DOT(tvec, pvec) * inv_det;
+       if (u < 0.0 || u > 1.0) return INT_MAX;
+
+       /* prepare to test V parameter */
+        qvec = cross(tvec, edge1);
+
+       /* calculate V parameter and test bounds */
+        v = dot(r.direction, qvec);//DOT(dir, qvec) * inv_det;
+       if (v < 0.0 || u + v > 1.0f) return INT_MAX;
+        w = 1.0f - (u + v);
+       /* calculate t, ray intersects triangle */
+       return dot(edge2, qvec); //DOT(edge2, qvec) * inv_det;
+    }
+    
+    vec3 getNormal(){
+        return vec3(vertex[0].normal.x * u + vertex[1].normal.x * v + vertex[2].normal.x * w,
+        vertex[0].normal.y * u + vertex[1].normal.y * v + vertex[2].normal.y * w,
+        vertex[0].normal.z * u + vertex[1].normal.z * v + vertex[2].normal.z * w);
+    }
+    
+    void computeHit(const Ray &r, const float &t, Hit &h) override{
+        h.x = r.origin + (t * r.direction);
+        h.n = getNormal();
+        h.t = t;
+    }
+};
+
+// return the scalar factor for the image
+float scalar_factor(const int &width,const int &height,const BoundedBox * bb){
+    // assume the image always begins at (0,0) -> (w,h)
+    float s_x = width / (bb->max.x - bb->min.x);
+    float s_y = height / (bb->max.y - bb->min.y);
+    return std::min(s_x,s_y);
+}
+
+vec2 translation_factor(const int &width,const int &height,const float &scalar, const BoundedBox * bb){
+    return vec2((0.5 * width) - (scalar * ( 0.5 * (bb->max.x + bb->min.x))),
+                (0.5 * height) - (scalar * ( 0.5 * (bb->max.y + bb->min.y))));
+}
+
+// Z buffer
+class ZBuffer{
+private:
+    int width, height;
+    float ** pbuffer;
+public:
+    ZBuffer(int _w, int _h){
+        width = _w, height = _h;
+        pbuffer = new float*[width+1];
+        for(int i = 0; i <= width; ++i){
+            pbuffer[i] = new float[height+1];
+        }
+    }
+    ~ZBuffer(){
+        for(int i = 0; i <= width; ++i){
+            delete[] pbuffer[i];
+        }
+        delete[] pbuffer;
+    }
+    ZBuffer( const ZBuffer& ) = delete;
+    ZBuffer& operator=( const ZBuffer& ) = delete;
+    void Clear(){
+        for(int x = 0; x <= width; ++x){
+            for(int y = 0; y <= height; ++y){
+                pbuffer[x][y] = -1 * std::numeric_limits<float>::infinity();
             }
         }
     }
-    cout << "Number of vertices: " << posBuf.size()/3 << endl;
+    float& At(int x, int y){
+        return pbuffer[x][y];
+    }
+    bool TestAndSet(int x, int y, float Depth){
+        float & depthInBuffer = At(x, y);
+        if(Depth > depthInBuffer){
+            depthInBuffer = Depth;
+            return true;
+        }
+        return false;
+    }
+};
+
+float calculateDepth(Triangle * T){
+    return ((T->u * T->vertex[0].position.z) + (T->v * T->vertex[1].position.z) + (T->w * T->vertex[2].position.z));
+}
+
+class Object : public Shape{
+public:
+    Object(const vec3 &d, const vec3 &s, const vec3 &a, const float &e){
+        Diffuse = d, Specular = s, Ambient = a, Exponent = e;
+    }
+    vector<Triangle*> triangles;
+    Triangle * triangle;
+    BoundedBox * bb;
+    Object(){}
     
-    // add the points into a vector of vec3
-    for(int i = 0; i < posBuf.size(); i+=3){
-        vertices.push_back(vec3(posBuf[i], posBuf[i+1], posBuf[i+2]));
-        normals.push_back(vec3(norBuf[i], norBuf[i+1], norBuf[i+2]));
+    float Intersect(const Ray &r, const float &t0, const float &t1) override{
+        float t = INT_MAX;
+        ZBuffer zbuff(bb->max.x, bb->max.y);
+        zbuff.Clear();
+        if(bb->inside(r)){
+            for(Triangle *T : triangles){
+                if((t = T->Intersect(r, t0, t1)) != INT_MAX){
+                    float z = calculateDepth(T);
+                    vec3 p = r.origin + (t * r.direction);
+                    if(zbuff.TestAndSet(p.x, p.y, z)){
+                        triangle = T;
+                        return t;
+                    }
+                }
+            }
+        }
+        return t;
     }
     
-    // create triangles with the vertices and normals
-    for(int i = 0; i < vertices.size(); i+=3){
-        Triangle t;
-        t.setVertices(vertices[i], vertices[i+1], vertices[i+2]);
-        t.setNormals(normals[i], normals[i+1], normals[i+2]);
-        t.computeArea();
-        triangles.push_back(t);
+    void computeHit(const Ray &r, const float &t, Hit &h) override{
+        if(!triangle) return;
+        triangle->computeHit(r, t, h);
     }
-    return triangles;
+    
+    void loadTriangles(const string &meshName, const int &width, const int &height){
+        // Load geometry
+        vector<float> posBuf; // list of vertex positions
+        vector<float> norBuf; // list of vertex normals
+        vector<float> texBuf; // list of vertex texture coords
+        tinyobj::attrib_t attrib;
+        std::vector<tinyobj::shape_t> shapes;
+        std::vector<tinyobj::material_t> materials;
+        string errStr;
+        bool rc = tinyobj::LoadObj(&attrib, &shapes, &materials, &errStr, meshName.c_str());
+        if(!rc) {
+            cerr << errStr << endl;
+        } else {
+            // Some OBJ files have different indices for vertex positions, normals,
+            // and texture coordinates. For example, a cube corner vertex may have
+            // three different normals. Here, we are going to duplicate all such
+            // vertices.
+            // Loop over shapes
+            for(size_t s = 0; s < shapes.size(); s++) {
+                // Loop over faces (polygons)
+                size_t index_offset = 0;
+                for(size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+                    size_t fv = shapes[s].mesh.num_face_vertices[f];
+                    // Loop over vertices in the face.
+                    for(size_t v = 0; v < fv; v++) {
+                        // access to vertex
+                        tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+                        posBuf.push_back(attrib.vertices[3*idx.vertex_index+0]);
+                        posBuf.push_back(attrib.vertices[3*idx.vertex_index+1]);
+                        posBuf.push_back(attrib.vertices[3*idx.vertex_index+2]);
+                        if(!attrib.normals.empty()) {
+                            norBuf.push_back(attrib.normals[3*idx.normal_index+0]);
+                            norBuf.push_back(attrib.normals[3*idx.normal_index+1]);
+                            norBuf.push_back(attrib.normals[3*idx.normal_index+2]);
+                        }
+                        if(!attrib.texcoords.empty()) {
+                            texBuf.push_back(attrib.texcoords[2*idx.texcoord_index+0]);
+                            texBuf.push_back(attrib.texcoords[2*idx.texcoord_index+1]);
+                        }
+                    }
+                    index_offset += fv;
+                    // per-face material (IGNORE)
+                    shapes[s].mesh.material_ids[f];
+                }
+            }
+        }
+        cout << "Number of vertices: " << posBuf.size()/3 << endl;
+        
+        
+        // construct the points in 3D
+        vector<Point> points;
+        // make the bounding box for the shape
+        bb = new BoundedBox();
+        for(int p = 0; p < posBuf.size(); p+= 3){
+            vec3 pos(posBuf[p], posBuf[p+1], posBuf[p+2]); vec3 n(norBuf[p], norBuf[p+1], norBuf[p+2]);
+            points.push_back(Point(pos,n));
+            // set the extremas for the bouding box ---
+            bb->set_extremas(points[points.size()-1].position);
+        }
+
+        // compute the scalar and the translation and apply to all the points
+//        float scalar = scalar_factor(width, height, bb);
+//        vec2 translation = translation_factor(width, height, scalar, bb);
+        
+        for(int p = 0; p < points.size(); p += 3){
+//            points[p].set_toImage(scalar, translation);
+//            points[p+1].set_toImage(scalar, translation);
+//            points[p+2].set_toImage(scalar, translation);
+
+            triangles.push_back(new Triangle(points[p], points[p+1], points[p+2]));
+        }
+        // resize the bounded box
+//        bb->min.x = (scalar * bb->min.x) + translation.x, bb->max.x = (scalar * bb->max.x) + translation.x;
+//        bb->min.y = (scalar * bb->min.y) + translation.y, bb->max.y = (scalar * bb->max.y) + translation.y;
+    }
+};
+
+// make the function for task 6
+void task6(const string &meshName, const int &width, const int &height){
+    // make the scene
+    Scene scene;
+    // make the light
+    Light l(vec3(-1.0, 1.0, 1.0), 1.0f);
+    scene.addLight(l);
+    // make the object
+    vec3 position, rotation, diffuse, specular, ambient, scale;
+    float exp, angle;
+    
+    position = vec3(0);
+    rotation = vec3(0);
+    scale = vec3(1.0);
+    angle = 0.0;
+    diffuse = vec3(0.0, 0.0, 1.0);
+    specular = vec3(1.0, 1.0, 0.5);
+    ambient = vec3(0.1);
+    exp = 100.0f;
+    
+    Object * bunny = new Object(diffuse, specular, ambient, exp);
+    // load the triangles onto the object
+    bunny->loadTriangles(meshName, width, height);
+    cout << "load done..." << endl;
+    scene.addShape(bunny);
+    camera->rayTrace(scene, image);
 }
 
 int main(int argc, char **argv)
@@ -485,9 +678,9 @@ int main(int argc, char **argv)
 		return 0;
 	}
     
-    //int sceneNumber = atoi(argv[1]);
+    int sceneNumber = atoi(argv[1]);
     
-	string meshName = "../../resources/bunny.obj";
+	string meshName = "../../resources/square.obj";
     // Output filename
     string filename(argv[3]);
     // Image width
@@ -501,10 +694,18 @@ int main(int argc, char **argv)
     
     camera = make_shared<Camera>(width,height);
     
-    //task1();
-    //task3();
-    task4();
-    //loadTriangles(meshName);
+    if(sceneNumber == 1 || sceneNumber == 2){
+        task1();
+    }
+    else if(sceneNumber == 3){
+        task3();
+    }
+    else if(sceneNumber == 4 || sceneNumber == 5){
+        task4();
+    }
+    else if(sceneNumber == 6){
+        task6(meshName, width, height);
+    }
     
     image->writeToFile(filename);
     

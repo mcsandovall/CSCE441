@@ -17,9 +17,9 @@ public:
     Shape(){}
     virtual ~Shape(){}
     // functions for each object
-    virtual float Intersect(const Ray &r,const float &t0,const float &t1) const{return 0.0f;}
-    glm::vec3 getColor(const Hit &hi, const Light &li, glm::vec3 cPos) const;
-    virtual void computeHit(const Ray &r, const float &t, Hit &h) const{};
+    virtual float Intersect(const Ray &r,const float &t0,const float &t1){return 0.0f;}
+    glm::vec3 getColor(const Hit &hi, const Light &li, glm::vec3 cPos);
+    virtual void computeHit(const Ray &r, const float &t, Hit &h){};
     
     glm::vec3 Position;
     glm::vec3 Scale;

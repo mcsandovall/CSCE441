@@ -514,6 +514,11 @@ int main(int argc, char **argv)
     bb.xmin = (scalar * bb.xmin) + translation[0], bb.xmax = (scalar * bb.xmax) + translation[0];
     bb.ymin = (scalar * bb.ymin) + translation[1], bb.ymax = (scalar * bb.ymax) + translation[1];
     
+    cout << scalar << endl;
+    cout << translation[0] << " " << translation[1] << endl;
+    cout << bb.xmin << " " << bb.ymin << endl;
+    cout << bb.xmax << " " << bb.ymax << endl;
+    
     // make a switch for each test case to be tested
     switch (atoi(argv[5])) {
         case 1:

@@ -35,7 +35,7 @@ Ray Camera::generateRay(int row, int col){
 }
     
 // compute the ray color function
-vec3 Camera::computeRayColor(const Scene &s, const Ray &r, const float &t0, const float &t1, const int &depth){
+vec3 Camera::computeRayColor(Scene &s, const Ray &r, const float &t0, const float &t1, const int &depth){
     vec3 color(0); // background color
     Hit h;
     int hit = s.Hit(r, t0, t1, h,0);
@@ -63,7 +63,7 @@ vec3 Camera::computeRayColor(const Scene &s, const Ray &r, const float &t0, cons
 }
     
 // ray tracer function (Take Picture)
-void Camera::rayTrace(const Scene &s, std::shared_ptr<Image> image){
+void Camera::rayTrace(Scene &s, std::shared_ptr<Image> image){
     for(int j = 0; j < height; ++j){
         for(int i = 0; i < width; ++i){
             // compute the primary array

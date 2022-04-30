@@ -32,7 +32,7 @@ class Scene
 public:
     Scene();
     ~Scene();
-    int Hit(const Ray &r, const float &t0, const float &t1, Hit &h, const int &depth) const;
+    int Hit(const Ray &r, const float &t0, const float &t1, Hit &h, const int &depth);
     // setters
     void addShape(Shape *s){ shapes.push_back(s); }
     void addLight(const Light &l){ lights.push_back(l); }
