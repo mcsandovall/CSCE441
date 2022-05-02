@@ -65,6 +65,7 @@ vec3 Camera::computeRayColor(Scene &s, const Ray &r, const float &t0, const floa
 // ray tracer function (Take Picture)
 void Camera::rayTrace(Scene &s, std::shared_ptr<Image> image){
     for(int j = 0; j < height; ++j){
+        std::cout << (j / (float) height) * 100.0f << "%" << std::endl;
         for(int i = 0; i < width; ++i){
             // compute the primary array
             Ray r = generateRay(i, j);

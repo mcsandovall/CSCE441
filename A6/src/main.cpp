@@ -447,18 +447,20 @@ public:
         tvec = r.origin - vertex[0].position;
 
        /* calculate U parameter and test bounds */
-        u = dot(tvec, pvec); //DOT(tvec, pvec) * inv_det;
+        u = dot(tvec, pvec) * inv_det; //DOT(tvec, pvec) * inv_det;
        if (u < 0.0 || u > 1.0) return INT_MAX;
 
        /* prepare to test V parameter */
         qvec = cross(tvec, edge1);
 
        /* calculate V parameter and test bounds */
-        v = dot(r.direction, qvec);//DOT(dir, qvec) * inv_det;
+        v = dot(r.direction, qvec) * inv_det;//DOT(dir, qvec) * inv_det;
        if (v < 0.0 || u + v > 1.0f) return INT_MAX;
         w = 1.0f - (u + v);
        /* calculate t, ray intersects triangle */
-       return dot(edge2, qvec); //DOT(edge2, qvec) * inv_det;
+        float t  = dot(edge2, qvec) * inv_det;
+        if(t > t0 && t < t1) return t;
+       return INT_MAX; //DOT(edge2, qvec) * inv_det;
     }
     
     vec3 getNormal(){
@@ -474,64 +476,6 @@ public:
     }
 };
 
-// return the scalar factor for the image
-float scalar_factor(const int &width,const int &height,const BoundedBox * bb){
-    // assume the image always begins at (0,0) -> (w,h)
-    float s_x = width / (bb->max.x - bb->min.x);
-    float s_y = height / (bb->max.y - bb->min.y);
-    return std::min(s_x,s_y);
-}
-
-vec2 translation_factor(const int &width,const int &height,const float &scalar, const BoundedBox * bb){
-    return vec2((0.5 * width) - (scalar * ( 0.5 * (bb->max.x + bb->min.x))),
-                (0.5 * height) - (scalar * ( 0.5 * (bb->max.y + bb->min.y))));
-}
-
-// Z buffer
-class ZBuffer{
-private:
-    int width, height;
-    float ** pbuffer;
-public:
-    ZBuffer(int _w, int _h){
-        width = _w, height = _h;
-        pbuffer = new float*[width+1];
-        for(int i = 0; i <= width; ++i){
-            pbuffer[i] = new float[height+1];
-        }
-    }
-    ~ZBuffer(){
-        for(int i = 0; i <= width; ++i){
-            delete[] pbuffer[i];
-        }
-        delete[] pbuffer;
-    }
-    ZBuffer( const ZBuffer& ) = delete;
-    ZBuffer& operator=( const ZBuffer& ) = delete;
-    void Clear(){
-        for(int x = 0; x <= width; ++x){
-            for(int y = 0; y <= height; ++y){
-                pbuffer[x][y] = -1 * std::numeric_limits<float>::infinity();
-            }
-        }
-    }
-    float& At(int x, int y){
-        return pbuffer[x][y];
-    }
-    bool TestAndSet(int x, int y, float Depth){
-        float & depthInBuffer = At(x, y);
-        if(Depth > depthInBuffer){
-            depthInBuffer = Depth;
-            return true;
-        }
-        return false;
-    }
-};
-
-float calculateDepth(Triangle * T){
-    return ((T->u * T->vertex[0].position.z) + (T->v * T->vertex[1].position.z) + (T->w * T->vertex[2].position.z));
-}
-
 class Object : public Shape{
 public:
     Object(const vec3 &d, const vec3 &s, const vec3 &a, const float &e){
@@ -544,16 +488,13 @@ public:
     
     float Intersect(const Ray &r, const float &t0, const float &t1) override{
         float t = INT_MAX;
-        ZBuffer zbuff(bb->max.x, bb->max.y);
-        zbuff.Clear();
+        float tp = INT_MAX;
         if(bb->inside(r)){
             for(Triangle *T : triangles){
-                if((t = T->Intersect(r, t0, t1)) != INT_MAX){
-                    float z = calculateDepth(T);
-                    vec3 p = r.origin + (t * r.direction);
-                    if(zbuff.TestAndSet(p.x, p.y, z)){
+                if((tp = T->Intersect(r, t0, t1)) != INT_MAX){
+                    if(tp < t){
+                        t = tp;
                         triangle = T;
-                        return t;
                     }
                 }
             }
@@ -620,26 +561,16 @@ public:
         // make the bounding box for the shape
         bb = new BoundedBox();
         for(int p = 0; p < posBuf.size(); p+= 3){
-            vec3 pos(posBuf[p], posBuf[p+1], posBuf[p+2]); vec3 n(norBuf[p], norBuf[p+1], norBuf[p+2]);
+            vec3 pos(posBuf[p], posBuf[p+1], posBuf[p+2]);
+            vec3 n(norBuf[p], norBuf[p+1], norBuf[p+2]);
             points.push_back(Point(pos,n));
             // set the extremas for the bouding box ---
             bb->set_extremas(points[points.size()-1].position);
         }
-
-        // compute the scalar and the translation and apply to all the points
-//        float scalar = scalar_factor(width, height, bb);
-//        vec2 translation = translation_factor(width, height, scalar, bb);
         
         for(int p = 0; p < points.size(); p += 3){
-//            points[p].set_toImage(scalar, translation);
-//            points[p+1].set_toImage(scalar, translation);
-//            points[p+2].set_toImage(scalar, translation);
-
             triangles.push_back(new Triangle(points[p], points[p+1], points[p+2]));
         }
-        // resize the bounded box
-//        bb->min.x = (scalar * bb->min.x) + translation.x, bb->max.x = (scalar * bb->max.x) + translation.x;
-//        bb->min.y = (scalar * bb->min.y) + translation.y, bb->max.y = (scalar * bb->max.y) + translation.y;
     }
 };
 
@@ -680,7 +611,7 @@ int main(int argc, char **argv)
     
     int sceneNumber = atoi(argv[1]);
     
-	string meshName = "../../resources/square.obj";
+	string meshName = "../../resources/bunny.obj";
     // Output filename
     string filename(argv[3]);
     // Image width
