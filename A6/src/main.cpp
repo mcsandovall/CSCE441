@@ -607,6 +607,14 @@ void task6(const string &meshName, const int &width, const int &height){
     camera->rayTrace(scene, image);
 }
 
+void task8(){
+    camera->fov = (float)(60*M_PI/180.0);
+    camera->Postion = vec3(-3.0,0,0);
+    camera->scene8 = true;
+    
+    task1();
+}
+
 int main(int argc, char **argv)
 {
 	if(argc < 3) {
@@ -640,7 +648,8 @@ int main(int argc, char **argv)
         task4();
     }
     else if(sceneNumber == 6){
-        task6(meshName, width, height);
+//        task6(meshName, width, height);
+        task8();
     }
     
     image->writeToFile(filename);

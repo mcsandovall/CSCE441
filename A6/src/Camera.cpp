@@ -16,20 +16,31 @@ using namespace glm;
 
 #define MAX_DEPTH 6
 
-Camera::Camera(const int &w, const int &h) :
+Camera::Camera(const int &w, const int &h, bool s8) :
 width(w),
 height(h),
 aspect(1.0f),
-fov((float)(-45.0*M_PI/180.0)),
+fov((float)(45.0*M_PI/180.0)),
 Postion(0.0,0.0,5.0),
-Rotation(0.0,0.0)
+Rotation(0.0,0.0),
+scene8(s8)
 {}
     
 // compute the ray at a given pixel
 Ray Camera::generateRay(int row, int col){
-    float x = (-width + ((row * 2) + 1)) / (float) width;
-    float y = (-height + ((col * 2) + 1)) / (float) height;
-    vec3 v(tan(-fov/2.0) * x, tan(-fov/2.0) * y, -1.0f);
+    float wp = 2 * tan(fov / 2) / width;
+    float hp = 2 * tan(fov / 2) / height;
+    
+    float b = -tan(fov/2);
+    float x = row * wp + b +  (wp / 2.0f);
+    float y = col * hp + b + (hp / 2.0f);
+    vec3 v;
+    // get the direction with respect to the virtual plane
+    if(scene8){
+        v = vec3(-2.0,y,x) - Postion;
+    }else{
+        v = vec3(x,y,4.0) - Postion;
+    }
     v = normalize(v);
     return Ray(Postion, v);
 }

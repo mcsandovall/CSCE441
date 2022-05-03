@@ -37,7 +37,7 @@ public:
 class Camera
 {
 public:
-    Camera(const int &w, const int &h);
+    Camera(const int &w, const int &h, bool s8 = false);
     
     // compute the ray at a given pixel
     Ray generateRay(int row, int col);
@@ -55,6 +55,7 @@ public:
     glm::vec3 LookAt;
     glm::vec3 Up;
     glm::vec2 Rotation;
+    bool scene8;
     std::vector<Ray> rays;
 };
 
