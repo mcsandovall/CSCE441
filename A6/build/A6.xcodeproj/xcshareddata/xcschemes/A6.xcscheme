@@ -52,7 +52,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "7 512 output.png"
+            argument = "6 512 output.png"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

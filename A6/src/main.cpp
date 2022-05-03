@@ -485,8 +485,10 @@ class Object : public Shape{
 public:
     mat4 mat_E;
     Hit thit;
+    bool transform;
     Object(const vec3 &d, const vec3 &s, const vec3 &a, const float &e){
         Diffuse = d, Specular = s, Ambient = a, Exponent = e;
+        transform = false;
     }
     Object(const vec3 &p, const vec3 &s, const vec3 &r,const float &angle, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e)
     {
@@ -499,6 +501,7 @@ public:
         Specular = sp;
         Ambient = a;
         Exponent = e;
+        transform = true;
     }
     vector<Triangle*> triangles;
     Triangle * triangle;
@@ -508,28 +511,37 @@ public:
     float Intersect(const Ray &r, const float &t0, const float &t1) override{
         float t = INT_MAX;
         float tp = INT_MAX;
-        vec3 p = inverse(mat_E) * vec4(r.origin,1.0);
-        vec3 v = inverse(mat_E) * vec4(r.direction,0.0);
-        v = normalize(v);
-        Ray rp(p,v);
+        Ray rp(r.origin,r.direction);
+        vec3 p,v,x,n;
+        if(transform){
+            p = inverse(mat_E) * vec4(r.origin,1.0);
+            v = inverse(mat_E) * vec4(r.direction,0.0);
+            v = normalize(v);
+            rp.origin = p;
+            rp.direction = v;
+        }
         if(bb->inside(rp)){
             for(Triangle *T : triangles){
                 if((tp = T->Intersect(rp, t0, t1)) != INT_MAX){
-                    vec3 x = p + (tp * v);
-                    x = mat_E * vec4(x,1.0f);
-                    vec3 n = T->getNormal();
-                    n = inverse(transpose(mat_E)) * vec4(n,0.0);
-                    n = normalize(n);
-                    tp = abs(distance(x, r.origin));
-                    if(dot(v, x - r.origin) < 0){
-                        tp = -tp;
+                    if(transform){
+                        x = p + (tp * v);
+                        x = mat_E * vec4(x,1.0f);
+                        n = T->getNormal();
+                        n = inverse(transpose(mat_E)) * vec4(n,0.0);
+                        n = normalize(n);
+                        tp = abs(distance(x, r.origin));
+                        if(dot(v, x - r.origin) < 0){
+                            tp = -tp;
+                        }
                     }
                     if(tp < t){
                         t = tp;
-                        thit.x = x;
-                        thit.n = n;
-                        thit.t = t;
                         triangle = T;
+                        if(transform){
+                            thit.x = x;
+                            thit.n = n;
+                            thit.t = t;
+                        }
                     }
                 }
             }
@@ -539,9 +551,13 @@ public:
     
     void computeHit(const Ray &r, const float &t, Hit &h) override{
         if(!triangle) return;
-        h.x = thit.x;
-        h.n = thit.n;
-        h.t = thit.t;
+        if(transform){
+            h.x = thit.x;
+            h.n = thit.n;
+            h.t = thit.t;
+        }else{
+            triangle->computeHit(r, t, h);
+        }
     }
     
     void loadTriangles(const string &meshName, const int &width, const int &height){
