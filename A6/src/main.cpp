@@ -648,7 +648,12 @@ int main(int argc, char **argv)
         task4();
     }
     else if(sceneNumber == 6){
-//        task6(meshName, width, height);
+        task6(meshName, width, height);
+    }
+    else if(sceneNumber == 7){
+        // TODO: Scene 7
+    }
+    else if (sceneNumber == 8){
         task8();
     }
     
