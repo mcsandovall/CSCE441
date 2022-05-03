@@ -483,8 +483,22 @@ public:
 
 class Object : public Shape{
 public:
+    mat4 mat_E;
+    Hit thit;
     Object(const vec3 &d, const vec3 &s, const vec3 &a, const float &e){
         Diffuse = d, Specular = s, Ambient = a, Exponent = e;
+    }
+    Object(const vec3 &p, const vec3 &s, const vec3 &r,const float &angle, const vec3 &d, const vec3 &sp, const vec3 &a, const float &e)
+    {
+        // load the matrix E = T * R * S
+        mat_E = mat4(1.0); // load identity
+        mat_E *= glm::translate(mat4(1.0), p);
+        mat_E *= glm::rotate(mat4(1.0), angle, r);
+        mat_E *= glm::scale(mat4(1.0), s);
+        Diffuse = d;
+        Specular = sp;
+        Ambient = a;
+        Exponent = e;
     }
     vector<Triangle*> triangles;
     Triangle * triangle;
@@ -494,11 +508,27 @@ public:
     float Intersect(const Ray &r, const float &t0, const float &t1) override{
         float t = INT_MAX;
         float tp = INT_MAX;
-        if(bb->inside(r)){
+        vec3 p = inverse(mat_E) * vec4(r.origin,1.0);
+        vec3 v = inverse(mat_E) * vec4(r.direction,0.0);
+        v = normalize(v);
+        Ray rp(p,v);
+        if(bb->inside(rp)){
             for(Triangle *T : triangles){
-                if((tp = T->Intersect(r, t0, t1)) != INT_MAX){
+                if((tp = T->Intersect(rp, t0, t1)) != INT_MAX){
+                    vec3 x = p + (tp * v);
+                    x = mat_E * vec4(x,1.0f);
+                    vec3 n = T->getNormal();
+                    n = inverse(transpose(mat_E)) * vec4(n,0.0);
+                    n = normalize(n);
+                    tp = abs(distance(x, rp.origin));
+                    if(dot(v, x - rp.origin) < 0){
+                        tp = -tp;
+                    }
                     if(tp < t){
                         t = tp;
+                        thit.x = x;
+                        thit.n = n;
+                        thit.t = t;
                         triangle = T;
                     }
                 }
@@ -509,7 +539,9 @@ public:
     
     void computeHit(const Ray &r, const float &t, Hit &h) override{
         if(!triangle) return;
-        triangle->computeHit(r, t, h);
+        h.x = thit.x;
+        h.n = thit.n;
+        h.t = thit.t;
     }
     
     void loadTriangles(const string &meshName, const int &width, const int &height){
@@ -607,6 +639,34 @@ void task6(const string &meshName, const int &width, const int &height){
     camera->rayTrace(scene, image);
 }
 
+// make the function for task 7
+void task7(const string &meshName, const int &width, const int &height){
+    // make the scene
+    Scene scene;
+    // make the light
+    Light l(vec3(1.0, 1.0, 2.0), 1.0f);
+    scene.addLight(l);
+    // make the object
+    vec3 position, rotation, diffuse, specular, ambient, scale;
+    float exp, angle;
+    
+    position = vec3(0.3, -1.5, 0.0);
+    rotation = vec3(1.0,0.0,0.0);
+    scale = vec3(1.5);
+    angle = (float) (20.0f*M_PI/180);
+    diffuse = vec3(0.0, 0.0, 1.0);
+    specular = vec3(1.0, 1.0, 0.5);
+    ambient = vec3(0.1);
+    exp = 100.0f;
+    
+    Object * bunny = new Object(position,scale,rotation,angle, diffuse,specular,ambient,exp);
+    // load the triangles onto the object
+    bunny->loadTriangles(meshName, width, height);
+    cout << "load done..." << endl;
+    scene.addShape(bunny);
+    camera->rayTrace(scene, image);
+}
+
 void task8(){
     camera->fov = (float)(60*M_PI/180.0);
     camera->Postion = vec3(-3.0,0,0);
@@ -651,7 +711,7 @@ int main(int argc, char **argv)
         task6(meshName, width, height);
     }
     else if(sceneNumber == 7){
-        // TODO: Scene 7
+        task7(meshName, width, height);
     }
     else if (sceneNumber == 8){
         task8();

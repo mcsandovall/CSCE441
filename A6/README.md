@@ -1,21 +1,14 @@
-# Assigment 1 Rasterizer 
+# Assigment 6 Ray Tracing
 
 Author: Mario Sandoval
 UIN: 629001077
 email: mcsandoval@tamu.edu
-Highest Task: Task 7 completed
+Highest Task: Scene 6 and Scene 8
 
+Note:
+I have have not completed scene 7 but completed scene 8
 
-Bycentric coordinates
-https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates
+Resources:
+Fast triangle ray trace:
+https://fileadmin.cs.lth.se/cs/Personal/Tomas_Akenine-Moller/raytri/
 
-Triangular interpolation color
-https://observablehq.com/@toja/triangular-color-interpolation
-
-ZBuffering:
-https://www.youtube.com/watch?v=HyVc0X9JKpg
-
-Additional info: Course Slides
-
-TO NOTE:
-The videos lecture from last year was really helpful in figuring out this assigment
