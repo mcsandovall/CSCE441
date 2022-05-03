@@ -440,7 +440,7 @@ public:
        /* if determinant is near zero, ray lies in plane of triangle */
         det = dot(edge1, pvec);//DOT(edge1, pvec);
 
-       if (det > -0.001 && det < 0.001) return INT_MAX;
+       if (det > -0.0001f && det < 0.0001f) return INT_MAX;
        inv_det = 1.0 / det;
 
        /* calculate distance from vert0 to ray origin */
@@ -464,9 +464,14 @@ public:
     }
     
     vec3 getNormal(){
-        return vec3(vertex[0].normal.x * u + vertex[1].normal.x * v + vertex[2].normal.x * w,
-        vertex[0].normal.y * u + vertex[1].normal.y * v + vertex[2].normal.y * w,
-        vertex[0].normal.z * u + vertex[1].normal.z * v + vertex[2].normal.z * w);
+        vec3 n(0);
+        n.x = w * vertex[0].normal.x + u * vertex[1].normal.x + v * vertex[2].normal.x;
+        n.y = w * vertex[0].normal.y + u * vertex[1].normal.y + v * vertex[2].normal.y;
+        n.z = w * vertex[0].normal.z + u * vertex[1].normal.z + v * vertex[2].normal.z;
+        n.x = std::clamp(n.x, -1.0f, 1.0f);
+        n.y = std::clamp(n.y, -1.0f, 1.0f);
+        n.z = std::clamp(n.z, -1.0f, 1.0f);
+        return n;
     }
     
     void computeHit(const Ray &r, const float &t, Hit &h) override{
