@@ -520,8 +520,8 @@ public:
                     vec3 n = T->getNormal();
                     n = inverse(transpose(mat_E)) * vec4(n,0.0);
                     n = normalize(n);
-                    tp = abs(distance(x, rp.origin));
-                    if(dot(v, x - rp.origin) < 0){
+                    tp = abs(distance(x, r.origin));
+                    if(dot(v, x - r.origin) < 0){
                         tp = -tp;
                     }
                     if(tp < t){
