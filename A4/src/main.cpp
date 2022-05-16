@@ -414,6 +414,32 @@ static void init()
     GLSL::checkError(GET_FILE_LINE);
 }
 
+void drawHUD(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t){
+    // draw the HUD
+    float y = 0.6;
+    float x = 0.8;
+    glm::vec3 ka(0.0,0.0,0.0);
+    glm::vec3 kd(0.7f,0.7f,0.7f);
+    glm::vec3 ks(1.0f,1.0f,1.0f);
+    Material m(ka,kd,ks,200.f);
+
+    bunny->Translate = glm::vec3(x,y,-0.3f);
+    bunny->Rotate = glm::vec3(0.0,1.0f,0.0);
+    bunny->angle = t;
+    bunny->material = m;
+    bunny->Scale = glm::vec3(0.2);
+    bunny->draw_shape(P, MV, true);
+
+    x = -x;
+    y += 0.1;
+    teapot->Translate = glm::vec3(x,y,-0.3f);
+    teapot->Rotate = glm::vec3(0.0,1.0f,0.0);
+    teapot->angle = t;
+    teapot->material = m;
+    teapot->Scale = glm::vec3(0.2);
+    teapot->draw_shape(P, MV, true);
+}
+
 void drawScene(shared_ptr<MatrixStack> P, shared_ptr<MatrixStack> MV, float t, bool orthographic = false){
     sun->scale_obj(0.5);
     sun->Translate = glm::vec3(8.0,10.0,1.0);
@@ -513,6 +539,9 @@ static void render()
 	P->pushMatrix();
     FLCamera->applyProjectionMatrix(P);
     MV->pushMatrix();
+    
+    // Draw the HUD
+    drawHUD(P, MV, t);
     
 	FLCamera->applyViewMatrix(MV);
     
